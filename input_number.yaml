@@ -1,0 +1,34 @@
+
+  ant_weight:
+    name: Weight
+    min: 160
+    max: 210
+    step: .01
+    mode: box
+
+  ant_bf_pct:
+    name: "BF%"
+    min: 14
+    max: 25
+    step: .01
+    mode: box
+
+  ant_fat_mass:
+    name: "Fat Mass"
+    min: 1
+    max: 200
+    step: .01
+    mode: box
+
+  ant_lean_mass:
+    name: "Lean Mass"
+    min: 120
+    max: 200
+    step: .01
+    mode: box
+
+  sunrise_duration:
+    name: "Sunrise Duration"
+    min: 24
+    max: 3600
+    step: 8 

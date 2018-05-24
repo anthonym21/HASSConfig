@@ -1,0 +1,101 @@
+- platform: mqtt
+  name: garage_moving
+  friendly_name: Garage Door Movement
+  state_topic: "smartthings/Garage Multi/acceleration"
+  device_class : garage_door
+  payload_on: "active"
+  payload_off: "inactive"
+  retain: true  
+  
+- platform: mqtt
+  name: garage_lightify
+  state_topic: "smartthings/Lightify Garage/motion"
+  friendly_name: Garage Motion
+  device_class: motion
+  payload_on: "active"
+  payload_off: "inactive" 
+  retain: true
+
+- platform: mqtt
+  name: garage_open
+  state_topic: "smartthings/Garage Multi/contact"
+  friendly_name: Garage Door
+  device_class: garage_door
+  payload_on: "open"
+  payload_off: "closed"
+  retain: true
+
+- platform: mqtt
+  name: front_door
+  state_topic: "smartthings/Front Door/contact"
+  friendly_name: Front Door
+  device_class: door
+  payload_on: "open"
+  payload_off: "closed"
+  retrain: true
+  
+- platform: mqtt
+  name: basement_door
+  state_topic: "smartthings/Basement Door/contact"
+  friendly_name: Basement Door
+  device_class: door
+  payload_on: "open"
+  payload_off: "closed"
+  retain: true
+
+- platform: mqtt
+  name: sofias_room_door
+  state_topic: "smartthings/Sofia Door/contact"
+  friendly_name: Sofia's Door
+  device_class: door
+  payload_on: "open"
+  payload_off: "closed"
+  retain: true
+
+- platform: mqtt
+  name: patio_door
+  state_topic: "smartthings/Patio Door/contact"
+  friendly_name: Patio Door
+  device_class: door
+  payload_on: "open"
+  payload_off: "closed"
+  retain: true
+  
+- platform: mqtt
+  name: hallway_spy
+  state_topic: "smartthings/Hallway Spy/motion"
+  friendly_name: Hallway Motion
+  device_class: motion
+  payload_on: "active"
+  payload_off: "inactive"
+  retain: true
+  
+- platform: mqtt
+  name: tv_room_motion
+  state_topic: "smartthings/TV Room Presence/motion"
+  friendly_name: TV Room Motion
+  device_class: motion
+  payload_on: "active"
+  payload_off: "inactive"
+  retain: true
+
+# XIAOMI HUB
+  
+- platform: xiaomi_aqara
+  name: bedroom_motion
+  friendly_name: Bedroom Motion
+  device_class: motion
+  retain: true
+
+- platform: xiaomi_aqara
+  name: button_kitchen
+  friendly_name: Kitchen Button
+  device_class: light
+  retain: false
+  
+- platform: xiaomi_aqara
+  name: button_in_bed
+  friendly_name: Toggle In-Bed
+  device_class: light
+  retain: false
+  

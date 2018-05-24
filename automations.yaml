@@ -1,0 +1,662 @@
+#KITCHEN ISLAND LAMP BUTTON#
+
+- id: kitchen_button_click_on
+  alias: Kitchen Light Button Single
+  trigger:
+  - event_data:
+      click_type: single
+      entity_id: binary_sensor.button_kitchen
+    event_type: click
+    platform: event
+  condition:
+  - condition: state
+    entity_id: light.kitchen_island
+    state: 'off'
+  action:
+    service: light.turn_on
+    data:
+      brightness_pct: 82
+      color_temp: '310'
+      entity_id: light.kitchen_island
+
+    
+- id: kitchen_button_click_off
+  alias: Kitchen Light Button Single/Off
+  trigger:
+    platform: event
+    event_type: click
+    event_data:
+      entity_id: binary_sensor.button_kitchen
+      click_type: single
+  condition:
+  - condition: state
+    entity_id: light.kitchen_island
+    state: 'on'
+  action:
+    service: light.turn_off
+    data:
+      entity_id: light.kitchen
+      
+- id: kitchen_button_click_long_click_release
+  alias: Kitchen Light Button Coral
+  trigger:
+  - event_data:
+      click_type: hold
+      entity_id: binary_sensor.button_kitchen
+    event_type: click
+    platform: event
+  action:
+  - data:
+      brightness_pct: 50
+      color_name: coral
+      entity_id: light.kitchen_island
+    service: light.turn_on
+    
+- id: kitchen_button_hold
+  alias: Kitchen Light Button dbl
+  trigger:
+  - event_data:
+      click_type: double
+      entity_id: binary_sensor.button_kitchen
+    event_type: click
+    platform: event
+  condition:
+  - condition: state
+    entity_id: light.kitchenette_lamp
+    state: 'off'
+  action:
+  - data:
+      brightness_pct: 90
+      color_name: white
+      entity_id: light.kitchen
+      transition: 0
+    service: light.turn_on
+    
+- id: kitchen_button_hold_off
+  alias: Kitchen Light Button dbl Off
+  trigger:
+    platform: event
+    event_type: click
+    event_data:
+      entity_id: binary_sensor.button_kitchen
+      click_type: double
+  condition:
+  - condition: state
+    entity_id: light.kitchenette_lamp
+    state: 'on'
+  action:
+  - service: light.turn_off
+    data:
+      entity_id: light.kitchenette_lamp
+      transtion: 2
+  - service: light.turn_on
+    data:
+      entity_id: light.kitchen_island
+      brightness_pct: 82
+      color_temp: 310
+
+ # GARAGE #
+      
+- id: illuminate_garage
+  alias: Garage Door Open -> Lights ON
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.basement_door
+    from: 'off'
+    to: 'on'
+  - platform: state
+    entity_id: binary_sensor.garage_moving
+    from: 'off'
+    to: 'on'
+  action:
+  - service: light.turn_off
+    data:
+      entity_id: light.garage_lights
+  - service: light.turn_on
+    data:
+      entity_id: light.garage_lights
+      brightness_pct: 100
+      transition: 2
+      
+- id: deluminate_garage
+  alias: Garage Clear -> Lights Out
+  trigger:
+  - entity_id: binary_sensor.garage_lightify
+    for:
+      minutes: 6
+    platform: state
+    to: 'off'
+  action:
+  - data:
+      entity_id: light.garage_lights
+      transition: 30
+    service: light.turn_off
+  - delay: '30'
+  - data:
+      entity_id: light.garage_lights
+    service: light.turn_off
+    
+- id: ensure_garage_off
+  alias: Make Sure Lights Are Off In Garage 10 min
+  trigger:
+  - entity_id: binary_sensor.garage_lightify
+    platform: state
+    to: 'off'
+    for:
+      minutes: 10
+  - entity_id: sensor.mud_room_motion_sensor
+    platform: state
+    to: 'off'
+    for:
+      minutes: 10
+  action:
+    service: light.turn_off
+    data:
+      entity_id: light.garage_lights
+      
+- id: dim_garage
+  alias: Basement Motion -> Dim Garage
+  trigger:
+    platform: state
+    entity_id: sensor.mud_room_motion_sensor
+    from: 'off'
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: light.garage_lights
+    state: 'off'
+  action:
+  - service: light.turn_on
+    data:
+      entity_id: light.garage_lights
+      brightness: 1
+
+      # BLINK ALERTS # 
+ 
+- id: blink_alert_office_garage_door
+  alias: Blink Garage Door
+  trigger:
+    platform: state
+    entity_id: binary_sensor.garage_moving
+    from: 'off'
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: input_boolean.push_blink_alerts
+    state: 'on'
+  action:
+  - service: light.turn_on
+    data:
+      brightness: 255
+      entity_id: light.office_filing_cabinet_iris
+      rgb_color:
+      - 255
+      - 0
+      - 0
+      flash: long
+  - delay:
+      seconds: 5
+  - service: light.turn_on
+    data:
+      rgb_color:
+      - 255
+      - 162
+      - 42
+      entity_id: light.office_filing_cabinet_iris
+      brightness: 1
+      
+- id: blink_alert_office_front_door
+  alias: Blink Front Door
+  trigger:
+    platform: state
+    entity_id: binary_sensor.front_door
+    from: 'off'
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: input_boolean.push_blink_alerts
+    state: 'on'
+  action:
+  - service: light.turn_on
+    data:
+      entity_id: light.office_filing_cabinet_iris
+      brightness: 255
+      rgb_color:
+      - 0
+      - 255
+      - 0
+      flash: long
+  - delay:
+      seconds: 5
+  - service: light.turn_on
+    data:
+      entity_id: light.office_filing_cabinet_iris
+      rgb_color:
+      - 255
+      - 228
+      - 44
+      brightness: 60
+      
+- id: blink_alert_hallway_others
+  alias: Blinks From Hallway
+  trigger:
+    platform: state
+    entity_id: binary_sensor.hallway_spy
+    from: 'off'
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: input_boolean.push_blink_alerts_downstairs
+    state: 'on'
+  action:
+  - service: light.turn_on
+    data:
+      entity_id: light.kitchen
+      flash: short
+  - service: light.turn_on
+    data:
+      entity_id: light.mud_room
+      flash: short
+      
+- id: reset_push_blinks
+  alias: Reset Bools 5AM
+  trigger:
+    platform: time
+    at: 05:00:00
+  action:
+  - service: input_boolean.turn_off
+    data:
+      entity_id: input_boolean.push_blink_alerts
+  - service: input_boolean.turn_off
+    data:
+      entity_id: input_boolean.push_html5_alerts
+  - service: input_boolean.turn_off
+    data:
+      entity_id: input_boolean.push_blink_alerts_downstairs
+ 
+ # FLUX #
+- id: office_flux_switched_on
+  alias: Office Flux ON
+  trigger:
+    platform: state
+    entity_id: switch.office_flux
+    from: 'off'
+    to: 'on'
+  action:
+  - service: switch.office_flux_update
+ 
+ # DEFUNCT #
+- id: on_hallway_motion
+  alias: On Office Motion
+  trigger:
+    platform: event
+    event_type: DLINK_HALLWAY_MOTION
+  condition:
+  - condition: state
+    entity_id: device_tracker.ant_pixel2
+    state: not home
+  action:
+  - service: automation.turn_off
+    data:
+      entity_id: automation.on_hallway_motion
+  - service: input_boolean.turn_on
+    data:
+      entity_id: input_boolean.dlink_office_motion
+  - delay: 00:02:00
+  - service: input_boolean.turn_off
+    data:
+      entity_id: input_boolean.dlink_office_motion
+  - service: automation.turn_on
+    data:
+      entity_id: automation.on_hallway_motion
+
+ ## DASH BUTTONS ##
+      
+- id: neat_dash_on
+  alias: NEAT_DASH_PRESSED_ON
+  trigger:
+    platform: event
+    event_type: NEAT_BUTTON
+  condition:
+  - condition: state
+    entity_id: light.office_pillar
+    state: 'off'
+  action:
+    service: light.turn_on
+    data:
+      entity_id: light.office_pillar
+      brightness: 254
+      
+- id: neat_dash_off
+  alias: NEAT_DASH_PRESSED_OFF
+  trigger:
+    platform: event
+    event_type: NEAT_BUTTON
+  condition:
+  - condition: state
+    entity_id: light.office_pillar
+    state: 'on'
+  action:
+    service: light.turn_off
+    data:
+      entity_id: light.office_pillar
+ 
+ ## VARIOUS ANT EVENTS ##
+ 
+- id: ant_in_bed_click
+  alias: Ant In Bed Single Click
+  trigger:
+    platform: event
+    event_type: click
+    event_data:
+      click_type: single
+      entity_id: binary_sensor.button_in_bed   
+  condition:
+  - condition: state
+    entity_id: input_boolean.ant_in_bed
+    state: 'false'
+  action:
+  - service: input_datetime.set_datetime
+    data_template:
+      entity_id: input_datetime.ant_inbed
+      date: '{{ as_timestamp(now()) | timestamp_custom("%Y-%m-%d",True) }}'
+      time: '{{ as_timestamp(now()) | timestamp_custom("%H:%M",True) }}'
+  - service: input_boolean.turn_on
+    data:
+      entity_id: input_boolean.ant_in_bed    
+
+- id: ant_out_bed_click
+  alias: Ant Out Bed Single Click
+  trigger:
+    event_type: click
+    platform: event
+    event_data:
+      click_type: single
+      entity_id: binary_sensor.button_in_bed   
+  condition:
+  - condition: state
+    entity_id: input_boolean.ant_in_bed
+    state: 'true'
+  action:
+  - service: input_datetime.set_datetime
+    data_template:
+      entity_id: input_datetime.ant_outbed
+      date: '{{ as_timestamp(now()) | timestamp_custom("%Y-%m-%d",True) }}'
+      time: '{{ as_timestamp(now()) | timestamp_custom("%H:%M",True) }}'
+  - service: input_boolean.turn_off
+    data:
+      entity_id: input_boolean.ant_in_bed       
+      
+- id: fan_lamp_toggle
+  alias: Bedroom Fan/Lamp Toggle
+  trigger:
+    event_type: click
+    platform: event
+    event_data:
+      click_type: double
+      entity_id: binary_sensor.button_in_bed
+  action:      
+    service: script.turn_on
+    data_template:
+       entity_id: '{% if is_state("light.bedroom_lamp", "on") %}script.toggle_bedroom_fan_off{% else %}script.toggle_bedroom_fan_on{% endif %}'
+ 
+- id: anthony_woke_up
+  alias: On ANT_AWAKE
+  trigger:
+    platform: event
+    event_type: ANT_AWAKE
+  action:
+  - service: input_datetime.set_datetime
+    data_template:
+      entity_id: input_datetime.ant_asleep
+      date: '{{ as_timestamp(strptime(trigger.event.data["fell_asleep"], "%B %d, %Y at %I:%M%p")) | timestamp_custom("%Y-%m-%d",True)}}'
+      time: '{{ as_timestamp(strptime(trigger.event.data["fell_asleep"], "%B %d, %Y at %I:%M%p")) | timestamp_custom("%H:%M",True)}}'
+  - service: input_datetime.set_datetime
+    data_template:
+      entity_id: input_datetime.ant_awake
+      date: '{{ as_timestamp(strptime(trigger.event.data["awoke"], "%B %d, %Y at
+        %I:%M%p")) | timestamp_custom("%Y-%m-%d",True)}}'
+      time: '{{ as_timestamp(strptime(trigger.event.data["awoke"], "%B %d, %Y at
+        %I:%M%p")) | timestamp_custom("%H:%M",True)}}'
+#  - service: input_boolean.turn_off
+#    data:
+#      entity_id: input_boolean.ant_in_bed
+  - service: light.turn_off
+    data:
+      entity_id: light.bedroom_lamp
+  - service: switch.turn_off
+    data:
+      entity_id: switch.bedroom_fan
+      
+- id: anthony_phone_nightstand
+  alias: On PIXEL_ON_NIGHTSTAND
+  trigger:
+    platform: event
+    event_type: PIXEL_ON_NIGHTSTAND
+  action:
+  - service: light.turn_on
+    data:
+      entity_id: light.bedroom_lamp
+      brightness: 1
+  - service: switch.turn_on
+    data:
+      entity_id: switch.bedroom_fan
+#  - service: input_boolean.turn_on
+#    data:
+#      entity_id: input_boolean.ant_in_bed
+      
+#- id: anthony_phone_off_nightstand
+#  alias: Pixel Off Nightstand
+#  trigger:
+#    platform: event
+#    event_type: PIXEL_OFF_NIGHTSTAND
+#  action:
+#  - service: light.turn_off
+#    data:
+#      entity_id: light.bedroom_lamp
+#  - service: switch.turn_off
+#    data:
+#      entity_id: switch.bedroom_fan
+#  - service: input_boolean.turn_off
+#    data:
+#      entity_id: input_boolean.ant_in_bed
+      
+- id: anthony_new_weigh_in
+  alias: On ANT_WEIGHT
+  trigger:
+    platform: event
+    event_type: ANT_WEIGHT
+  condition:
+    condition: template
+    value_template: '{{ ((strptime(trigger.event.data["timestamp"], "%B %d, %Y at %I:%M%p")).day >= states.input_datetime.ant_weigh_datetime.attributes.day) or ((trigger.event.data["bodyfat"] | float) <= (states.input_number.ant_bf_pct.state|float))  }}'
+  action:
+ #- service: logbook.logbook
+  #  data_template:
+  #    name: 'Body Metrics'
+  #    message: ' updated to {{ trigger.eventdata["weight"] | float }} lbs, {{ trigger.eventdata["bodyfat"] | float }} % BF'
+  - service: input_number.set_value
+    data_template:
+      entity_id: input_number.ant_weight
+      value: '{{ trigger.event.data["weight"] | float}}'
+  - service: input_number.set_value
+    data_template:
+      entity_id: input_number.ant_bf_pct
+      value: '{{ trigger.event.data["bodyfat"] | float}}'
+  - service: input_number.set_value
+    entity_id: input_number.ant_fat_mass
+    data_template:
+      value: '{{ trigger.event.data["fat"] | float}}'
+  - service: input_number.set_value
+    data_template:
+      entity_id: input_number.ant_lean_mass
+      value: '{{ trigger.event.data["lean"] | float}}'
+  - service: input_datetime.set_datetime
+    data_template:
+      entity_id: input_datetime.ant_weigh_datetime
+      date: '{{ as_timestamp(strptime(trigger.event.data["timestamp"], "%B %d, %Y at %I:%M%p")) | timestamp_custom("%Y-%m-%d",True)}}'
+      time: '{{ as_timestamp(strptime(trigger.event.data["timestamp"], "%B %d, %Y at %I:%M%p")) | timestamp_custom("%H:%M",True)}}'
+      
+- id: deluminate_tv_room
+  alias: Deluminate TV Room
+  trigger:
+    platform: state
+    entity_id: binary_sensor.tv_room_motion
+    from: 'on'
+    to: 'off'
+    for:
+      minutes: 5
+  condition:
+  - condition: time
+    after: 00:00:00
+    before: 04:45:00
+  action:
+  - service: light.turn_on
+    data_template:
+      entity_id: light.tv_bias
+      brightness: 36
+      xy_color:
+      - 0.646
+      - 0.346
+      transition: 10
+  - service: light.turn_on
+    data_template:
+      entity_id: light.kitchen
+      brightness: 31
+      xy_color:
+      - 0.509
+      - 0.387
+      transition: 10
+  - service: light.turn_on
+    data_template:
+      entity_id: light.tv_room_front_lamp
+      color_temp: 500
+      brightness: 38
+      transition: 10
+  - service: light.turn_on
+    data_template:
+      entity_id: light.tv_room_back_lamp
+      color_temp: 500
+      brightness: 45
+      transition: 10
+      
+- id: deluminate_dining_room
+  alias: Deluminate Dining Room
+  trigger:
+    platform: state
+    entity_id: binary_sensor.dining_room_motion
+    from: 'on'
+    to: 'off'
+    for:
+      minutes: 5
+  condition:
+  - condition: time
+    after: 00:00:00
+    before: 04:45:00
+  action:
+  - service: light.turn_on
+    data_template:
+      entity_id: light.dining_room_motion
+      color_temp: 500
+      brightness: 1
+      transition: 2
+      
+- id: illuminate_tv_room
+  alias: Illuminate TV Room
+  trigger:
+    platform: state
+    entity_id: binary_sensor.tv_room_motion
+    to: 'on'
+  condition:
+  - condition: time
+    after: 00:00:00
+    before: 04:55:00
+  action:
+  - service: light.turn_on
+    data_template:
+      brightness: 236
+      entity_id: light.tv_bias
+      xy_color:
+      - 0.606
+      - 0.374
+      transition: 2
+  - service: light.turn_on
+    data_template:
+      entity_id: light.kitchen
+      brightness: 108
+      xy_color:
+      - 0.539
+      - 0.386
+      transition: 1
+  - service: light.turn_on
+    data_template:
+      entity_id: light.tv_room_front_lamp
+      color_temp: 333
+      brightness: 152
+      transition: 2
+  - service: light.turn_on
+    data_template:
+      entity_id: light.tv_room_back_lamp
+      color_temp: 333
+      brightness: 166
+      transition: 2
+      
+- id: illuminate_dining_room
+  alias: Illuminate Dining Room
+  trigger:
+    platform: state
+    entity_id: binary_sensor.dining_room_motion
+    to: 'on'
+  condition:
+  - condition: time
+    after: 00:00:00
+    before: 04:55:00
+  action:
+  - service: light.turn_on
+    data_template:
+      entity_id: light.dining_room
+      color_temp: 333
+      brightness: 99
+      transition: 2
+      
+- id: last_motion_update
+  alias: Update Last Motion
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.tv_room_motion, binary_sensor.hallway_spy, binary_sensor.sofias_room_door, binary_sensor.basement_door, binary_sensor.front_door, binary_sensor.garage_lightify, binary_sensor.office_motion, binary_sensor.bedroom_motion, binary_sensor.dining_room_motion, binary_sensor.patio_door
+    to: 'on'
+  condition:
+    condition: template
+    value_template: '{{ states.variable.last_motion.state != trigger.to_state.attributes.friendly_name  }}'
+  action:
+  - service: variable.set_variable
+    data:
+      variable: last_motion
+      attributes_template: '{"history_1": "{{ variable.state }}",  "history_2": "{{ variable.attributes.history_1 }}", "history_3": "{{ variable.attributes.history_2 }}" }'
+    data_template:
+      value: '{{ trigger.to_state.attributes.friendly_name }}'
+        
+- id: last_motion_datetime_update
+  alias: Update Last Motion Datetime
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.tv_room_motion, binary_sensor.hallway_spy, binary_sensor.sofias_room_door, binary_sensor.basement_door, binary_sensor.front_door, binary_sensor.garage_lightify, binary_sensor.office_motion, binary_sensor.bedroom_motion, binary_sensor.dining_room_motion, binary_sensor.patio_door
+    to: 'on'
+  action:
+  - service: variable.set_variable
+    data:
+      variable: last_motion_datetime
+      attributes_template: '{"history_1": "{{ variable.state }}",  "history_2": "{{ variable.attributes.history_1 }}",  "history_3": "{{ variable.attributes.history_2 }}" }'
+    data_template:
+      value: '{{ now().strftime("%H:%M:%S %m/%d") }}'
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: input_boolean.push_html5_alerts
+      state: 'on'
+  - service: notify.html5_office
+    data_template:
+      message: 'Last Detection in {{ trigger.to_state.attributes.friendly_name  }} @  {{ now().strftime("%H:%M:%S %m/%d") }} '
+    data:
+      data:
+        tag: last_motion_updated
+

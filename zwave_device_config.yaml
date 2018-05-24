@@ -1,0 +1,3 @@
+sensor.dome_siren_sourcenodeid:
+  ignored: false
+  polling_intensity: 0

@@ -1,0 +1,334 @@
+sensor.ant_home:
+  icon: mdi:account
+binary_sensor.downstairs_thermostat_fan:
+  device_class: power
+  friendly_name: Downstairs Fan
+device_tracker.ant_iphone:
+  hidden: true
+light.all_lights:
+  hidden: true
+  hide_control: true
+  hide_in_default_view: true
+binary_sensor.downstairs_thermostat_has_leaf:
+  hidden: true
+light.entertainment_area_1:
+  hidden: true
+binary_sensor.upstairs_thermostat_has_leaf:
+  hidden: true
+light.downstairs:
+  hidden: true
+group.all_lights: {}
+group.all_automations:
+  hide_in_default_view: true
+  hidden: false
+group.all_scripts:
+  hide_in_default_view: true
+  hidden: false
+sensor.upstairs_thermostat_upstairs_thermostat_temperature:
+  friendly_name: Upstairs Temperature
+sensor.upstairs_thermostat_upstairs_thermostat_target:
+  friendly_name: Upstairs Target
+sensor.upstairs_thermostat_upstairs_thermostat_humidity:
+  friendly_name: Upstairs Humidity
+  icon: mdi:water-percent
+binary_sensor.garage_lightify:
+  friendly_name: Garage Motion (Lightify)
+  hidden: true
+binary_sensor.garage_motion:
+  friendly_name: Garage Motion (D-Link)
+binary_sensor.garage_moving:
+  friendly_name: Garage Door Movement
+  icon: mdi:garage-alert
+binary_sensor.garage_open:
+  friendly_name: Garage Door
+  show_last_changed: true
+sensor.garage_temperature:
+  friendly_name: Garage Temperature
+sun.sun: {}
+sensor.bedroom_dimmer:
+  hidden: true
+sensor.dining_dimmer:
+  hidden: true
+sensor.google_pixel:
+  hidden: true
+sensor.office_dimmer:
+  hidden: true
+binary_sensor.downstairs_thermostat_downstairs_thermostat_online:
+  friendly_name: Downstairs Nest Online
+  icon: mdi:nest-thermostat
+binary_sensor.upstairs_thermostat_upstairs_thermostat_online:
+  friendly_name: Upstairs  Nest Online
+  icon: mdi:nest-thermostat
+sensor.mud_room_motion_sensor:
+  friendly_name: Mud Room Motion
+  hidden: true
+  show_last_changed: true
+sensor.dark_sky_precip_probability:
+  friendly_name: Precipitation %
+sensor.upstairs_nest_protect_battery_health:
+  friendly_name: Upstairs Protect Battery
+sensor.upstairs_nest_protect_smoke_status:
+  friendly_name: Upstairs Smoke
+sensor.upstairs_nest_protect_co_status:
+  friendly_name: Upstairs CO
+binary_sensor.upstairs_thermostat_upstairs_thermostat_fan:
+  friendly_name: Upstairs Fan
+sensor.upstairs_thermostat_upstairs_thermostat_hvac_state:
+  friendly_name: Upstairs HVAC State
+  icon: mdi:approval
+sensor.upstairs_thermostat_upstairs_thermostat_operation_mode:
+  friendly_name: Upstairs HVAC Mode
+  icon: mdi:fan
+sensor.dark_sky_daily_high_apparent_temperature:
+  friendly_name: High Temperature
+sensor.dark_sky_daily_low_apparent_temperature:
+  friendly_name: Low Temperature
+sensor.dark_sky_uv_index:
+  friendly_name: UV Index
+sensor.dark_sky_icon:
+  hidden: true
+device_tracker.ant_pixel2:
+  friendly_name: Ant
+sensor.sofias_room_humidity:
+  friendly_name: Sofia's Room Humidity
+sensor.sofias_room_temperature:
+  friendly_name: Sofia's Room Temperature
+binary_sensor.front_door_contact:
+  friendly_name: Front Door
+sensor.ups:
+  friendly_name: UPS Shipments
+sensor.dark_sky_apparent_temperature:
+  friendly_name: Apparent Temperature
+sensor.dark_sky_humidity:
+  friendly_name: Humidity
+sensor.travel_time__phone_to_home:
+  hidden: true
+sensor.downstairs_thermostat_downstairs_thermostat_humidity:
+  friendly_name: Downstairs Humidity
+  icon: mdi:water-percent
+sensor.downstairs_thermostat_downstairs_thermostat_hvac_state:
+  friendly_name: Downstairs HVAC State
+sensor.downstairs_thermostat_downstairs_thermostat_operation_mode:
+  friendly_name: Downstairs HVAC Mode
+sensor.downstairs_thermostat_downstairs_thermostat_target:
+  friendly_name: Downstairs Target
+sensor.downstairs_thermostat_downstairs_thermostat_temperature:
+  friendly_name: Downstairs Temperature
+switch.upstairs_fan:
+  hidden: true
+binary_sensor.basement_door:
+  friendly_name: Basement Door
+sensor.bedroom_humidity:
+  friendly_name: Bedroom Humidity
+  icon: mdi:water-percent
+sensor.bedroom_temperature:
+  friendly_name: Bedroom Temperature
+binary_sensor.front_door:
+  friendly_name: Front Door
+binary_sensor.sofias_room_door:
+  friendly_name: Sofia's Door
+history_graph.downstairs_vs_outdoor_temperatures_2d:
+  friendly_name: Downstairs vs Outdoors (2D)
+history_graph.upstairs_vs_outdoor_temperatures:
+  friendly_name: Upstairs vs Outdoors (2D)
+switch.bedroom_fan:
+  icon: mdi:fan
+binary_sensor.hallway_spy:
+  friendly_name: Hallway Motion
+history_graph.ant_body_comp_history:
+  friendly_name: Body Comp Weekly
+zone.ant_pixel2__stop__shop:
+  friendly_name: Stop & Shop
+variable.last_motion:
+  friendly_name: Last Motion Detection
+binary_sensor.tv_room_motion:
+  friendly_name: TV Room Motion
+zone.ant_pixel2__putnam_hospital:
+  friendly_name: Putnam Hospital
+sensor.pws_alerts:
+  hidden: true
+variable.last_motion_datetime:
+  friendly_name: Last Motion Time
+sensor.basement_temperature:
+  friendly_name: Basement Temperature
+binary_sensor.bedroom_motion:
+  show_last_changed: true
+sensor.mud_room_motion_template:
+  show_last_changed: true
+sensor.garage_motion_template:
+  show_last_changed: true
+binary_sensor.dining_room_motion:
+  show_last_changed: true
+binary_sensor.patio_door:
+  friendly_name: Patio Door
+  show_last_changed: true
+history_graph.ant_body_fat_history:
+  friendly_name: Recent Fatness
+sensor.office_temperature:
+  friendly_name: Office Temperature
+plant.basil_1:
+  friendly_name: Basil (Right Railing Planter)
+  sensors:
+    battery: sensor.plant_mqtt_basil_1_battery
+    brightness: sensor.plant_mqtt_basil_1_brightness
+    conductivity: sensor.plant_mqtt_basil_1_conductivity
+    moisture: sensor.plant_mqtt_basil_1_moisture
+    temperature: sensor.plant_mqtt_basil_1_temperature
+  unit_of_measurement_dict:
+    battery: '%'
+    brightness: lx
+    conductivity: uS/cm
+    moisture: '%'
+    temperature: °F
+light.office:
+  custom_ui_state_card: state-card-custom-ui
+  state_card_mode: break-slider
+  stretch_slider: true
+  extra_data_template: 'RGB: ${attributes.rgb_color} Br: ${(attributes.brightness / 255 * 100 * 100 | round(0))}'
+  hide_control: false
+  show_last_changed: false
+  theme: happy
+  confirm_controls_show_lock: true
+  slider_theme:
+    min: 1
+    max: 255
+    pin: true
+    off_when_min: false
+    report_when_not_changed: false
+light.bedroom:
+  custom_ui_state_card: state-card-custom-ui
+  state_card_mode: break-slider
+  stretch_slider: true
+  extra_data_template: 'Temp: ${attributes.color_temp} Br: ${(attributes.brightness  / 255 * 100 * 100 | round(0))}'
+  hide_control: false
+  show_last_changed: false
+  theme: happy
+  confirm_controls_show_lock: true
+  slider_theme:
+    min: 1
+    max: 255
+    pin: true
+    off_when_min: false
+    report_when_not_changed: false
+light.tv_bias:
+  custom_ui_state_card: state-card-custom-ui
+  state_card_mode: break-slider
+  stretch_slider: true
+  extra_data_template: 'RGB: ${attributes.rgb_color} Br: ${(attributes.brightness  / 255 * 100 * 100 | round(0))}'
+  hide_control: false
+  show_last_changed: false
+  theme: happy
+  confirm_controls_show_lock: true
+  slider_theme:
+    min: 1
+    max: 255
+    pin: true
+    off_when_min: false
+    report_when_not_changed: false
+light.front_lightstrip:
+  custom_ui_state_card: state-card-custom-ui
+  state_card_mode: break-slider
+  stretch_slider: true
+  extra_data_template: 'RGB: ${attributes.rgb_color} Br: ${(attributes.brightness  / 255 * 100 * 100 | round(0))}'
+  hide_control: false
+  show_last_changed: false
+  theme: happy
+  confirm_controls_show_lock: true
+  slider_theme:
+    min: 1
+    max: 255
+    pin: true
+    off_when_min: false
+    report_when_not_changed: false
+light.front_room_small_lamps:
+  custom_ui_state_card: state-card-custom-ui
+  state_card_mode: break-slider
+  stretch_slider: true
+  extra_data_template: 'Temp: ${attributes.color_temp} Br: ${(attributes.brightness  / 255 * 100 * 100 | round(0))}'
+  hide_control: false
+  show_last_changed: false
+  theme: happy
+  confirm_controls_show_lock: true
+  slider_theme:
+    min: 1
+    max: 255
+    pin: true
+    off_when_min: false
+    report_when_not_changed: false
+light.kitchen_island:
+  custom_ui_state_card: state-card-custom-ui
+  state_card_mode: break-slider
+  stretch_slider: true
+  extra_data_template: 'RGB: ${attributes.rgb_color} Br: ${(attributes.brightness  / 255 * 100 * 100 | round(0))}'
+  hide_control: false
+  show_last_changed: false
+  theme: happy
+  confirm_controls_show_lock: true
+  slider_theme:
+    min: 1
+    max: 255
+    pin: true
+    off_when_min: false
+    report_when_not_changed: false
+light.kitchenette_lamp:
+  custom_ui_state_card: state-card-custom-ui
+  state_card_mode: break-slider
+  stretch_slider: true
+  extra_data_template: 'RGB: ${attributes.rgb_color} Br: ${(attributes.brightness  / 255 * 100 * 100 | round(0))}'
+  hide_control: false
+  show_last_changed: false
+  theme: happy
+  confirm_controls_show_lock: true
+  slider_theme:
+    min: 1
+    max: 255
+    pin: true
+    off_when_min: false
+    report_when_not_changed: false
+light.dining_room:
+  custom_ui_state_card: state-card-custom-ui
+  state_card_mode: break-slider
+  stretch_slider: true
+  extra_data_template: 'Temp: ${attributes.color_temp} Br: ${(attributes.brightness  / 255 * 100 * 100 | round(0))}'
+  hide_control: false
+  show_last_changed: false
+  theme: happy
+  confirm_controls_show_lock: true
+  slider_theme:
+    min: 1
+    max: 255
+    pin: true
+    off_when_min: false
+    report_when_not_changed: false
+sensor.outdoor_temperature:
+  friendly_name: Outdoor Temperature
+proximity.ant_prox_home:
+  friendly_name: Proximity to Home (Ant)
+  show_last_changed: true
+proximity.ant_prox_work:
+  friendly_name: Proximity To Work (Ant)
+  show_last_changed: true
+sensor.office_humidity:
+  friendly_name: Office Humidity
+sensor.basement_humidity:
+  friendly_name: Basement Humidity
+switch.office_flux:
+  friendly_name: Office Flux Mode
+sensor.outdoor_humidity:
+  friendly_name: Outdoor Humidity
+sensor.plant_mqtt_basil_1_battery:
+  friendly_name: Basil 1 Battery %
+sensor.plant_mqtt_basil_1_brightness:
+  friendly_name: Basil 1 Brightness
+sensor.plant_mqtt_basil_1_conductivity:
+  friendly_name: Basil 1 Soil Conductivity
+sensor.plant_mqtt_basil_1_moisture:
+  friendly_name: Basil 1 Soil Moisture
+sensor.plant_mqtt_basil_1_temperature:
+  friendly_name: Basil 1 Ambient Temperature
+zone.home_office:
+  beacon:
+    major: 21000
+    minor: 1
+    uuid: 1337-0693-A4E2-4FB1-AFCF-C6EB-0764-7825
+  friendly_name: Home_Office

@@ -1,0 +1,167 @@
+  
+  toggle_bedroom_fan_on:
+    sequence:
+      - service: light.turn_on
+        data:
+          entity_id: light.bedroom_lamp
+          transition: 2
+          brightness: 1
+          color_temp: 500
+      - service: switch.turn_on
+        data:
+            entity_id: switch.bedroom_fan
+
+  toggle_bedroom_fan_off:
+    sequence:
+      - service: light.turn_off
+        data:
+          entity_id: light.bedroom_lamp
+          transition: 2
+      - service: switch.turn_off
+        data:
+            entity_id: switch.bedroom_fan          
+  
+  sunrise_test2:
+    sequence:
+      - service: light.turn_on
+        data_template: 
+          entity_id: light.office_pillar
+          transition: 1
+          brightness: 56
+          color_name: Crimson
+      - service: light.turn_on
+        data_template: 
+          entity_id: light.office_hue_go
+          transition: 1
+          brightness: 42
+          color_name: OrangeRed
+      - service: light.turn_on
+        data_template: 
+          entity_id: light.office_corner_bloom
+          transition: 1
+          brightness: 32
+          rgb_color: [199, 21, 133]
+      - service: light.turn_on
+        data_template: 
+          entity_id: light.flux1
+          transition: 1
+          brightness: 32
+          color_name: Crimson
+      - service: light.turn_on
+        data_template: 
+          entity_id: light.office_monitor_bloom
+          transition: 1
+          brightness: 18
+          color_name: Indigo
+      - service: light.turn_on
+        data_template: 
+          entity_id: light.office_filing_cabinet_iris
+          transition: 1
+          brightness: 18
+          color_name: Navy
+      - service: light.turn_on
+        data_template: 
+          entity_id: light.office_bookcase_iris
+          transition: 1
+          brightness: 1
+          color_name: MidnightBlue
+      - service: light.turn_on
+        data_template: 
+          entity_id: light.office_bookcase_bloom
+          transition: 1
+          brightness: 18
+          color_name: Indigo
+      - service: light.turn_on
+        data_template: 
+          entity_id: light.game_of_thrones_lamp
+          transition: 1
+          brightness: 48
+          color_name: MidnightBlue
+      - service: light.turn_on
+        data_template: 
+          entity_id: light.gateway_light
+          transition: 1
+          brightness: 23
+          color_name: Navy
+      - service: light.turn_on
+        data_template: 
+          entity_id: light.office_closet_corner
+          transition: 1
+          brightness: 1
+          color_name: Navy
+      - delay: '00:00:{{ ((states.input_number.sunrise_duration.state | int) / 3) | int }}'
+      
+  sunrise_script:
+    sequence:
+      - service: light.turn_off
+        data:
+          entity_id: light.office
+      - delay: '00:00:05'
+      - service: light.turn_on
+        data_template: 
+          entity_id: light.office_pillar
+          transition: '{{ ((states.input_number.sunrise_duration.state | int) / 3) | int }}'
+          brightness: 62
+          rgb_color: [255, 106, 0]
+      - service: light.turn_on
+        data_template: 
+          entity_id: light.office_hue_go
+          transition: '{{ ((states.input_number.sunrise_duration.state | int) / 3) | int }}'
+          brightness: 41
+          rgb_color: [255, 77, 0]
+      - service: light.turn_on
+        data_template: 
+          entity_id: light.office_corner_bloom
+          transition: '{{ ((states.input_number.sunrise_duration.state | int) / 3) | int }}'
+          brightness: 61
+          rgb_color: [255, 206, 0]
+      - service: light.turn_on
+        data_template: 
+          entity_id: light.flux1
+          transition: '{{ ((states.input_number.sunrise_duration.state | int) / 3) | int }}'
+          brightness: 99
+          rgb_color: [82, 2, 255]
+      - service: light.turn_on
+        data_template: 
+          entity_id: light.office_monitor_bloom
+          transition: '{{ ((states.input_number.sunrise_duration.state | int) / 3) | int }}'
+          brightness: 18
+          rgb_color: [255, 0, 207]
+      - service: light.turn_on
+        data_template: 
+          entity_id: light.office_filing_cabinet_iris
+          transition: '{{ ((states.input_number.sunrise_duration.state | int) / 3) | int }}'
+          brightness: 20
+          rgb_color: [214, 0, 255]
+      - service: light.turn_on
+        data_template: 
+          entity_id: light.office_bookcase_iris
+          transition: '{{ ((states.input_number.sunrise_duration.state | int) / 3) | int }}'
+          brightness: 3
+          rgb_color: [107, 0, 255]
+      - service: light.turn_on
+        data_template: 
+          entity_id: light.office_bookcase_bloom
+          transition: '{{ ((states.input_number.sunrise_duration.state | int) / 3) | int }}'
+          brightness: 20
+          rgb_color: [80, 0, 255]
+      - service: light.turn_on
+        data_template: 
+          entity_id: light.game_of_thrones_lamp
+          transition: '{{ ((states.input_number.sunrise_duration.state | int) / 3) | int }}'
+          brightness: 99
+          rgb_color: [82, 2, 255] 
+      - service: light.turn_on
+        data_template: 
+          entity_id: light.gateway_light
+          transition: '{{ ((states.input_number.sunrise_duration.state | int) / 3) | int }}'
+          brightness: 99
+          rgb_color: [82, 2, 255]
+      - service: light.turn_on
+        data_template: 
+          entity_id: light.office_closet_corner
+          transition: '{{ ((states.input_number.sunrise_duration.state | int) / 3) | int }}'
+          brightness: 3
+          rgb_color: [81, 1, 255]
+      - delay: '00:00:{{ ((states.input_number.sunrise_duration.state | int) / 3) | int }}'
+

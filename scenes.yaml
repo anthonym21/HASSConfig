@@ -1,0 +1,103 @@
+
+- name: Dark Late Downstairs
+  entities:
+    light.tv_bias:
+      state: on
+      brightness: 1
+      rgb_color: [255, 44, 2]
+    light.front_small_lamp:
+      state: on
+      brightness: 89
+    light.front_small_lamp_far:
+      state: on
+      brightness: 85
+    light.dining_room_1:
+      state: on
+      brightness: 1
+    light.dining_room_2:
+      state: on
+      brightness: 1
+    light.dining_room_3:
+      state: on
+      brightness: 1
+    light.front_chess_table:
+      state: on
+      brightness: 25
+    light.dining_room_4:
+      state: on
+      brightness: 1
+    light.dining_room_5:
+      state: on
+      brightness: 1
+    light.kitchen_light_a:
+      state: on
+      brightness: 140
+      rgb_color: [255, 0, 0]
+    light.kitchen_light_b:
+      state: on
+      brightness: 140
+      rgb_color: [255, 0, 0]
+    light.tv_room_back_lamp:
+      state: on
+      brightness: 101
+    light.tv_room_front_lamp:
+      state: on
+      brightness: 101
+    light.kitchenette_lamp:
+      state: on
+      brightness: 140
+      rgb_color: [255, 0, 0]
+    light.front_lightstrip:
+      state: on
+      brightness: 94
+      rgb_color: [255, 29, 2]
+    light.front_lamp:
+      state: on
+      brightness: 78
+      rgb_color: [255, 222, 113]
+- name: Dimmed Office
+  entities:
+    light.office_pillar:
+      state: on
+      brightness: 97
+      xy_color: [0.52, 0.413]
+    light.office_closet_corner:
+      state: on
+      brightness: 1
+      xy_color: [0.581, 0.393]
+    light.office_bookcase_bloom:
+      state: on
+      brightness: 253
+      xy_color: [0.53, 0.411]
+    light.office_hue_go:
+      state: on
+      brightness: 46
+      xy_color: [0.529, 0.406]
+    light.office_filing_cabinet_iris:
+      state: on
+      brightness: 13
+      xy_color: [0.539, 0.396]
+    light.office_corner_bloom:
+      state: on
+      brightness: 59
+      xy_color: [0.555, 0.422]
+    light.office_monitor_bloom:
+      state: on
+      brightness: 86
+      xy_color: [0.532, 0.442]
+    light.office_bookcase_iris:
+      state: on
+      brightness: 1
+      xy_color: [0.583, 0.399]
+    light.game_of_thrones_lamp:
+      state: on
+      brightness: 63
+      xy_color: [0.581, 0.387]
+    light.flux1:
+      state: on
+      brightness: 16
+      xy_color: [0.677, 0.319]
+    light.gateway_llight:
+      state: on
+      brightness: 51
+      xy_color: [0.677, 0.319]

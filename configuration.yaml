@@ -1,0 +1,486 @@
+homeassistant:
+
+  name: Home
+  latitude: !secret home_latitude
+  longitude: !secret home_longitude
+  elevation: 182
+  unit_system: imperial
+  time_zone: America/New_York
+
+  customize_glob: !include customize_glob.yaml
+
+  customize:   !include customize.yaml
+    
+customizer:
+  custom_ui: local
+    
+zone: !include zones.yaml
+
+frontend:
+  extra_html_url:
+    - /local/custom_ui/state-card-custom-ui.html
+  extra_html_url_es5:
+    - /local/custom_ui/state-card-custom-ui-es5.html
+ 
+config:
+
+cloud:
+
+map:
+
+influxdb:
+  host: 192.168.86.41
+  port: 8086
+  username: !secret influx_username
+  password: !secret influx_password
+  database: home_assistant
+
+http:
+  base_url: https://rayn.duckdns.org
+  api_password: !secret api_password
+  use_x_forwarded_for: true
+ 
+# Checks for available updates
+updater:
+
+# Discover some devices automatically
+discovery:
+    
+# Allows you to issue voice commands from the frontend in enabled browsers
+#conversation:
+
+# Enables support for tracking state changes over time.
+history: !include history.yaml
+ 
+logbook: !include logbook.yaml
+ 
+recorder: !include recorder.yaml
+
+
+logger:
+  default: info
+  logs:
+    #homeassistant.components.http.ban: warning
+    homeassistant.core: warning
+    homeassistant.components.mqtt: debug
+    #homeassistant.setup: info
+    homeassistant.components.http.view: warning
+    homeassistant.components.sensor.fitbit: debug
+    homeassistant.components.discovery: warning
+    homeassistant.components.ifttt: debug
+    homeassistant.components.device_tracker.nmap_tracker: warning
+    homeassistant.components.device_tracker.owntracks: debug
+    homeassistant.components.automation: debug
+    homeassistant.components.media_player: debug
+    homeassistant.components.google_assistant: debug
+    #homeassistant.components.hue: info
+    
+sun:
+
+mqtt:
+  broker: localhost
+  port: 1883
+  discovery: true
+  discovery_prefix: smartthings
+  client_id: hassio
+  keepalive: 60
+  username: !secret mqtt_username
+  password: !secret mqtt_password
+  protocol: 3.1.1
+
+# notifiy
+twilio:
+  account_sid: !secret twilio_accoutn_sid
+  auth_token: !secret twilio_auth_token
+
+# webhooks
+ifttt:
+  key: !secret ifttt_key
+
+# tiny chinese gadgets  
+xiaomi_aqara:
+#  host: 192.168.86.139
+  discovery_retry: 10
+  gateways:
+    - key: !secret xiaomi_gw_key
+ 
+# fancy future devices
+zwave:
+  usb_path: /dev/zwave
+  
+# iphone
+ios:
+ 
+input_number: !include input_number.yaml
+     
+input_boolean:
+  dlink_office_motion:
+    name: "D-Link Office"
+    icon: mdi:run-fast
+    initial: false
+  dlink_garage_motion:
+    name: "D-Link Garage"
+    icon: mdi:run-fast
+    initial: false
+  ant_in_bed:
+    name: "Ant In Bed"
+    icon: mdi:sleep
+  push_blink_alerts:
+    name: "Push Blink Notes"
+    icon: mdi:alerts
+    initial: false
+  push_html5_alerts:
+    name: "Push HTML5 Notes"
+    icon: mdi:alerts
+    initial: false
+  push_blink_alerts_downstairs:
+    name: "Push Downstairs Notes"
+    icon: mdi:alerts
+    initial: false
+
+input_datetime:
+  ant_asleep:
+    name: "Asleep"
+    icon: mdi:timer
+    has_date: true
+    has_time: true
+  ant_awake:
+    name: "Awake"
+    icon: mdi:timer
+    has_date: true
+    has_time: true
+  ant_weigh_datetime:
+    name: "Measurement Taken"
+    has_date: true
+    has_time: true
+  ant_outbed:
+    name: "Ant Out of Bed @"
+    has_date: true
+    has_time: true
+    icon: mdi:sleep
+  ant_inbed:
+    name: "Ant In Bed @"
+    has_date: true
+    has_time: true
+    icon: mdi:sleep
+  
+    
+# LIGHTS / HUE / EMULATED BRIDGE
+light:
+- platform: group
+  name: Garage Lights
+  entities:
+   - light.garage_light_1
+   - light.garage_light_2
+   
+- platform: group
+  name: Kitchen Island
+  entities:
+   - light.kitchen_light_a
+   - light.kitchen_light_b
+ 
+- platform: group
+  name: Front Room Small Lamps
+  entities:
+    - light.front_small_lamp
+    - light.front_small_lamp_far
+
+- platform: flux_led
+  devices:
+    192.168.86.134:
+      name: Flux.1
+    
+hue:
+  bridges:
+     - host: 192.168.86.37
+       allow_unreachable: true
+       allow_hue_groups: true
+
+emulated_hue:
+  host_ip: 192.168.86.41
+  listen_port: 8300
+  off_maps_to_on_domains:
+    - script
+    - scene
+  exposed_domains:
+    - light
+    - switch
+    - input_boolean
+  expose_by_default: false
+  entities:
+    light.kitchen_island:
+      name: "Kitchen Island Lights"
+      hidden: false
+    light.dining_room:
+      name: "Dining Room Lights"
+      hidden: false
+    light.front_room_lamps:
+      name: "Front Room Lamps"
+      hidden: false
+    light.front_lightstrip:
+      name: "Front Room Lightstrip"
+      hidden: false
+    light.outside:
+      name: "Outdoor Light"
+      hidden: false
+    light.tv_bias:
+      name: "TV Backlighting"
+      hidden: false
+    light.tv_room:
+      name: "TV Room Lamps"
+      hidden: false
+    
+## NOTIFICATIONS ##
+notify:
+
+- platform: twilio_sms
+  name: twilio_sms
+  from_number: !secret twilio_from_number
+
+- platform: pushbullet
+  name: push_bullet
+  api_key: !secret push_bullet_api_key
+  
+- platform: html5
+  name: html5_office
+  gcm_api_key: !secret gcm_api_key
+  gcm_sender_id: !secret gcm_sender_id
+  
+- platform: nfandroidtv
+  name: firetv
+  host: 192.168.86.104
+  duration: 4
+  position: bottom-right
+  color: black
+  transparency: 50%
+  interrupt: 0
+  
+### BINARY SENSORS ###
+binary_sensor:  !include binary_sensor.yaml
+  
+## VARIABLES ###
+
+variable:
+  last_motion:
+    value: 'Unknown'
+    restore: true
+    attributes: 
+      icon: mdi:map-marker
+      name: "Last Motion"
+  last_motion_datetime:
+    value: 'Unknown'
+    restore: true
+    attributes:
+      icon: mdi:clock
+      name: "Last Detection"
+      
+  # NEST Thermostat & Protects
+nest:
+  client_id: !secret nest_client_id
+  client_secret: !secret nest_client_secret
+  sensors:
+     monitored_conditions:
+         - temperature
+         - target
+         - humidity
+         - operation_mode
+         - hvac_state
+         - co_status
+         - smoke_status
+         - battery_health
+  binary_sensors:
+     monitored_conditions:
+         - fan
+         - online
+
+## HISTORY GRAPHS ##
+         
+history_graph:
+  upstairs_climate_over_time:
+    name: Upstairs Climate Over Time
+    entities: 
+      - sensor.outdoor_temperature
+      - sensor.upstairs_avg_temperature
+      - sensor.bedroom_temperature
+      - sensor.office_temperature
+      - sensor.sofias_room_temperature
+    hours_to_show: 168
+    refresh: 3600
+  gr2:
+    name: downstairs_vs_outdoor_temperatures_2d
+    entities: 
+      - sensor.pws_feelslike_f
+      - sensor.outdoor_temperature
+      - sensor.downstairs_thermostat_temperature
+      - sensor.downstairs_thermostat_target
+    hours_to_show: 96
+    refresh: 3600
+  gr5:
+    name: ant_body_comp_history
+    entities:
+      - sensor.ant_weight_sensor
+      - sensor.ant_weight_sma
+      - sensor.ant_fat_mass_sensor
+      - sensor.ant_lean_mass_sensor
+    hours_to_show: 840
+    refresh: 900
+  gr6:
+    name: ant_body_fat_history
+    entities:
+      - sensor.ant_bf_pct_sensor
+      - sensor.ant_bf_pct_sma
+    hours_to_show: 840
+    refresh: 900
+     
+weather:
+- platform: darksky
+  api_key: !secret darksky_api_key
+         
+sensor: !include_dir_merge_named  /sensor
+
+plant: !include plants.yaml
+ 
+device_tracker:
+- platform: nmap_tracker
+  hosts: 192.168.86.1/24
+  interval_seconds: 60
+  consider_home: 300
+  track_new_devices: yes
+  home_interval: 5
+  scan_options: " --priviliged -sP "
+  exclude:
+    - 192.168.86.41
+ 
+- platform: owntracks
+  max_gps_accuracy: 256
+  waypoints: True
+  mqtt_topic: "owntracks/#"
+  events_only: False   
+
+- platform: ping
+  consider_home: 60
+  hosts:
+    sam_iphone: 192.168.86.80
+    
+# Text to speech
+tts:
+  platform: google
+
+# GOOGLE Assistant
+google_assistant:
+  project_id: !secret google_project_id
+  client_id: !secret google_client_id
+  access_token: !secret google_access_token
+  agent_user_id: anthony21@gmail.com
+  api_key: !secret google_api_key
+  expose_by_default: true
+  #exposed_domains:
+   # - scene
+ #  - script
+ #   - switch
+  #  - fan
+  # - light
+ #   - media_player
+ #   - climate
+  
+wake_on_lan:
+
+# MEDIA
+
+media_player:
+- platform: webostv
+  name: LG TV
+  host: 192.168.86.120
+  timeout: 30
+  scan_interval: 120
+  customize:
+    sources:
+      - Amazon
+      - Chromecast
+      - Kodi
+      - Steam
+      
+# Buggy as shit, this is a component just for the sake of having a component
+#- platform: spotify
+#  client_id: !secret spotify_client_id
+#  client_secret: !secret spotify_client_secret
+  
+
+switch:
+
+- platform: mqtt
+  name: Bedroom Fan
+  state_topic: 'smartthings/Bedroom Fan/switch'
+  command_topic: 'smartthings/Bedroom Fan/switch'
+  payload_on: 'on'
+  payload_off: 'off'
+  retain: true
+ 
+- platform: mqtt
+  name: Peanut - LEDs
+  state_topic: "smartthings/Peanut Plug 2/switch"
+  command_topic: "smartthings/Peanut Plug 2/switch"
+  payload_on: "on"
+  payload_off: "off"
+  retain: true
+
+- platform: flux
+  lights:
+  - light.bedroom_lamp
+  name: Bedroom Fluxer
+  start_time: '18:00'
+  stop_time: '04:00'
+  brightness: 1
+  disable_brightness_adjust: True
+  mode: mired
+
+- platform: flux
+  lights:
+  - light.office
+  name: office_flux
+  start_time: '20:00'
+  stop_time: '03:45'
+  brightness: 15
+  mode: xy
+  transition: 15
+  interval: 15
+
+- switch.dome_siren:
+  name: Dome Siren
+  platform: zwave
+  
+- platform: template
+  switches:
+    upstairs_fan:
+      friendly_name: Upstairs Fan  
+      entity_id: binary_sensor.upstairs_thermostat_fan
+      value_template: >
+        {{ is_state('binary_sensor.upstairs_thermostat_fan', 'on') }}
+      icon_template: >-
+        {% if is_state('binary_sensor.upstairs_thermostat_fan','on') %}
+          mdi:fan
+        {% else %}
+          mdi:fan-off
+         {% endif %}
+      turn_on:
+        service: climate.set_fan_mode
+        data:
+          entity_id: climate.nest_upstairs
+          fan_mode: on
+      turn_off:
+        service: climate.set_fan_mode
+        data:
+          entity_id: climate.nest_upstairs
+          fan_mode: auto
+  
+automation: !include automations.yaml
+
+
+
+group: !include groups.yaml
+
+script: !include scripts.yaml
+
+proximity: !include proximity.yaml
+
+scene: !include scenes.yaml

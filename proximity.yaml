@@ -1,0 +1,13 @@
+
+  ant_prox_home:
+    devices:
+      - device_tracker.ant_pixel2
+    zone: home
+    tolerance: 2
+    unit_of_measurement: mi
+  ant_prox_work:
+    devices:
+      - device_tracker.ant_pixel2
+    zone: Broadridge
+    tolerance: 2
+    unit_of_measurement: mi

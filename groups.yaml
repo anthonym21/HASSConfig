@@ -183,6 +183,9 @@
       - sensor.bedroom_temperature
       - sensor.sofias_room_temperature
       - sensor.upstairs_thermostat_temperature
+      - sensor.kitchen_temperature
+      - sensor.kitchen_humidity
+      - sensor.kitchen_air_pressure
       - sensor.upstairs_avg_humidity
   
   downstairs_all_temps:
@@ -292,6 +295,7 @@
       - light.kitchenette_lamp
       - sensor.kitchen_temperature
       - sensor.kitchen_humidity
+      - sensor.kitchen_air_pressure
       - binary_sensor.button_kitchen
    
   tv_room:
@@ -508,6 +512,7 @@
     entities:
       - sensor.office_motion_template
       - binary_sensor.button_1
+      - binary_sensor.button_in_bed
       - sensor.dome_alarm_type
       - sensor.dome_alarm_level
       - sensor.dome_siren_sourcenodeid

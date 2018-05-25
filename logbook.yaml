@@ -1,14 +1,17 @@
 
   include:
     domains:
-      - sensor
       - binary_sensor
       - automation
+      - sensor
       - variable
       - light
       - device_tracker
       - script
       - climate
+      - input_datetime
+      - input_number
+      - input_boolean
   exclude:
     entities:
       - sensor.dark_sky_apparent_temperature
@@ -42,5 +45,12 @@
       - automation.update_last_motion
       - automation.update_last_motion_datetime
       - variable.last_motion_datetime
-    domains:
-      - zwave
+      - binary_sensor.bedroom_motion
+      - binary_sensor.dining_room_motion
+      - binary_sensor.garage_lightify
+      - binary_sensor.hallway_spy
+      - binary_sensor.tv_room_motion
+      - sensor.garage_motion_template
+      - sensor.mud_room_motion_template
+ #   domains:
+  #    - zwave

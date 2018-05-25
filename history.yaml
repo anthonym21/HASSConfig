@@ -32,3 +32,6 @@
     domains:
       - light
       - automation
+      - script
+      - zwave
+      - google_wifi

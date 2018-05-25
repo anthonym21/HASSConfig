@@ -336,7 +336,7 @@ weather:
 - platform: darksky
   api_key: !secret darksky_api_key
          
-sensor: !include_dir_merge_named  /sensor
+sensor: !include_dir_merge_list  sensor/
 
 plant: !include plants.yaml
  
@@ -351,11 +351,13 @@ device_tracker:
   exclude:
     - 192.168.86.41
  
-- platform: owntracks
-  max_gps_accuracy: 256
-  waypoints: True
-  mqtt_topic: "owntracks/#"
-  events_only: False   
+#- platform: owntracks
+#  max_gps_accuracy: 256
+#  waypoints: True
+#  mqtt_topic: "owntracks/#"
+#  events_only: False   
+
+- platform: gpslogger
 
 - platform: ping
   consider_home: 60

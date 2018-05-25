@@ -1,6 +1,19 @@
   db_url: !secret sql_db_url
   purge_keep_days: 14
   purge_interval: 2
+  include:
+    domains:
+      - binary_sensor
+      - automation
+      - sensor
+      - variable
+      - light
+      - device_tracker
+      - script
+      - climate
+      - input_datetime
+      - input_number
+      - input_boolean
   exclude:
     entities:
       - sensor.dark_sky_apparent_temperature
@@ -32,10 +45,10 @@
       - sensor.date
       - weather.dark_sky
       - sensor.ups
-    domains:
-      - camera
-      - history_graph
-      - weather
-      - weblink
-      - updater
-      - group
+ #   domains:
+ #     - camera
+ #     - history_graph
+ #     - weather
+ #     - weblink
+ #     - updater
+#      - group

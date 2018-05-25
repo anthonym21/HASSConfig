@@ -1,3 +1,4 @@
+
 - platform: moon 
 
 - platform: wunderground
@@ -465,12 +466,11 @@
  
  # BODY METRICS
 - platform: template
-  hide_in_default_view: true
   sensors:
     ant_weight_sensor:
       friendly_name: 'Weight'
       value_template: '{{ states.input_number.ant_weight.state }}'
-      unit_of_measurement: lbs
+      #unit_of_measurement: lbs
     ant_bf_pct_sensor:
       friendly_name: 'BF%'
       value_template: '{{ states.input_number.ant_bf_pct.state }}'
@@ -527,33 +527,6 @@
     weekofyear:
       friendly_name: 'Week Number'
       value_template: "{{ now().strftime('%U') }}"
-      
-- platform: template
-  sensors:
-    moonphases:
-       entity_id: sensor.moon
-       friendly_name: Moon Phase
-       value_template: '{{ states.sensor.moon.state }}'
-#       entity_picture_template: >-
- #         {%- if is_state('sensor.moon', 'New moon') -%}
- #           /local/MoonPhases/NNewMoon.jpg
- #         {%- elif is_state('sensor.moon', 'Waxing crescent') -%}
- #           /local/MoonPhases/NWaxingCrescent.jpg
- #         {%- elif is_state('sensor.moon', 'First quarter') -%}
- #            /local/MoonPhases/NFirstQuarter.jpg
-  #        {%- elif is_state('sensor.moon', 'Waxing gibbous') -%}
-   #         /local/MoonPhases/NWaxingGibbous.jpg
-    #      {%- elif is_state('sensor.moon' 'Full moon') -%}
-     #       /local/MoonPhases/NFullMoon.jpg
-     #     {%- elif is_state('sensor.moon', 'Waning gibbous') -%}
-     #       /local/MoonPhases/NWaningGibbous.jpg
-     #     {%- elif is_state('sensor.moon', 'Last quarter') -%}
-     #       /local/MoonPhases/NLastQuarter.jpg
-     #     {%- elif is_state('sensor.moon', 'Waning crescent') -%}
-     #       /local/MoonPhases/NWaningCrescent.jpg
-     #     {%- else -%}
-     #       unknown
-     #     {%- endif -%} 
 
 - platform: template
   sensors:
@@ -568,4 +541,32 @@
       friendly_name: Sunrise
       icon_template: mdi:weather-sunset-up
       value_template: '{{ as_timestamp(states.sun.sun.attributes.next_rising) |  timestamp_custom("%H:%M") }}' 
+      
+- platform: template
+  sensors:
+    moonphases:
+      friendly_name: Moon Phase
+      value_template: '{{ states.sensor.moon.state }}'
+      entity_picture_template: >-
+          {%- if is_state('sensor.moon', 'New moon') -%}
+            /local/MoonPhases/NNewMoon.jpg
+          {%- elif is_state('sensor.moon', 'Waxing crescent') -%}
+            /local/MoonPhases/NWaxingCrescent.jpg
+          {%- elif is_state('sensor.moon', 'First quarter') -%}
+             /local/MoonPhases/NFirstQuarter.jpg
+          {%- elif is_state('sensor.moon', 'Waxing gibbous') -%}
+            /local/MoonPhases/NWaxingGibbous.jpg
+          {%- elif is_state('sensor.moon' 'Full moon') -%}
+            /local/MoonPhases/NFullMoon.jpg
+          {%- elif is_state('sensor.moon', 'Waning gibbous') -%}
+            /local/MoonPhases/NWaningGibbous.jpg
+          {%- elif is_state('sensor.moon', 'Last quarter') -%}
+            /local/MoonPhases/NLastQuarter.jpg
+          {%- elif is_state('sensor.moon', 'Waning crescent') -%}
+            /local/MoonPhases/NWaningCrescent.jpg
+          {%- else -%}
+            unknown
+          {%- endif -%} 
+
+
 

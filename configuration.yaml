@@ -45,7 +45,9 @@ updater:
 
 # Discover some devices automatically
 discovery:
-    
+    ignore:
+      - philips_hue
+      - deconz      
 # Allows you to issue voice commands from the frontend in enabled browsers
 #conversation:
 
@@ -63,16 +65,20 @@ logger:
     #homeassistant.components.http.ban: warning
     homeassistant.core: warning
     homeassistant.components.mqtt: debug
-    #homeassistant.setup: info
+    homeassistant.setup: info
     homeassistant.components.http.view: warning
-    homeassistant.components.sensor.fitbit: debug
+    homeassistant.components.sensor: debug
+    homeassistant.components.binary_sensor: debug
     homeassistant.components.discovery: warning
     homeassistant.components.ifttt: debug
     homeassistant.components.device_tracker.nmap_tracker: warning
-    homeassistant.components.device_tracker.owntracks: debug
+    homeassistant.components.device_tracker.owntracks: info
+    homeassistant.components.device_tracker.gpslogger: debug
     homeassistant.components.automation: debug
     homeassistant.components.media_player: debug
     homeassistant.components.google_assistant: debug
+    homeassistant.components.proximity: warning
+    requests.packages.urllib3.connectionpool: critical
     #homeassistant.components.hue: info
     
 sun:
@@ -189,7 +195,23 @@ light:
   devices:
     192.168.86.134:
       name: Flux.1
-    
+
+- platform: mqtt
+  name: Osram Flex
+  state_topic: 'smartthings/Osram Flex/switch'
+  command_topic: 'smartthings/Osram Flex/switch'
+  brightness_state_topic: 'smartthings/Osram Flex/level'
+  brightness_command_topic: 'smartthings/Osram Flex/level'
+  brightness_scale: 100
+  rgb_state_topic: 'smartthings/Osram Flex/color'
+  rgb_command_topic: 'smartthings/Osram Flex/color'
+  white_value_temp_command_topic: 'smartthings/Osram Flex/colorTemperature'
+  white_value_state_topic: 'smartthings/Osram Flex/colorTemperature'
+  white_value_scale: 6500
+  payload_on: 'ON'
+  payload_off: 'OFF'
+  retain: true
+      
 hue:
   bridges:
      - host: 192.168.86.37
@@ -229,7 +251,7 @@ emulated_hue:
     light.tv_room:
       name: "TV Room Lamps"
       hidden: false
-    
+
 ## NOTIFICATIONS ##
 notify:
 
@@ -319,19 +341,41 @@ history_graph:
     name: ant_body_comp_history
     entities:
       - sensor.ant_weight_sensor
-      - sensor.ant_weight_sma
+      - sensor.ant_weight_smooth
       - sensor.ant_fat_mass_sensor
       - sensor.ant_lean_mass_sensor
-    hours_to_show: 840
-    refresh: 900
+    hours_to_show: 336
+    refresh: 600
   gr6:
     name: ant_body_fat_history
     entities:
       - sensor.ant_bf_pct_sensor
-      - sensor.ant_bf_pct_sma
-    hours_to_show: 840
-    refresh: 900
-     
+      - sensor.ant_bf_pct_smooth
+    hours_to_show: 336
+    refresh: 600
+  smooth_metrics:
+    name: Lowpass Metrics
+    entities:
+      - sensor.ant_lean_mass_sensor
+      - sensor.ant_weight_smooth
+    hours_to_show: 336
+    refresh: 600
+  ant_sma_vs_smooth:
+    name: Weight Analysis
+    entities:
+      - sensor.ant_weight_sensor
+      - sensor.ant_weight_sma
+      - sensor.ant_weight_smooth
+    hours_to_show: 336
+    refresh: 3600
+  commuting_lowpass:
+    name: Historical Commute Times
+    entities:
+      - sensor.home_to_broadridge_smooth
+      - sensor.broadridge_to_home_smooth
+      - sensor.home_to_datto_smooth
+      - sensor.datto_to_home_smooth
+         
 weather:
 - platform: darksky
   api_key: !secret darksky_api_key
@@ -342,12 +386,13 @@ plant: !include plants.yaml
  
 device_tracker:
 - platform: nmap_tracker
-  hosts: 192.168.86.1/24
   interval_seconds: 60
-  consider_home: 300
   track_new_devices: yes
   home_interval: 5
-  scan_options: " --priviliged -sP "
+  scan_options: " -F --host-timeout 2s "
+  hosts:
+    - 192.168.86.75-80
+    - 192.168.86.1/24
   exclude:
     - 192.168.86.41
  
@@ -359,10 +404,10 @@ device_tracker:
 
 - platform: gpslogger
 
-- platform: ping
-  consider_home: 60
-  hosts:
-    sam_iphone: 192.168.86.80
+#- platform: ping
+#  consider_home: 600
+#  hosts:
+#    sam_iphone: 192.168.86.80
     
 # Text to speech
 tts:
@@ -474,10 +519,16 @@ switch:
         data:
           entity_id: climate.nest_upstairs
           fan_mode: auto
-  
+
+camera: 
+
+- platform: mjpeg
+  name: office_window_camera
+  mjpeg_url: http://192.168.86.150:8081
+  username: !secret office_cam_username
+  password: !secret office_cam_password
+          
 automation: !include automations.yaml
-
-
 
 group: !include groups.yaml
 

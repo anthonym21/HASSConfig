@@ -34,13 +34,11 @@ sensor.upstairs_thermostat_upstairs_thermostat_humidity:
 binary_sensor.garage_lightify:
   friendly_name: Garage Motion (Lightify)
   hidden: true
-binary_sensor.garage_motion:
-  friendly_name: Garage Motion (D-Link)
 binary_sensor.garage_moving:
   friendly_name: Garage Door Movement
   icon: mdi:garage-alert
 binary_sensor.garage_open:
-  friendly_name: Garage Door
+  friendly_name: Garage Door Status
   show_last_changed: true
 sensor.garage_temperature:
   friendly_name: Garage Temperature
@@ -167,7 +165,7 @@ history_graph.ant_body_fat_history:
 sensor.office_temperature:
   friendly_name: Office Temperature
 plant.basil_1:
-  friendly_name: Basil (Right Railing Planter)
+  friendly_name: Basil
   sensors:
     battery: sensor.plant_mqtt_basil_1_battery
     brightness: sensor.plant_mqtt_basil_1_brightness
@@ -184,7 +182,8 @@ light.office:
   custom_ui_state_card: state-card-custom-ui
   state_card_mode: break-slider
   stretch_slider: true
-  extra_data_template: 'RGB: ${attributes.rgb_color} Br: ${(attributes.brightness / 255 * 100 * 100 | round(0))}'
+  extra_data_template: 'RGB: ${attributes.rgb_color} Br: ${(attributes.brightness
+    / 255 * 100 * 100 | round(0))}'
   hide_control: false
   show_last_changed: false
   theme: happy
@@ -199,7 +198,8 @@ light.bedroom:
   custom_ui_state_card: state-card-custom-ui
   state_card_mode: break-slider
   stretch_slider: true
-  extra_data_template: 'Temp: ${attributes.color_temp} Br: ${(attributes.brightness  / 255 * 100 * 100 | round(0))}'
+  extra_data_template: 'Temp: ${attributes.color_temp} Br: ${(attributes.brightness  /
+    255 * 100 * 100 | round(0))}'
   hide_control: false
   show_last_changed: false
   theme: happy
@@ -214,7 +214,8 @@ light.tv_bias:
   custom_ui_state_card: state-card-custom-ui
   state_card_mode: break-slider
   stretch_slider: true
-  extra_data_template: 'RGB: ${attributes.rgb_color} Br: ${(attributes.brightness  / 255 * 100 * 100 | round(0))}'
+  extra_data_template: 'RGB: ${attributes.rgb_color} Br: ${(attributes.brightness  /
+    255 * 100 * 100 | round(0))}'
   hide_control: false
   show_last_changed: false
   theme: happy
@@ -229,7 +230,8 @@ light.front_lightstrip:
   custom_ui_state_card: state-card-custom-ui
   state_card_mode: break-slider
   stretch_slider: true
-  extra_data_template: 'RGB: ${attributes.rgb_color} Br: ${(attributes.brightness  / 255 * 100 * 100 | round(0))}'
+  extra_data_template: 'RGB: ${attributes.rgb_color} Br: ${(attributes.brightness  /
+    255 * 100 * 100 | round(0))}'
   hide_control: false
   show_last_changed: false
   theme: happy
@@ -244,7 +246,8 @@ light.front_room_small_lamps:
   custom_ui_state_card: state-card-custom-ui
   state_card_mode: break-slider
   stretch_slider: true
-  extra_data_template: 'Temp: ${attributes.color_temp} Br: ${(attributes.brightness  / 255 * 100 * 100 | round(0))}'
+  extra_data_template: 'Temp: ${attributes.color_temp} Br: ${(attributes.brightness  /
+    255 * 100 * 100 | round(0))}'
   hide_control: false
   show_last_changed: false
   theme: happy
@@ -259,7 +262,8 @@ light.kitchen_island:
   custom_ui_state_card: state-card-custom-ui
   state_card_mode: break-slider
   stretch_slider: true
-  extra_data_template: 'RGB: ${attributes.rgb_color} Br: ${(attributes.brightness  / 255 * 100 * 100 | round(0))}'
+  extra_data_template: 'RGB: ${attributes.rgb_color} Br: ${(attributes.brightness  /
+    255 * 100 * 100 | round(0))}'
   hide_control: false
   show_last_changed: false
   theme: happy
@@ -274,7 +278,8 @@ light.kitchenette_lamp:
   custom_ui_state_card: state-card-custom-ui
   state_card_mode: break-slider
   stretch_slider: true
-  extra_data_template: 'RGB: ${attributes.rgb_color} Br: ${(attributes.brightness  / 255 * 100 * 100 | round(0))}'
+  extra_data_template: 'RGB: ${attributes.rgb_color} Br: ${(attributes.brightness  /
+    255 * 100 * 100 | round(0))}'
   hide_control: false
   show_last_changed: false
   theme: happy
@@ -289,7 +294,8 @@ light.dining_room:
   custom_ui_state_card: state-card-custom-ui
   state_card_mode: break-slider
   stretch_slider: true
-  extra_data_template: 'Temp: ${attributes.color_temp} Br: ${(attributes.brightness  / 255 * 100 * 100 | round(0))}'
+  extra_data_template: 'Temp: ${attributes.color_temp} Br: ${(attributes.brightness  /
+    255 * 100 * 100 | round(0))}'
   hide_control: false
   show_last_changed: false
   theme: happy
@@ -332,3 +338,16 @@ zone.home_office:
     minor: 1
     uuid: 1337-0693-A4E2-4FB1-AFCF-C6EB-0764-7825
   friendly_name: Home_Office
+device_tracker.pixel2:
+  hidden: true
+  hide_control: true
+plant.plant_2:
+  friendly_name: Chives
+plant.plant_3:
+  friendly_name: Cilantro
+plant.plant_4:
+  friendly_name: Parsley
+plant.plant_5:
+  friendly_name: Front Garden
+device_tracker.kindle_fire_blue:
+  hidden: true

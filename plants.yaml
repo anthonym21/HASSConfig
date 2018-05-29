@@ -66,3 +66,20 @@
     max_temperature: 89
     min_brightness: 2500
     max_brightness: 60000
+    
+  plant_5:
+    sensors:
+      moisture: sensor.plant_mqtt_plant_5_moisture
+      battery: sensor.plant_mqtt_plant_5_battery
+      conductivity: sensor.plant_mqtt_plant_5_conductivity
+      temperature: sensor.plant_mqtt_plant_5_temperature
+      brightness: sensor.plant_mqtt_plant_5_brightness
+    min_moisture: 15
+    max_moisture: 60
+    min_battery: 10
+    min_conductivity: 350
+    max_conductivity: 2000
+    min_temperature: 46
+    max_temperature: 89
+    min_brightness: 2500
+    max_brightness: 60000

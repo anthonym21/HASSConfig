@@ -8,8 +8,8 @@
   retain: true  
   
 - platform: mqtt
-  name: garage_lightify
-  state_topic: "smartthings/Lightify Garage/motion"
+  name: garage_motion
+  state_topic: "smartthings/Garage Bosch/motion"
   friendly_name: Garage Motion
   device_class: motion
   payload_on: "active"
@@ -19,7 +19,7 @@
 - platform: mqtt
   name: garage_open
   state_topic: "smartthings/Garage Multi/contact"
-  friendly_name: Garage Door
+  friendly_name: Garage Door Open/Close
   device_class: garage_door
   payload_on: "open"
   payload_off: "closed"
@@ -79,6 +79,13 @@
   payload_off: "inactive"
   retain: true
 
+- platform: mqtt
+  name: office_window_motion
+  state_topic: "camera/zeroview office/motion"
+  friendly_name: Office Camera Motion
+  device_class: motion
+  retain: true
+  
 # XIAOMI HUB
   
 - platform: xiaomi_aqara

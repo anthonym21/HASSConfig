@@ -41,14 +41,42 @@
   password: !secret nzbget_password
   monitored_variables:
     - article_cache
-    - download_rate
+    - average_download_rate
+    - download_paused
+    - download_size
+    - post_paused
+    - remaining_size
  
-# - platform: transmission
-  # host: 192.168.86.35 
-  # monitored_variables:
-    # - current_status 
-    # - active_torrents
-    
+- platform: deluge
+  host: 192.168.86.41
+  username: !secret deluge_username
+  password: !secret deluge_password
+  monitored_variables:
+    - current_status
+    - download_speed
+    - upload_speed
+ 
+- platform: transmission
+  host: 192.168.86.35 
+  monitored_variables:
+    - current_status 
+    - active_torrents
+     
+
+- platform: sonarr
+  api_key: !secret sonarr_api_key
+  host: galaxy
+  port: 8989
+  monitored_conditions: 
+    - upcoming
+    - diskspace
+    - queue
+  days: 2
+  unit: TB
+
+- platform: radarr
+  api_key: !secret radarr_api_key
+  
 - platform: fitbit
   client_id: !secret fitbit_client_id
   client_secret: !secret fitbit_client_secret
@@ -76,17 +104,19 @@
   #file_path: /fail2ban/fail2ban.log scan_interval: 900    
   
 # MQTT SENSORS
-
-- platform: mqtt
-  state_topic: "owntracks/ant/pixel2"
-  name: "Pixel2 Battery"
-  unit_of_measurement: "%"
-  value_template: '{{ value_json.batt }}'
       
 - platform: mqtt
   state_topic: "smartthings/Garage Multi/temperature"
   name: garage_temperature
-  friendly_name: Garage Temperature
+  friendly_name: Garage Temperature (Multi)
+  unit_of_measurement: °F
+  forceupdate: true
+  retain: true
+
+- platform: mqtt
+  state_topic: "smartthings/Garage Bosch/temperature"
+  name: garage_temperature_bosch
+  friendly_name: Garage Temperature (Bosch)
   unit_of_measurement: °F
   forceupdate: true
   retain: true
@@ -335,7 +365,47 @@
   value_template: '{{ value_json.brightness }}'
   unit_of_measurement: lx
   retain: true
+
+- platform: mqtt
+  name: plant_mqtt_plant_5_moisture
+  friendly_name: Front Garden Soil Moisture
+  state_topic: "plantgateway/raw/plant_5"
+  value_template: '{{ value_json.moisture }}'
+  unit_of_measurement: '%'
+  retain: true
+
+- platform: mqtt   
+  name: plant_mqtt_plant_5_battery
+  friendly_name: Garden Node Battery
+  state_topic: "plantgateway/raw/plant_5"
+  value_template: '{{ value_json.battery }}'
+  unit_of_measurement: '%'
+  forceupdate: true
+  retain: true
+
+- platform: mqtt
+  name: plant_mqtt_plant_5_temperature
+  friendly_name: Garden Ambient Temperature
+  state_topic: "plantgateway/raw/plant_5"
+  value_template: '{{ float(value_json.temperature) * 9 / 5 + 32 }}'
+  retain: true
+  unit_of_measurement: °F
   
+- platform: mqtt
+  name: plant_mqtt_plant_5_conductivity
+  friendly_name: Garden Soil Conductivity
+  state_topic: "plantgateway/raw/plan_5"
+  value_template: '{{ value_json.conductivity }}'
+  unit_of_measurement: "uS/cm"
+  retain: true
+  
+- platform: mqtt
+  name: plant_mqtt_plant_5_brightness
+  friendly_name: Garden Ambient Light
+  state_topic: "plantgateway/raw/plant_5"
+  value_template: '{{ value_json.brightness }}'
+  unit_of_measurement: lx
+  retain: true
 # XIAOMI HUB SENSORS
       
 - platform: xiaomi_aqara
@@ -421,6 +491,19 @@
       friendly_name: 'Mud Room Temperature'
       value_template: '{{ ((float(states.sensor.mud_room_motion_sensor.attributes.temperature) * 9 / 5) + 32) | round(1) }}'
       unit_of_measurement: °F
+
+- platform: template
+  sensors:
+    pixel2_battery:
+      friendly_name: "Pixel2 Battery"
+      unit_of_measurement: "%"
+      value_template: '{{ states.device_tracker.ant_pixel2.attributes.battery  | round(0) }}'
+      
+# - platform: mqtt
+#  state_topic: "owntracks/ant/pixel2"
+#  name: "Pixel2 Battery"
+#  unit_of_measurement: "%"
+#  value_template: '{{ value_json.batt }}'
       
   # MOTION SENSOR RE-TEMPLATING
 - platform: template
@@ -475,18 +558,42 @@
       friendly_name: 'BF%'
       value_template: '{{ states.input_number.ant_bf_pct.state }}'
       unit_of_measurement: "%"
-    ant_fat_mass_sensor:
-      friendly_name: 'Lean Mass'
-      value_template: '{{ states.input_number.ant_lean_mass.state }}'
-      unit_of_measurement: lbs
-    ant_lean_mass_sensor:
-      friendly_name: 'Fat Mass'
-      value_template: '{{ states.input_number.ant_fat_mass.state }}'
-      unit_of_measurement: lbs
+#    ant_lean_mass_sensor:
+#      friendly_name: 'Lean Mass'
+#      value_template: '{{ states.input_number.ant_lean_mass.state }}'
+ #     unit_of_measurement: lbs
+ #   ant_fat_mass_sensor:
+ #     friendly_name: 'Fat Mass'
+ #     value_template: '{{ states.input_number.ant_fat_mass.state }}'
+ #     unit_of_measurement: lbs
     ant_measurement_taken:
       friendly_name: 'Weighed @'
       value_template: '{{ states.input_datetime.ant_weigh_datetime.state }}'
 
+- platform: filter
+  name: ant_fat_mass_sensor
+  entity_id: input_number.ant_fat_mass
+  friendly_name: 'Fat Mass'
+  unit_of_measurement: lbs
+  filters:
+    - filter: outlier
+      window_size: 7
+      radius: 3
+    - filter: lowpass
+      time_constant: 10
+
+- platform: filter
+  name: ant_lean_mass_sensor
+  entity_id: input_number.ant_lean_mass
+  friendly_name: 'Lean Mass'
+  unit_of_measurement: lbs
+  filters:
+    - filter: outlier
+      window_size: 7
+      radius: 3
+    - filter: lowpass
+      time_constant: 10
+      
 - platform: filter
   name: ant_bf_pct_sma
   entity_id: sensor.ant_bf_pct_sensor
@@ -494,12 +601,8 @@
   unit_of_measurement: '%'
   filters: 
     - filter: time_simple_moving_average
-      window_size: 12:00:00
-      precision: 5
-    - filter: lowpass
-      time_constant: 7
-      precision: 3
-        
+      window_size: 01:00:00
+      
 - platform: filter
   name: ant_weight_sma
   friendly_name: 'Weight SMA'
@@ -507,11 +610,31 @@
   unit_of_measurement: lbs
   filters:
     - filter: time_simple_moving_average
-      window_size: 12:00:00
-      precision: 5
+      window_size: 01:00:00
+      
+- platform: filter
+  name: ant_bf_pct_smooth
+  entity_id: sensor.ant_bf_pct_sensor
+  friendly_name: 'BF% smooth"'
+  unit_of_measurement: '%'
+  filters: 
+    - filter: outlier
+      radius: 0.7
+      window_size: 2
     - filter: lowpass
-      time_constant: 7
-      precision: 3
+      time_constant: 8
+      
+- platform: filter
+  name: ant_weight_smooth
+  friendly_name: 'Weight smooth'
+  entity_id: sensor.ant_weight_sensor
+  unit_of_measurement: lbs
+  filters: 
+    - filter: outlier
+      window_size: 7
+      radius: 2
+    - filter: lowpass
+      time_constant: 8
       
 - platform: template
   sensors:

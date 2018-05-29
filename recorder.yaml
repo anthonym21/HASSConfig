@@ -1,6 +1,6 @@
   db_url: !secret sql_db_url
-  purge_keep_days: 14
-  purge_interval: 2
+  purge_keep_days: 1440
+  purge_interval: 0
   include:
     domains:
       - binary_sensor

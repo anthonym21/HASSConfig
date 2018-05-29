@@ -18,6 +18,19 @@
       - history_graph.upstairs_climate_over_time
       - group.downstairs_temps
       - group.upstairs_temps
+  
+  weather_view:
+    name: Weather
+    view: yes
+    control: hidden
+    entities:
+      - group.weather_today
+      - group.almanac
+      - group.moon_phases
+      - weather.dark_sky
+      - group.weather_ahead
+      - group.local_outdoor_temps
+
       
   upstairs_view:
     name: Upstairs
@@ -68,6 +81,7 @@
       - plant.plant_2
       - plant.plant_3
       - plant.plant_4
+      - plant.plant_5
   
   network_computers:
     name: Intranetwork
@@ -88,7 +102,7 @@
       - group.my_commute
       - group.movingabout
       - group.fitbit
-      - group.ant_forecast
+      - group.weather_today
       - group.almanac
       - group.ant_body_composition_over_time
       - group.batteries
@@ -120,33 +134,9 @@
     entities:
       - sensor.outdoor_temperature
       - sensor.outdoor_humidity
-
-  ant_forecast:
-    name: Daily Forecast
-    control: hidden
-    entities:
-      - sensor.sunrise_time
-      - sensor.sunset_time
-      - sensor.pws_weather_1d
-      - sensor.pws_weather_1n
-      - sensor.pws_feelslike_f
-      - sensor.pws_temp_f
       - sensor.dark_sky_daily_low_apparent_temperature
       - sensor.dark_sky_daily_high_apparent_temperature
-      - sensor.pws_relative_humidity
-      - sensor.pws_precip_1d
-      - sensor.dark_sky_precip
-      - sensor.pws_precip_1d_in
-      - sensor.pws_wind_mph
-      - sensor.dark_sky_uv_index
-      - sensor.pws_alerts
-      - sensor.pws_weather_2d
-      - sensor.pws_weather_2n
-      - sensor.pws_weather_3d
-      - sensor.pws_weather_3n
-      - sensor.pws_weather_4d
-      - sensor.pws_weather_4n
-       
+
   family:
     name: Family
     icon: mdi:home
@@ -183,9 +173,6 @@
       - sensor.bedroom_temperature
       - sensor.sofias_room_temperature
       - sensor.upstairs_thermostat_temperature
-      - sensor.kitchen_temperature
-      - sensor.kitchen_humidity
-      - sensor.kitchen_air_pressure
       - sensor.upstairs_avg_humidity
   
   downstairs_all_temps:
@@ -197,6 +184,9 @@
       - sensor.front_room_temperature
       - sensor.downstairs_thermostat_humidity
       - sensor.front_room_humidity
+      - sensor.kitchen_temperature
+      - sensor.kitchen_humidity
+      - sensor.kitchen_air_pressure
       - sensor.downstairs_avg_temperature
       - sensor.downstairs_avg_humidity
             
@@ -226,12 +216,18 @@
       - sensor.plant_mqtt_plant_4_temperature
       - sensor.plant_mqtt_plant_4_conductivity
       - sensor.plant_mqtt_plant_4_brightness
+      # garden
+      - sensor.plant_mqtt_plant_5_moisture
+      - sensor.plant_mqtt_plant_5_battery
+      - sensor.plant_mqtt_plant_5_temperature
+      - sensor.plant_mqtt_plant_5_conductivity
+      - sensor.plant_mqtt_plant_5_brightness
 
   almanac:
     name: Farmer's Almanac
     entities:
       - sun.sun
-      - sensor.moonphases
+      - sensor.moon
       - sensor.nextsunrise
       - sensor.nextsunset
       - sensor.dayofyear
@@ -240,7 +236,6 @@
   moon_phases:
     name: Moon Phase
     entities:
-      - sensor.moon
       - sensor.moonphases
       
   upstairs_temps:
@@ -345,6 +340,7 @@
     control: hidden
     entities:
       - media_player.office_speaker
+      - camera.office_window_camera
       - sensor.office_temperature
       - sensor.office_humidity
       - sensor.illumination_gateway
@@ -362,7 +358,7 @@
       - light.flux1
       - scene.dimmed_office
       - input_number.sunrise_duration
-      - switch.office_flux
+#      - switch.office_flux
       - switch.dome_siren
 #      - input_boolean.push_blink_alerts
 #  input_boolean.push_html5_alerts
@@ -373,15 +369,15 @@
     entities:
       - binary_sensor.garage_open
       - binary_sensor.garage_moving
-      - sensor.garage_motion_template
+      - binary_sensor.garage_motion
       - sensor.mud_room_motion_template
       - binary_sensor.basement_door
       - sensor.mud_room_light_level
       - sensor.basement_temperature
+      - sensor.garage_temperature_bosch
       - sensor.basement_humidity
       - light.mud_room
-      - light.garage_light_1
-      - light.garage_light_2
+      - light.garage_lights
   
   ant_body_composition_over_time:
     name: Body Metrics Weekly
@@ -408,8 +404,10 @@
       - sensor.steps
       - sensor.ant_weight_sensor
       - sensor.ant_weight_sma
+      - sensor.ant_weight_smooth
       - sensor.ant_bf_pct_sensor
       - sensor.ant_bf_pct_sma
+      - sensor.ant_bf_pct_smooth
       - sensor.ant_lean_mass_sensor
       - sensor.ant_fat_mass_sensor
       - sensor.ant_measurement_taken
@@ -423,11 +421,12 @@
       - binary_sensor.bedroom_motion
       - binary_sensor.hallway_spy
       - binary_sensor.office_motion
+      - binary_sensor.office_window_motion
       - binary_sensor.dining_room_motion
       - binary_sensor.tv_room_motion
       - sensor.mud_room_motion_template
       - sensor.garage_motion_template
-      - binary_sensor.garage_lightify
+      - binary_sensor.garage_motion
       - binary_sensor.garage_door
       - binary_sensor.garage_moving
       - binary_sensor.sofias_room_door
@@ -463,16 +462,21 @@
   my_commute:
     name: Current Commute
     entities:
-      - sensor.home__broadridge
-      - sensor.broadridge__home
+      - sensor.home_to_broadridge_raw
+      - sensor.home_to_broadridge_smooth
+      - sensor.broadridge_to_home_raw
+      - sensor.broadridge_to_home_smooth
+      - history_graph.commuting_lowpass
+      
   
   commuting_times:
     name: Travel Times
     entities:
-      - sensor.home__broadridge
-      - sensor.home__datto
-      - sensor.broadridge__home
-      - sensor.datto__home
+      - sensor.home_to_broadridge_smooth
+      - sensor.home_to_datto_smooth
+      - sensor.broadridge_to_home_smooth
+      - sensor.datto_to_home_smooth
+      - history_graph.commuting_lowpass
   
   household_protect:
     name: Protect Status
@@ -507,6 +511,60 @@
       - sensor.sunrise_time
       - sensor.sunset_time
       
+  weather_today:
+    name: Today's Weather
+    control: hidden
+    entities:
+      - sensor.pws_weather_1d
+      - sensor.pws_weather_1n
+      - sensor.pws_temp_f
+      - sensor.dark_sky_daily_low_apparent_temperature
+      - sensor.dark_sky_daily_high_apparent_temperature
+      - sensor.pws_relative_humidity
+      - sensor.pws_precip_1d
+      - sensor.pws_precip_1d_in
+      - sensor.pws_wind_mph
+      - sensor.dark_sky_uv_index
+      - sensor.pws_alerts
+  
+  weather_ahead:  
+    name: Looking Ahead Slightly
+    control: hidden
+    entities:
+      - sensor.pws_weather_2d
+      - sensor.pws_weather_2n
+      - sensor.pws_weather_3d
+      - sensor.pws_weather_3n
+      - sensor.pws_weather_4d
+      - sensor.pws_weather_4n
+  
+  ant_forecast:
+    name: Daily Forecast
+    control: hidden
+    entities:
+      - sensor.sunrise_time
+      - sensor.sunset_time
+      - sensor.pws_weather_1d
+      - sensor.pws_weather_1n
+      - sensor.pws_feelslike_f
+      - sensor.pws_temp_f
+      - sensor.dark_sky_daily_low_apparent_temperature
+      - sensor.dark_sky_daily_high_apparent_temperature
+      - sensor.pws_relative_humidity
+      - sensor.pws_precip_1d
+      - sensor.dark_sky_precip
+      - sensor.pws_precip_1d_in
+      - sensor.pws_wind_mph
+      - sensor.dark_sky_uv_index
+      - sensor.pws_alerts
+      - sensor.pws_weather_2d
+      - sensor.pws_weather_2n
+      - sensor.pws_weather_3d
+      - sensor.pws_weather_3n
+      - sensor.pws_weather_4d
+      - sensor.pws_weather_4n
+       
+      
   stragglers:
     name: Homeless
     entities:
@@ -516,3 +574,5 @@
       - sensor.dome_alarm_type
       - sensor.dome_alarm_level
       - sensor.dome_siren_sourcenodeid
+      - sensor.home_to_datto_raw
+      - sensor.datto_to_home_raw

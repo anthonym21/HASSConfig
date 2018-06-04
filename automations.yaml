@@ -513,7 +513,7 @@
       xy_color:
       - 0.646
       - 0.346
-      transition: 10
+      transition: 8
   - service: light.turn_on
     data_template:
       entity_id: light.kitchen
@@ -521,19 +521,20 @@
       xy_color:
       - 0.509
       - 0.387
-      transition: 10
+      transition: 8
+  - delay: 00:00:01
   - service: light.turn_on
     data_template:
       entity_id: light.tv_room_front_lamp
       color_temp: 500
       brightness: 38
-      transition: 10
+      transition: 5
   - service: light.turn_on
     data_template:
       entity_id: light.tv_room_back_lamp
       color_temp: 500
       brightness: 45
-      transition: 10
+      transition: 5
       
 - id: deluminate_dining_room
   alias: Deluminate Dining Room
@@ -550,7 +551,7 @@
     before: 04:45:00
   action:
   - service: light.turn_on
-    data_template:
+    data:
       entity_id: light.dining_room
       color_temp: 500
       brightness: 1
@@ -568,7 +569,7 @@
     before: 04:55:00
   action:
   - service: light.turn_on
-    data_template:
+    data:
       brightness: 236
       entity_id: light.tv_bias
       xy_color:
@@ -576,21 +577,22 @@
       - 0.374
       transition: 2
   - service: light.turn_on
-    data_template:
+    data:
       entity_id: light.kitchen
       brightness: 108
       xy_color:
       - 0.539
       - 0.386
       transition: 1
+  - delay: 00:00:01 
   - service: light.turn_on
-    data_template:
+    data:
       entity_id: light.tv_room_front_lamp
       color_temp: 333
       brightness: 152
       transition: 2
   - service: light.turn_on
-    data_template:
+    data:
       entity_id: light.tv_room_back_lamp
       color_temp: 333
       brightness: 166
@@ -608,11 +610,11 @@
     before: 04:55:00
   action:
   - service: light.turn_on
-    data_template:
+    data:
       entity_id: light.dining_room
       color_temp: 333
-      brightness: 67
-      transition: 2
+      brightness: 75
+      transition: 1
       
 - id: last_motion_update
   alias: Update Last Motion
@@ -656,3 +658,29 @@
       data:
         tag: last_motion_updated
 
+- id: someone_is_out_front
+  alias: Front of House 
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.office_window_motion
+    from: 'off'
+    to: 'on'
+  condition:
+    - condition: state
+      entity_id: input_boolean.push_html5_alerts
+      state: 'on'
+  action:
+  - service: notify.html5_office
+    data:
+      message: 'Motion Detected in Front Zone'
+      data:
+        tag: someone_is_out_front
+        url: !secret camera_proxy_url
+        image: !secret camera_proxy_url
+  - service: automation.turn_off
+    entity_id: automation.someone_is_out_front
+  #- service: switch.turn_on
+  #  entity_id: switch.dome_siren  
+  - delay: 00:01:00
+  - service: automation.turn_on
+    entity_id: automation.someone_is_out_front

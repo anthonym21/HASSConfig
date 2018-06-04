@@ -34,6 +34,28 @@
       - apparent_temperature_min
       - uv_index
  
+- platform: yweather
+  forecast: 1
+  name: yw_day1
+  monitored_conditions:
+    - weather
+    - temp_min
+    - temp_max
+- platform: yweather
+  forecast: 2
+  name: yw_day2
+  monitored_conditions:
+    - weather
+    - temp_min
+    - temp_max
+- platform: yweather
+  forecast: 3
+  name: yw_day3
+  monitored_conditions:
+    - weather
+    - temp_min
+    - temp_max
+ 
 - platform: nzbget
   host: 192.168.86.41
   hide_in_default_view: true
@@ -553,88 +575,46 @@
     ant_weight_sensor:
       friendly_name: 'Weight'
       value_template: '{{ states.input_number.ant_weight.state }}'
-      #unit_of_measurement: lbs
+      unit_of_measurement: lbs
     ant_bf_pct_sensor:
       friendly_name: 'BF%'
       value_template: '{{ states.input_number.ant_bf_pct.state }}'
       unit_of_measurement: "%"
-#    ant_lean_mass_sensor:
-#      friendly_name: 'Lean Mass'
-#      value_template: '{{ states.input_number.ant_lean_mass.state }}'
- #     unit_of_measurement: lbs
- #   ant_fat_mass_sensor:
- #     friendly_name: 'Fat Mass'
- #     value_template: '{{ states.input_number.ant_fat_mass.state }}'
- #     unit_of_measurement: lbs
+    ant_lean_mass_sensor:
+      friendly_name: 'Lean Mass'
+      value_template: '{{ states.input_number.ant_lean_mass.state }}'
+      unit_of_measurement: lbs
+    ant_fat_mass_sensor:
+      friendly_name: 'Fat Mass'
+      value_template: '{{ states.input_number.ant_fat_mass.state }}'
+      unit_of_measurement: lbs
     ant_measurement_taken:
       friendly_name: 'Weighed @'
       value_template: '{{ states.input_datetime.ant_weigh_datetime.state }}'
 
-- platform: filter
-  name: ant_fat_mass_sensor
-  entity_id: input_number.ant_fat_mass
-  friendly_name: 'Fat Mass'
-  unit_of_measurement: lbs
-  filters:
-    - filter: outlier
-      window_size: 7
-      radius: 3
-    - filter: lowpass
-      time_constant: 10
+#- platform: filter
+#  name: ant_fat_mass_sensor
+#  entity_id: input_number.ant_fat_mass
+#  friendly_name: 'Fat Mass'
+#  unit_of_measurement: lbs
+#  filters:
+#    - filter: outlier
+#      window_size: 7
+#      radius: 3
+#    - filter: lowpass
+#      time_constant: 10
 
-- platform: filter
-  name: ant_lean_mass_sensor
-  entity_id: input_number.ant_lean_mass
-  friendly_name: 'Lean Mass'
-  unit_of_measurement: lbs
-  filters:
-    - filter: outlier
-      window_size: 7
-      radius: 3
-    - filter: lowpass
-      time_constant: 10
-      
-- platform: filter
-  name: ant_bf_pct_sma
-  entity_id: sensor.ant_bf_pct_sensor
-  friendly_name: 'BF% SMA"'
-  unit_of_measurement: '%'
-  filters: 
-    - filter: time_simple_moving_average
-      window_size: 01:00:00
-      
-- platform: filter
-  name: ant_weight_sma
-  friendly_name: 'Weight SMA'
-  entity_id: sensor.ant_weight_sensor
-  unit_of_measurement: lbs
-  filters:
-    - filter: time_simple_moving_average
-      window_size: 01:00:00
-      
-- platform: filter
-  name: ant_bf_pct_smooth
-  entity_id: sensor.ant_bf_pct_sensor
-  friendly_name: 'BF% smooth"'
-  unit_of_measurement: '%'
-  filters: 
-    - filter: outlier
-      radius: 0.7
-      window_size: 2
-    - filter: lowpass
-      time_constant: 8
-      
-- platform: filter
-  name: ant_weight_smooth
-  friendly_name: 'Weight smooth'
-  entity_id: sensor.ant_weight_sensor
-  unit_of_measurement: lbs
-  filters: 
-    - filter: outlier
-      window_size: 7
-      radius: 2
-    - filter: lowpass
-      time_constant: 8
+#- platform: filter
+#  name: ant_lean_mass_sensor
+#  entity_id: input_number.ant_lean_mass
+#  friendly_name: 'Lean Mass'
+#  unit_of_measurement: lbs
+#  filters:
+#    - filter: outlier
+#      window_size: 7
+#      radius: 3
+#    - filter: lowpass
+#      time_constant: 10
       
 - platform: template
   sensors:
@@ -679,7 +659,7 @@
              /local/MoonPhases/NFirstQuarter.jpg
           {%- elif is_state('sensor.moon', 'Waxing gibbous') -%}
             /local/MoonPhases/NWaxingGibbous.jpg
-          {%- elif is_state('sensor.moon' 'Full moon') -%}
+          {%- elif is_state('sensor.moon','Full moon') -%}
             /local/MoonPhases/NFullMoon.jpg
           {%- elif is_state('sensor.moon', 'Waning gibbous') -%}
             /local/MoonPhases/NWaningGibbous.jpg

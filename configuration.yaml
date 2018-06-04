@@ -67,7 +67,7 @@ logger:
     homeassistant.components.mqtt: debug
     homeassistant.setup: info
     homeassistant.components.http.view: warning
-    homeassistant.components.sensor: debug
+    # homeassistant.components.sensor: debug
     homeassistant.components.binary_sensor: debug
     homeassistant.components.discovery: warning
     homeassistant.components.ifttt: debug

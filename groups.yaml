@@ -355,7 +355,7 @@
       - light.office_pillar
       - light.game_of_thrones_lamp
       - light.gateway_llight
-      - light.flux1
+      - light.flex_rgbw
       - scene.dimmed_office
       - input_number.sunrise_duration
 #      - switch.office_flux

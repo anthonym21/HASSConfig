@@ -25,6 +25,7 @@
     control: hidden
     entities:
       - group.weather_today
+      - group.yahoo_weather
       - group.almanac
       - group.moon_phases
       - weather.dark_sky
@@ -90,6 +91,9 @@
     entities:
       - group.google_wifi_group
       - group.nzbget
+      - group.sonarr
+      - group.radarr
+      - group.deluge
   
   antview:
     name: Anthony
@@ -174,6 +178,7 @@
       - sensor.sofias_room_temperature
       - sensor.upstairs_thermostat_temperature
       - sensor.upstairs_avg_humidity
+      - sensor.office_temperature
   
   downstairs_all_temps:
     name: Downstairs Temperatures
@@ -306,6 +311,8 @@
      - media_player.lg_tv
      - media_player.kodi_libreeleclocal
      - remote.harmony
+     - scene.illuminated_downstairs
+     - scene.deluminated_downstairs
      - climate.nest_downstairs
   
   sofias_room:
@@ -332,6 +339,7 @@
       - light.bedroom_pillar
       - switch.bedroom_fan
       - light.bedroom
+      - script.fade_to_goodnight
       - media_player.bedroom_speaker
   
   office_room:
@@ -344,6 +352,8 @@
       - sensor.office_temperature
       - sensor.office_humidity
       - sensor.illumination_gateway
+      - binary_sensor.office_motion
+      - sensor.office_illumination
       - light.office
       - light.office_bookcase_bloom
       - light.office_bookcase_iris
@@ -357,6 +367,8 @@
       - light.gateway_llight
       - light.flex_rgbw
       - scene.dimmed_office
+      - scene.neutral_dim_office
+      - scene.bright_white_office
       - input_number.sunrise_duration
 #      - switch.office_flux
       - switch.dome_siren
@@ -390,24 +402,46 @@
     name: NZBGet
     entities:
       - sensor.nzbget_article_cache
+      - sensor.nzbget_average_speed
       - sensor.nzbget_speed
-     
+      - sensor.nzbget_download_paused
+      - sensor.nzbget_post_processing_paused
+      - sensor.nzbget_queue_size
+      - sensor.nzbget_size
+  
+  deluge:
+    name: Deluge
+    entities:
+      - sensor.deluge_down_speed
+      - sensor.deluge_up_speed
+      - sensor.deluge_status
+   
+  radarr:
+    name: Radarr
+    entities:
+      - sensor.radarr_movies
+      
+  sonarr:
+    name: Sonarr
+    entities:
+      - sensor.sonarr_disk_space
+      - sensor.sonarr_queue
+      - sensor.sonarr_upcoming
+  
   fitbit:   
     name: Body Metrics
     control: hidden
     entities:
       - input_datetime.ant_asleep
       - input_datetime.ant_awake
+      - input_datetime.ant_inbed
+      - input_datetime.ant_outbed
       - sensor.sleep_minutes_asleep
       - sensor.sleep_time_in_bed
       - sensor.resting_heart_rate
       - sensor.steps
       - sensor.ant_weight_sensor
-      - sensor.ant_weight_sma
-      - sensor.ant_weight_smooth
       - sensor.ant_bf_pct_sensor
-      - sensor.ant_bf_pct_sma
-      - sensor.ant_bf_pct_smooth
       - sensor.ant_lean_mass_sensor
       - sensor.ant_fat_mass_sensor
       - sensor.ant_measurement_taken
@@ -425,7 +459,6 @@
       - binary_sensor.dining_room_motion
       - binary_sensor.tv_room_motion
       - sensor.mud_room_motion_template
-      - sensor.garage_motion_template
       - binary_sensor.garage_motion
       - binary_sensor.garage_door
       - binary_sensor.garage_moving
@@ -463,20 +496,18 @@
     name: Current Commute
     entities:
       - sensor.home_to_broadridge_raw
-      - sensor.home_to_broadridge_smooth
       - sensor.broadridge_to_home_raw
-      - sensor.broadridge_to_home_smooth
-      - history_graph.commuting_lowpass
+      - history_graph.commuting
       
   
   commuting_times:
     name: Travel Times
     entities:
-      - sensor.home_to_broadridge_smooth
-      - sensor.home_to_datto_smooth
-      - sensor.broadridge_to_home_smooth
-      - sensor.datto_to_home_smooth
-      - history_graph.commuting_lowpass
+      - sensor.home_to_broadridge_raw
+      - sensor.home_to_datto_raw
+      - sensor.broadridge_to_home_raw
+      - sensor.datto_to_home_raw
+      - history_graph.commuting
   
   household_protect:
     name: Protect Status
@@ -495,7 +526,20 @@
       - sensor.google_wifi_local_ip
       - sensor.google_wifi_current_version
       - sensor.google_wifi_new_version
-     
+
+  yahoo_weather:
+    name: Yahoo Weather
+    entities:
+      - sensor.yw_day1_condition
+      - sensor.yw_day1_temperature_max
+      - sensor.yw_day1_temperature_min
+      - sensor.yw_day2_condition
+      - sensor.yw_day2_temperature_max
+      - sensor.yw_day2_temperature_min
+      - sensor.yw_day3_condition
+      - sensor.yw_day3_temperature_max
+      - sensor.yw_day3_temperature_min
+      
   weather:
     name: Weather
     entities:
@@ -569,6 +613,7 @@
     name: Homeless
     entities:
       - sensor.office_motion_template
+      - button.luminate
       - binary_sensor.button_1
       - binary_sensor.button_in_bed
       - sensor.dome_alarm_type
@@ -576,3 +621,4 @@
       - sensor.dome_siren_sourcenodeid
       - sensor.home_to_datto_raw
       - sensor.datto_to_home_raw
+      - sensor.garage_motion_template

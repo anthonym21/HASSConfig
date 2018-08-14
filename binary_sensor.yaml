@@ -1,6 +1,6 @@
 - platform: mqtt
   name: garage_moving
-  friendly_name: Garage Door Movement
+  friendly_name: Garage Door Acceleration
   state_topic: "smartthings/Garage Multi/acceleration"
   device_class : garage_door
   payload_on: "active"
@@ -8,9 +8,18 @@
   retain: true  
   
 - platform: mqtt
-  name: garage_motion
+  name: garage_lightify
+  state_topic: "smartthings/Lightify Garage/motion"
+  friendly_name: Garage Motion Lightify
+  device_class: motion
+  payload_on: "active"
+  payload_off: "inactive" 
+  retain: true  
+  
+- platform: mqtt
+  name: garage_bosch
   state_topic: "smartthings/Garage Bosch/motion"
-  friendly_name: Garage Motion
+  friendly_name: Garage Motion Bosch
   device_class: motion
   payload_on: "active"
   payload_off: "inactive" 
@@ -24,15 +33,6 @@
   payload_on: "open"
   payload_off: "closed"
   retain: true
-
-- platform: mqtt
-  name: front_door
-  state_topic: "smartthings/Front Door/contact"
-  friendly_name: Front Door
-  device_class: door
-  payload_on: "open"
-  payload_off: "closed"
-  retrain: true
   
 - platform: mqtt
   name: basement_door
@@ -60,16 +60,7 @@
   payload_on: "open"
   payload_off: "closed"
   retain: true
-  
-- platform: mqtt
-  name: hallway_spy
-  state_topic: "smartthings/Hallway Spy/motion"
-  friendly_name: Hallway Motion
-  device_class: motion
-  payload_on: "active"
-  payload_off: "inactive"
-  retain: true
-  
+    
 - platform: mqtt
   name: tv_room_motion
   state_topic: "smartthings/TV Room Presence/motion"
@@ -85,7 +76,21 @@
   friendly_name: Office Camera Motion
   device_class: motion
   retain: true
-  
+ 
+ # TEMPLATE
+
+- platform: template
+  sensors:
+    garage_motion:
+      friendly_name: 'Garage Motion'
+      value_template: "{{ is_state('binary_sensor.garage_lightify','on') or is_state('binary_sensor.garage_bosch','on') }}"
+      icon_template: >-
+        {% if is_state('binary_sensor.garage_lightify', 'on') %}
+          mdi:run-fast
+        {% else %}
+          mdi:human-handsup
+         {% endif %}
+      
 # XIAOMI HUB
   
 - platform: xiaomi_aqara
@@ -95,8 +100,8 @@
   retain: true
 
 - platform: xiaomi_aqara
-  name: button_kitchen
-  friendly_name: Kitchen Button
+  name: luminate_button
+  friendly_name: Luminate Button
   device_class: light
   retain: false
   
@@ -105,4 +110,23 @@
   friendly_name: Toggle In-Bed
   device_class: light
   retain: false
+
+- platform: xiaomi_aqara
+  name: office_motion
+  friendly_name: Office Motion
+  device_class: motion
+  retain: true
   
+- platform: xiaomi_aqara
+  name: hallway_spy
+  friendly_name: Hallway Motion
+  device_class: motion
+  retain: true
+  
+- platform: xiaomi_aqara
+  name: front_door
+  friendly_name: Front Door
+  device_class: door
+  payload_on: "open"
+  payload_off: "closed"
+  retain: true

@@ -22,6 +22,14 @@ frontend:
   extra_html_url_es5:
     - /local/custom_ui/state-card-custom-ui-es5.html
  
+#panel_custom:
+#  - name: react
+#    sidebar_title: TodoMVC
+#    sidebar_icon: mdi:work
+#    url_path: todomvc
+#    config:
+#      title: hello
+ 
 config:
 
 cloud:
@@ -45,9 +53,7 @@ updater:
 
 # Discover some devices automatically
 discovery:
-    ignore:
-      - philips_hue
-      - deconz      
+
 # Allows you to issue voice commands from the frontend in enabled browsers
 #conversation:
 
@@ -120,17 +126,17 @@ ios:
 input_number: !include input_number.yaml
      
 input_boolean:
-  dlink_office_motion:
-    name: "D-Link Office"
-    icon: mdi:run-fast
-    initial: false
-  dlink_garage_motion:
-    name: "D-Link Garage"
-    icon: mdi:run-fast
-    initial: false
   ant_in_bed:
     name: "Ant In Bed"
     icon: mdi:sleep
+  luminate:
+    name: "Unluminate"
+    icon: mdi:light
+    initial: false
+  office_motion_throttle:
+    name: Office Motion Throttled
+    icon: mdi:light
+    initial: false
   push_blink_alerts:
     name: "Push Blink Notes"
     icon: mdi:alerts
@@ -141,6 +147,10 @@ input_boolean:
     initial: false
   push_blink_alerts_downstairs:
     name: "Push Downstairs Notes"
+    icon: mdi:alerts
+    initial: false
+  push_door_alerts:
+    name: "Push Door Alerts"
     icon: mdi:alerts
     initial: false
 
@@ -169,6 +179,12 @@ input_datetime:
     has_date: true
     has_time: true
     icon: mdi:sleep
+  ant_sleeping:
+    name: "Ant Asleep For"
+    has_date: false
+    has_time: true
+    icon: mdi:sleep
+  
   
     
 # LIGHTS / HUE / EMULATED BRIDGE
@@ -191,26 +207,41 @@ light:
     - light.front_small_lamp
     - light.front_small_lamp_far
 
+- platform: group
+  name: Office
+  entities: 
+    - light.office_bookcase_bloom
+    - light.office_bookcase_iris
+    - light.office_closet_corner
+    - light.office_corner_bloom
+    - light.office_filing_cabinet_iris
+    - light.office_hue_go
+    - light.office_monitor_bloom
+    - light.office_pillar
+    - light.game_of_thrones_lamp
+    - light.gateway_llight
+    - light.flex_rgbw
+    
 - platform: flux_led
   devices:
     192.168.86.134:
       name: Flux.1
 
-- platform: mqtt
-  name: Osram Flex
-  state_topic: 'smartthings/Osram Flex/switch'
-  command_topic: 'smartthings/Osram Flex/switch'
-  brightness_state_topic: 'smartthings/Osram Flex/level'
-  brightness_command_topic: 'smartthings/Osram Flex/level'
-  brightness_scale: 100
-  rgb_state_topic: 'smartthings/Osram Flex/color'
-  rgb_command_topic: 'smartthings/Osram Flex/color'
-  white_value_temp_command_topic: 'smartthings/Osram Flex/colorTemperature'
-  white_value_state_topic: 'smartthings/Osram Flex/colorTemperature'
-  white_value_scale: 6500
-  payload_on: 'ON'
-  payload_off: 'OFF'
-  retain: true
+#- platform: mqtt
+#  name: Osram Flex
+#  state_topic: 'smartthings/Osram Flex/switch'
+#  command_topic: 'smartthings/Osram Flex/switch'
+#  brightness_state_topic: 'smartthings/Osram Flex/level'
+#  brightness_command_topic: 'smartthings/Osram Flex/level'
+#  brightness_scale: 100
+#  rgb_state_topic: 'smartthings/Osram Flex/color'
+#  rgb_command_topic: 'smartthings/Osram Flex/color'
+#  white_value_temp_command_topic: 'smartthings/Osram Flex/colorTemperature'
+#  white_value_state_topic: 'smartthings/Osram Flex/colorTemperature'
+#  white_value_scale: 6500
+#  payload_on: 'ON'
+#  payload_off: 'OFF'
+#  retain: true
       
 hue:
   bridges:
@@ -341,40 +372,38 @@ history_graph:
     name: ant_body_comp_history
     entities:
       - sensor.ant_weight_sensor
-      - sensor.ant_weight_smooth
       - sensor.ant_fat_mass_sensor
       - sensor.ant_lean_mass_sensor
-    hours_to_show: 336
+    hours_to_show: 367
     refresh: 600
   gr6:
     name: ant_body_fat_history
     entities:
       - sensor.ant_bf_pct_sensor
       - sensor.ant_bf_pct_smooth
-    hours_to_show: 336
+    hours_to_show: 744
     refresh: 600
   smooth_metrics:
-    name: Lowpass Metrics
+    name: Lean vs Weight
     entities:
       - sensor.ant_lean_mass_sensor
-      - sensor.ant_weight_smooth
-    hours_to_show: 336
+      - sensor.ant_weight_sensor
+    hours_to_show: 744
     refresh: 600
   ant_sma_vs_smooth:
-    name: Weight Analysis
+    name: Weight History
     entities:
       - sensor.ant_weight_sensor
-      - sensor.ant_weight_sma
       - sensor.ant_weight_smooth
-    hours_to_show: 336
+    hours_to_show: 744
     refresh: 3600
-  commuting_lowpass:
-    name: Historical Commute Times
+  commuting:
+    name: Current Commute Times
     entities:
-      - sensor.home_to_broadridge_smooth
-      - sensor.broadridge_to_home_smooth
-      - sensor.home_to_datto_smooth
-      - sensor.datto_to_home_smooth
+      - sensor.home_to_broadridge_raw
+      - sensor.broadridge_to_home_raw
+      - sensor.home_to_datto_raw
+      - sensor.datto_to_home_raw
          
 weather:
 - platform: darksky
@@ -396,11 +425,11 @@ device_tracker:
   exclude:
     - 192.168.86.41
  
-#- platform: owntracks
-#  max_gps_accuracy: 256
-#  waypoints: True
-#  mqtt_topic: "owntracks/#"
-#  events_only: False   
+- platform: owntracks
+  max_gps_accuracy: 256
+  waypoints: True
+  mqtt_topic: "owntracks/#"
+  events_only: False   
 
 - platform: gpslogger
 

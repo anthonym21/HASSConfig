@@ -26,6 +26,12 @@
       - sensor.dark_sky_summary
       - sensor.dark_sky_temperature
       - sensor.dark_sky_uv_index
+      - sensor.dark_sky_cloud_cover
+      - sensor.dark_sky_minutely_summary
+      - sensor.dark_sky_hourly_summary
+      - sensor.dark_sky_apparent_temperature
+      - sensor.dark_sky_temperature_high
+      - sensor.dark_sky_temperature_low
       - sensor.pws_alerts
       - sensor.pws_feelslike_f
       - sensor.pws_heat_index_f
@@ -40,7 +46,8 @@
       - sensor.pws_weather_4d
       - sensor.pws_weather_4n
       - sensor.travel_time__phone_to_home
-      - sensor.last_boot
+      - sensor.pws_precip_today_string
+      - sensor.pws_feelslike_string
       - sensor.google_wifi_last_restart
       - sensor.date
       - weather.dark_sky

@@ -5,13 +5,13 @@
   api_key: !secret wunderground_api_key
   pwd_id: KCTDANBU51
   update_interval:
-    minutes: 10
+    minutes: 15
   monitored_conditions:
     - alerts
-    - feelslike_f
+    - feelslike_string
     - temp_f
     - relative_humidity
-    - precip_1d
+    - precip_today_string
     - precip_1d_in
     - weather_1d
     - weather_1n
@@ -26,12 +26,16 @@
 - platform: darksky
   api_key: !secret darksky_api_key
   update_interval:
-    minutes: 10
+    minutes: 15
   monitored_conditions:
       - precip_type
       - precip_probability
-      - apparent_temperature_max
-      - apparent_temperature_min
+      - cloud_cover
+      - minutely_summary
+      - hourly_summary
+      - apparent_temperature
+      - temperature_high
+      - temperature_low
       - uv_index
  
 - platform: yweather
@@ -135,77 +139,61 @@
   forceupdate: true
   retain: true
 
-- platform: mqtt
-  state_topic: "smartthings/Garage Bosch/temperature"
-  name: garage_temperature_bosch
-  friendly_name: Garage Temperature (Bosch)
-  unit_of_measurement: °F
-  forceupdate: true
-  retain: true
+#- platform: mqtt
+#  state_topic: "smartthings/Garage Bosch/temperature"
+#  name: garage_temperature_bosch
+#  friendly_name: Garage Temperature (Bosch)
+#  unit_of_measurement: °F
+#  forceupdate: true
+#  retain: true
   
-- platform: mqtt
-  state_topic: 'smartthings/Basement Climate/temperature'
-  name: basement_temperature
-  friendly_name: Basement Temperature
-  unit_of_measurement: °F
-  retain: true
-  forceupdate: true
+#- platform: mqtt
+#  state_topic: 'smartthings/Basement Climate/temperature'
+#  name: basement_temperature
+#  friendly_name: Basement Temperature
+#  unit_of_measurement: °F
+#  retain: true
+#  forceupdate: true
  
-- platform: mqtt
-  state_topic: 'smartthings/Basement Climate/humidity'
-  name: basement_humidity
-  friendly_name: Basement Temperature
-  unit_of_measurement: '%'
-  retain: true
-  forceupdate: true
+#- platform: mqtt
+#  state_topic: 'smartthings/Basement Climate/humidity'
+#  name: basement_humidity
+#  friendly_name: Basement Temperature
+#  unit_of_measurement: '%'
+#  retain: true
+#  forceupdate: true
  
-- platform: mqtt
-  state_topic: "smartthings/Office Climate/temperature"
-  name: office_temperature
-  friendly_name: Office Temperature
-  unit_of_measurement: °F
-  retain: true
-  forceupdate: true
+#- platform: mqtt
+ # state_topic: "smartthings/Sofia Room Temperature/temperature"
+ # name: sofias_room_temperature
+ # friendly_name: Sofias Room Temperature
+ # unit_of_measurement: °F
+ # retain: true
+ # forceupdate: true
   
-- platform: mqtt
-  state_topic: "smartthings/Office Climate/humidity"
-  name: office_humidity
-  friendly_name: Office Humidity
-  unit_of_measurement: "%"
-  retain: true
-  forceupdate: true
- 
-- platform: mqtt
-  state_topic: "smartthings/Sofia Room Temperature/temperature"
-  name: sofias_room_temperature
-  friendly_name: Sofias Room Temperature
-  unit_of_measurement: °F
-  retain: true
-  forceupdate: true
+#- platform: mqtt
+#  state_topic: "smartthings/Sofia Room Temperature/humidity"
+#  name: sofias_room_humidity
+#  friendly_name: Sofias Room Humidity
+#  unit_of_measurement: "%"
+#  retain: true
+#  forceupdate: true
   
-- platform: mqtt
-  state_topic: "smartthings/Sofia Room Temperature/humidity"
-  name: sofias_room_humidity
-  friendly_name: Sofias Room Humidity
-  unit_of_measurement: "%"
-  retain: true
-  forceupdate: true
+#- platform: mqtt
+#  state_topic: "smartthings/Bedroom Climate/temperature"
+#  name: bedroom_temperature
+#  friendly_name: Bedroom Temperature
+#  unit_of_measurement: °F
+#  retain: true
+#  forceupdate: true
   
-- platform: mqtt
-  state_topic: "smartthings/Bedroom Climate/temperature"
-  name: bedroom_temperature
-  friendly_name: Bedroom Temperature
-  unit_of_measurement: °F
-  retain: true
-  forceupdate: true
-  
-- platform: mqtt
-  state_topic: "smartthings/Bedroom Climate/humidity"
-  name: bedroom_humidity
-  friendly_name: Bedroom Humidity
-  unit_of_measurement: "%"
-  retain: true
-  forceupdate: true
+#- platform: mqtt
+#  state_topic: "smartthings/Bedroom Climate/humidity"
+#  name: bedroom_humidity
+#  friendly_name: Bedroom Humidity
+#  unit_of_measurement: "%"
+#  retain: true
+#  forceupdate: true
   
 - platform: mqtt
   state_topic: "smartthings/Outdoor Weather/temperature"
@@ -445,6 +433,46 @@
   friendly_name: Front Room Humidity
   unit_of_measurement: '%'
   
+- platform: xiaomi_aqara
+  name: office_temperature
+  friendly_name: Office Temperature
+  unit_of_measurement: °F
+  
+- platform: xiaomi_aqara
+  name: office_humidity
+  friendly_name: Office Humidity
+  unit_of_measurement: "%"
+
+- platform: xiaomi_aqara
+  name: basement_temperature
+  friendly_name: Basement Temperature 
+  unit_of_measurement: °F
+  
+- platform: xiaomi_aqara
+  name: basement_humidity
+  friendly_name: Basement Humidity
+  unit_of_measurement: '%'
+  
+- platform: xiaomi_aqara
+  name: bedroom_temperature
+  friendly_name: Bedroom Temperature 
+  unit_of_measurement: °F
+  
+- platform: xiaomi_aqara
+  name: bedroom_humidity
+  friendly_name: Bedroom Humidity
+  unit_of_measurement: '%'
+
+- platform: xiaomi_aqara
+  name: sofias_room_temperature
+  friendly_name: Sofia's Room Temperature 
+  unit_of_measurement: °F
+  
+- platform: xiaomi_aqara
+  name: sofias_room_humidity
+  friendly_name: Sofia's Room Humidity
+  unit_of_measurement: '%'
+  
  # TEMPLATE SENSORS
  
 - platform: template
@@ -592,17 +620,31 @@
       friendly_name: 'Weighed @'
       value_template: '{{ states.input_datetime.ant_weigh_datetime.state }}'
 
-#- platform: filter
-#  name: ant_fat_mass_sensor
-#  entity_id: input_number.ant_fat_mass
-#  friendly_name: 'Fat Mass'
-#  unit_of_measurement: lbs
-#  filters:
-#    - filter: outlier
-#      window_size: 7
-#      radius: 3
-#    - filter: lowpass
-#      time_constant: 10
+- platform: filter
+  name: ant_weight_smooth
+  entity_id: sensor.ant_weight_sensor
+  friendly_name: Weight Trend
+  unit_of_measurement: lbs
+  history_period: 72:00:00
+  filters:
+    - filter: outlier
+      window_size: 5
+      radius: 2
+    - filter: lowpass
+      time_constant: 15
+      
+- platform: filter
+  name: ant_bf_pct_smooth
+  entity_id: sensor.ant_bf_pct_sensor
+  friendly_name: BF% Trend
+  unit_of_measurement: lbs
+  history_period: 72:00:00
+  filters:
+    - filter: outlier
+      window_size: 5
+      radius: 2
+    - filter: lowpass
+      time_constant: 15
 
 #- platform: filter
 #  name: ant_lean_mass_sensor

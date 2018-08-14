@@ -101,3 +101,141 @@
       state: on
       brightness: 51
       xy_color: [0.677, 0.319]
+      
+- name: Neutral_Dim_Office
+  entities:
+    light.gateway_llight:
+      state: on
+      brightness: 242
+      hs_color: [0.0, 0.0]
+    light.flex_rgbw:
+      state: on
+      brightness: 255
+    light.office_filing_cabinet_iris:
+      state: on
+      brightness: 1
+      hs_color: [32.059, 80.0]
+    light.office_monitor_bloom:
+      state: on
+      brightness: 86
+      hs_color: [43.294, 100.0]
+    light.game_of_thrones_lamp:
+      state: on
+      brightness: 63
+      hs_color: [36.067, 69.804]
+    light.office_bookcase_iris:
+      state: on
+      brightness: 1
+      hs_color: [34.824, 100.0]
+    light.office_pillar:
+      state: on
+      brightness: 97
+      hs_color: [35.41, 71.765]
+    light.office_closet_corner:
+      state: on
+      brightness: 1
+      hs_color: [43.294, 100.0]
+    light.office_bookcase_bloom:
+      state: on
+      brightness: 253
+      hs_color: [33.081, 72.549]
+    light.office_corner_bloom:
+      state: on
+      brightness: 59
+      hs_color: [39.294, 100.0]
+    light.office_hue_go:
+      state: on
+      brightness: 46
+      hs_color: [33.261, 72.157]
+      
+- name: Bright_White_Office
+  entities:
+    light.gateway_llight:
+      state: on
+      brightness: 242
+      hs_color: [0.0, 0.0]
+    light.flex_rgbw:
+      state: on
+      brightness: 255
+    light.office_filing_cabinet_iris:
+      state: on
+      brightness: 250
+      hs_color: [83.478, 9.02]
+    light.office_monitor_bloom:
+      state: on
+      brightness: 254
+      hs_color: [181.579, 14.902]
+    light.game_of_thrones_lamp:
+      state: on
+      brightness: 253
+      hs_color: [42.222, 10.588]
+    light.office_bookcase_iris:
+      state: on
+      brightness: 252
+      hs_color: [55.714, 10.98]
+    light.office_pillar:
+      state: on
+      brightness: 253
+      hs_color: [45.0, 21.961]
+    light.office_closet_corner:
+      state: on
+      brightness: 254
+      hs_color: [210.0, 6.275]
+    light.office_bookcase_bloom:
+      state: on
+      brightness: 251
+      hs_color: [53.793, 11.373]
+    light.office_corner_bloom:
+      state: on
+      brightness: 254
+      hs_color: [61.875, 12.549]
+    light.office_hue_go:
+      state: on
+      brightness: 251
+      hs_color: [186.0, 3.922]
+
+- name: Deluminated Downstairs
+  entities:
+    light.tv_bias:
+      state: on
+      brightness: 36
+      xy_color: [0.646, 0.346]
+    light.kitchen:
+      state: on
+      brightness: 31
+      xy_color: [0.539, 0.386]
+    light.tv_room_front_lamp:
+      state: on
+      brightness: 38
+      color_temp: 500
+    light.tv_room_back_lamp:
+      state: on
+      brightness: 45
+      color_temp: 500
+    light.dining_room:
+      state: on
+      color_temp: 500
+      brightness: 1
+
+- name: Illuminated Downstairs
+  entities:
+    light.tv_bias:
+      state: on
+      brightness: 236
+      xy_color: [0.606, 0.374]
+    light.kitchen:
+      state: on
+      brightness: 108
+      xy_color: [0.539, 0.386]
+    light.tv_room_front_lamp:
+      state: on
+      brightness: 142
+      color_temp: 333
+    light.tv_room_back_lamp:
+      state: on
+      brightness: 166
+      color_temp: 333
+    light.dining_room:
+      state: on
+      color_temp: 333
+      brightness: 75

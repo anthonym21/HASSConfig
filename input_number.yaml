@@ -2,14 +2,14 @@
   ant_weight:
     name: Weight
     min: 160
-    max: 210
+    max: 250
     step: .01
     mode: box
 
   ant_bf_pct:
     name: "BF%"
     min: 14
-    max: 25
+    max: 30
     step: .01
     mode: box
 

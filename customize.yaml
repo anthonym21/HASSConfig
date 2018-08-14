@@ -135,6 +135,7 @@ binary_sensor.hallway_spy:
   friendly_name: Hallway Motion
 history_graph.ant_body_comp_history:
   friendly_name: Body Comp Weekly
+  hours_to_show: 334
 zone.ant_pixel2__stop__shop:
   friendly_name: Stop & Shop
 variable.last_motion:
@@ -156,6 +157,8 @@ sensor.mud_room_motion_template:
 sensor.garage_motion_template:
   show_last_changed: true
 binary_sensor.dining_room_motion:
+  show_last_changed: true
+binary_sensor.office_motion:
   show_last_changed: true
 binary_sensor.patio_door:
   friendly_name: Patio Door
@@ -351,3 +354,13 @@ plant.plant_5:
   friendly_name: Front Garden
 device_tracker.kindle_fire_blue:
   hidden: true
+binary_sensor.garage_motion:
+  friendly_name: Garage Motion
+  show_last_changed: true
+sensor.garage_temperature_bosch:
+  friendly_name: Garage Temperature (Bosch)
+binary_sensor.office_window_motion:
+  friendly_name: Front Camera
+  show_last_changed: true
+device_tracker.b827eb2b6cc8:
+  track: false

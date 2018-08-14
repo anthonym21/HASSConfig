@@ -37,11 +37,16 @@
       - sensor.pws_weather_3n
       - sensor.pws_weather_4d
       - sensor.pws_weather_4n
+      - sensor.yw_day1_condition
+      - sensor.yw_day2_condition
+      - sensor.yw_day3_condition
       - sensor.travel_time__phone_to_home
       - sensor.last_boot
       - sensor.date
       - weather.dark_sky
       - sensor.ups
+      - sensor.daylight
+      - sensor.deluge_status
       - automation.update_last_motion
       - automation.update_last_motion_datetime
       - variable.last_motion_datetime
@@ -50,6 +55,8 @@
       - binary_sensor.garage_lightify
       - binary_sensor.hallway_spy
       - binary_sensor.tv_room_motion
+      - binary_sensor.office_motion
+      - binary_sensor.office_window_motion
       - sensor.garage_motion_template
       - sensor.mud_room_motion_template
  #   domains:

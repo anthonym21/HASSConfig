@@ -1,100 +1,63 @@
-#KITCHEN ISLAND LAMP BUTTON#
+#DOWNSTAIRS LUMINATE BUTTON#
 
-- id: kitchen_button_click_on
-  alias: Kitchen Light Button Single
+- id: illuminate_on
+  alias: ilLuminate On
   trigger:
   - platform: event
     event_data:
       click_type: single
-      entity_id: binary_sensor.button_kitchen
+      entity_id: binary_sensor.luminate_button
     event_type: click
   condition:
-  - condition: state
-    entity_id: light.kitchen_island
-    state: 'off'
+  - condition: numeric_state
+    entity_id: light.dining_room
+    value_template: '{% if states.light.dining_room.state == "on"  %}{{ states.light.dining_room.attributes.brightness }}{% else %}0{% endif %}'
+    below: 10
   action:
-    service: light.turn_on
+  - service: input_boolean.turn_on
     data:
-      brightness_pct: 82
-      color_temp: '310'
-      entity_id: light.kitchen_island
+      entity_id: input_boolean.luminate
+  - service: scene.turn_on
+    data:
+      entity_id:  scene.illuminated_downstairs
 
+- id: deluminate_on
+  alias: deLuminate On
+  trigger:
+  - platform: event
+    event_data:
+      click_type: single
+      entity_id: binary_sensor.luminate_button
+    event_type: click
+  condition:
+  - condition: numeric_state
+    entity_id: light.dining_room
+    value_template: '{% if states.light.dining_room.state == "on"  %}{{ states.light.dining_room.attributes.brightness }}{% else %}0{% endif %}'
+    above: 10
+  action:
+  - service: input_boolean.turn_on
+    data:
+      entity_id: input_boolean.luminate
+  - service: scene.turn_on
+    data:
+      entity_id:  scene.deluminated_downstairs
     
-- id: kitchen_button_click_off
-  alias: Kitchen Light Button Single/Off
+- id: luminate_double_click
+  alias: reLuminate
   trigger:
   - platform: event
     event_type: click
     event_data:
-      entity_id: binary_sensor.button_kitchen
-      click_type: single
-  condition:
-  - condition: state
-    entity_id: light.kitchen_island
-    state: 'on'
+      entity_id: binary_sensor.luminate_button
+      click_type: double
   action:
-    service: light.turn_off
+  - service: input_boolean.turn_off
     data:
-      entity_id: light.kitchen
+      entity_id: input_boolean.luminate
+  - service: scene.turn_on
+    data:
+      entity_id:  scene.deluminated_downstairs
       
-- id: kitchen_button_click_long_click_release
-  alias: Kitchen Light Button Coral
-  trigger:
-  - platform: event
-    event_data:
-      click_type: hold
-      entity_id: binary_sensor.button_kitchen
-    event_type: click
-  action:
-  - data:
-      brightness_pct: 50
-      color_name: coral
-      entity_id: light.kitchen_island
-    service: light.turn_on
-    
-- id: kitchen_button_hold
-  alias: Kitchen Light Button dbl
-  trigger:
-  - platform: event
-    event_data:
-      click_type: double
-      entity_id: binary_sensor.button_kitchen
-    event_type: click
-  condition:
-  - condition: state
-    entity_id: light.kitchenette_lamp
-    state: 'off'
-  action:
-  - data:
-      brightness_pct: 90
-      color_name: white
-      entity_id: light.kitchen
-      transition: 0
-    service: light.turn_on
-    
-- id: kitchen_button_hold_off
-  alias: Kitchen Light Button dbl Off
-  trigger:
-    platform: event
-    event_type: click
-    event_data:
-      entity_id: binary_sensor.button_kitchen
-      click_type: double
-  condition:
-  - condition: state
-    entity_id: light.kitchenette_lamp
-    state: 'on'
-  action:
-  - service: light.turn_off
-    data:
-      entity_id: light.kitchenette_lamp
-      transtion: 2
-  - service: light.turn_on
-    data:
-      entity_id: light.kitchen_island
-      brightness_pct: 82
-      color_temp: 310
-
  # GARAGE #
       
 - id: illuminate_garage
@@ -112,6 +75,20 @@
  # - service: light.turn_off
  #   data:
  #     entity_id: light.garage_lights
+  - service: light.turn_on
+    data:
+      entity_id: light.garage_lights
+      brightness_pct: 100
+      transition: 2
+
+- id: garage_movement
+  alias: Garage Motion Detected
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.garage_motion
+    from: 'off'
+    to: 'on'
+  action:
   - service: light.turn_on
     data:
       entity_id: light.garage_lights
@@ -138,7 +115,7 @@
 - id: ensure_garage_off
   alias: Make Sure Lights Are Off In Garage 10 min
   trigger:
-  - entity_id: binary_sensor.garage_motion
+  - entity_id: binary_sensor.garage_motion, binary_sensor.mud_room_motion_sensor
     platform: state
     to: 'off'
     for:
@@ -271,6 +248,9 @@
   - service: input_boolean.turn_off
     data:
       entity_id: input_boolean.push_blink_alerts_downstairs
+  - service: input_boolean.turn_off
+    data:
+      entity_id: input_boolean.luminate
  
  # FLUX #
 - id: office_flux_switched_on
@@ -283,104 +263,34 @@
   action:
   - service: switch.office_flux_update
  
- # DEFUNCT #
-- id: on_hallway_motion
-  alias: On Office Motion
-  trigger:
-    platform: event
-    event_type: DLINK_HALLWAY_MOTION
-  condition:
-  - condition: state
-    entity_id: device_tracker.ant_pixel2
-    state: not home
-  action:
-  - service: automation.turn_off
-    data:
-      entity_id: automation.on_hallway_motion
-  - service: input_boolean.turn_on
-    data:
-      entity_id: input_boolean.dlink_office_motion
-  - delay: 00:02:00
-  - service: input_boolean.turn_off
-    data:
-      entity_id: input_boolean.dlink_office_motion
-  - service: automation.turn_on
-    data:
-      entity_id: automation.on_hallway_motion
-
- ## DASH BUTTONS ##
-      
-- id: neat_dash_on
-  alias: NEAT_DASH_PRESSED_ON
-  trigger:
-    platform: event
-    event_type: NEAT_BUTTON
-  condition:
-  - condition: state
-    entity_id: light.office_pillar
-    state: 'off'
-  action:
-    service: light.turn_on
-    data:
-      entity_id: light.office_pillar
-      brightness: 254
-      
-- id: neat_dash_off
-  alias: NEAT_DASH_PRESSED_OFF
-  trigger:
-    platform: event
-    event_type: NEAT_BUTTON
-  condition:
-  - condition: state
-    entity_id: light.office_pillar
-    state: 'on'
-  action:
-    service: light.turn_off
-    data:
-      entity_id: light.office_pillar
- 
  ## VARIOUS ANT EVENTS ##
  
-- id: ant_in_bed_click
-  alias: Ant In Bed Single Click
+- id: ant_in_bed
+  alias: Ant In Bed 
   trigger:
+    event_type: ANT_IN_BED
     platform: event
-    event_type: click
-    event_data:
-      click_type: single
-      entity_id: binary_sensor.button_in_bed   
-  condition:
-  - condition: state
-    entity_id: input_boolean.ant_in_bed
-    state: 'false'
   action:
   - service: input_datetime.set_datetime
     data_template:
       entity_id: input_datetime.ant_inbed
-      date: '{{ as_timestamp(now()) | timestamp_custom("%Y-%m-%d",True) }}'
-      time: '{{ as_timestamp(now()) | timestamp_custom("%H:%M",True) }}'
+      date: '{{ as_timestamp(strptime(trigger.event.data["inbed"], "%B %d, %Y at %I:%M%p")) | timestamp_custom("%Y-%m-%d",True)}}'
+      time: '{{ as_timestamp(strptime(trigger.event.data["inbed"], "%B %d, %Y at %I:%M%p")) | timestamp_custom("%H:%M",True)}}'
   - service: input_boolean.turn_on
     data:
-      entity_id: input_boolean.ant_in_bed    
-
-- id: ant_out_bed_click
-  alias: Ant Out Bed Single Click
+      entity_id: input_boolean.ant_in_bed   
+      
+- id: ant_out_bed
+  alias: Ant Out Bed 
   trigger:
-    event_type: click
+    event_type: ANT_OUT_BED
     platform: event
-    event_data:
-      click_type: single
-      entity_id: binary_sensor.button_in_bed   
-  condition:
-  - condition: state
-    entity_id: input_boolean.ant_in_bed
-    state: 'true'
   action:
   - service: input_datetime.set_datetime
     data_template:
       entity_id: input_datetime.ant_outbed
-      date: '{{ as_timestamp(now()) | timestamp_custom("%Y-%m-%d",True) }}'
-      time: '{{ as_timestamp(now()) | timestamp_custom("%H:%M",True) }}'
+      date: '{{ as_timestamp(strptime(trigger.event.data["outbed"], "%B %d, %Y at %I:%M%p")) | timestamp_custom("%Y-%m-%d",True)}}'
+      time: '{{ as_timestamp(strptime(trigger.event.data["outbed"], "%B %d, %Y at %I:%M%p")) | timestamp_custom("%H:%M",True)}}'
   - service: input_boolean.turn_off
     data:
       entity_id: input_boolean.ant_in_bed       
@@ -505,6 +415,9 @@
   - condition: time
     after: 00:00:00
     before: 04:45:00
+  - condition: state
+    entity_id: input_boolean.luminate
+    state: 'off'
   action:
   - service: light.turn_on
     data_template:
@@ -549,6 +462,9 @@
   - condition: time
     after: 00:00:00
     before: 04:45:00
+  - condition: state
+    entity_id: input_boolean.luminate
+    state: 'off'
   action:
   - service: light.turn_on
     data:
@@ -567,6 +483,9 @@
   - condition: time
     after: 00:00:00
     before: 04:55:00
+  - condition: state
+    entity_id: input_boolean.luminate
+    state: 'off'
   action:
   - service: light.turn_on
     data:
@@ -589,14 +508,14 @@
     data:
       entity_id: light.tv_room_front_lamp
       color_temp: 333
-      brightness: 152
+      brightness: 142
       transition: 2
   - service: light.turn_on
     data:
       entity_id: light.tv_room_back_lamp
       color_temp: 333
       brightness: 166
-      transition: 2
+      transition: 3
       
 - id: illuminate_dining_room
   alias: Illuminate Dining Room
@@ -608,6 +527,9 @@
   - condition: time
     after: 00:00:00
     before: 04:55:00
+  - condition: state
+    entity_id: input_boolean.luminate
+    state: 'off'
   action:
   - service: light.turn_on
     data:
@@ -620,7 +542,7 @@
   alias: Update Last Motion
   trigger:
   - platform: state
-    entity_id: binary_sensor.tv_room_motion, binary_sensor.hallway_spy, binary_sensor.sofias_room_door, binary_sensor.basement_door, binary_sensor.front_door, binary_sensor.garage_motion, binary_sensor.office_motion, binary_sensor.bedroom_motion, binary_sensor.dining_room_motion, binary_sensor.patio_door
+    entity_id: binary_sensor.tv_room_motion, binary_sensor.hallway_spy, binary_sensor.sofias_room_door, binary_sensor.basement_door, binary_sensor.front_door, binary_sensor.garage_motion, binary_sensor.bedroom_motion, binary_sensor.dining_room_motion, binary_sensor.patio_door
     to: 'on'
   condition:
     condition: template
@@ -637,7 +559,7 @@
   alias: Update Last Motion Datetime
   trigger:
   - platform: state
-    entity_id: binary_sensor.tv_room_motion, binary_sensor.hallway_spy, binary_sensor.sofias_room_door, binary_sensor.basement_door, binary_sensor.front_door, binary_sensor.garage_motion, binary_sensor.office_motion, binary_sensor.bedroom_motion, binary_sensor.dining_room_motion, binary_sensor.patio_door
+    entity_id: binary_sensor.tv_room_motion, binary_sensor.hallway_spy, binary_sensor.sofias_room_door, binary_sensor.basement_door, binary_sensor.front_door, binary_sensor.garage_motion, binary_sensor.bedroom_motion, binary_sensor.dining_room_motion, binary_sensor.patio_door
     to: 'on'
   action:
   - service: variable.set_variable
@@ -684,3 +606,70 @@
   - delay: 00:01:00
   - service: automation.turn_on
     entity_id: automation.someone_is_out_front
+
+- id: the_doorbell
+  alias: Doorbell
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.front_door, binary_sensor.sofias_room_door, binary_sensor.garage_open
+    from: 'off'
+    to: 'on'
+  condition:
+    - condition: state
+      entity_id: input_boolean.push_html5_alerts
+      state: 'on'
+  action:
+  - service: switch.turn_on
+    entity_id: switch.dome_siren
+  - service: notify.html5_office
+    data:
+      message: "{{ trigger.to_state.attributes.friendly_name  }} has been opened"
+      tag: doorbell_on
+  - delay: 00:00:10
+  - service: switch.turn_off
+    entity_id: switch.dome_siren
+             
+    
+- id: office_throttle
+  alias: Office Throttle
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.office_motion
+    from: 'off'
+    to: 'on'
+  - platform: state
+    entity_id:  input_boolean.office_motion_throttle
+    from: 'on'
+    to: 'off'
+  condition:
+   - condition: state
+     entity_id: input_boolean.office_motion_throttle
+     state: 'off'
+   - condition: state
+     entity_id: binary_sensor.office_motion
+     state: 'on'
+  action:
+  - service: input_boolean.turn_on
+    entity_id: input_boolean.office_motion_throttle
+  - delay: 00:10:00
+  - service: input_boolean.turn_off
+    entity_id: input_boolean.office_motion_throttle
+  
+- id: intruder_alert
+  alias: Intruder Alert
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.front_door, binary_sensor.garage_open
+    to: 'on'
+  condition:
+    - condition: template
+      value_template: "{{ not is_state('device_tracker.ant_pixel2', 'home') }}"
+   #   entity_id: device_tracker.ant_pixel2
+  #    state: 'not_home'
+  action:
+  - service: notify.html5_office
+    data_template:
+      message: 'Door is Open: {{ trigger.to_state.attributes.friendly_name  }} @  {{ now().strftime("%H:%M:%S %m/%d") }} '
+    data:
+      data:
+        tag: intruder_alert

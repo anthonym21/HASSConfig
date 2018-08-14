@@ -15,6 +15,7 @@
 *.pem
 *.conf
 .cloud
+core.config_entries
 deps
 custom_components
 dome

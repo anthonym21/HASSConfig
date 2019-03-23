@@ -1,119 +1,105 @@
 
 - platform: moon 
 
-- platform: wunderground
-  api_key: !secret wunderground_api_key
-  pwd_id: KCTDANBU51
-  update_interval:
-    minutes: 15
-  monitored_conditions:
-    - alerts
-    - feelslike_string
-    - temp_f
-    - relative_humidity
-    - precip_today_string
-    - precip_1d_in
-    - weather_1d
-    - weather_1n
-    - weather_2d
-    - weather_2n
-    - weather_3d
-    - weather_3n
-    - weather_4d
-    - weather_4n
-    - wind_mph
-
 - platform: darksky
   api_key: !secret darksky_api_key
-  update_interval:
+  scan_interval:
     minutes: 15
+  forecast:
+    - 0
+    - 1
+    - 2
   monitored_conditions:
-      - precip_type
-      - precip_probability
-      - cloud_cover
-      - minutely_summary
-      - hourly_summary
-      - apparent_temperature
-      - temperature_high
-      - temperature_low
-      - uv_index
+    - precip_type
+    - precip_probability
+    - precip_intensity
+    - precip_accumulation
+    - cloud_cover
+    - hourly_summary
+    - daily_summary
+    - temperature
+    - humidity
+    - apparent_temperature
+    - apparent_temperature_high
+    - apparent_temperature_low
+    - uv_index
  
-- platform: yweather
-  forecast: 1
-  name: yw_day1
-  monitored_conditions:
-    - weather
-    - temp_min
-    - temp_max
-- platform: yweather
-  forecast: 2
-  name: yw_day2
-  monitored_conditions:
-    - weather
-    - temp_min
-    - temp_max
-- platform: yweather
-  forecast: 3
-  name: yw_day3
-  monitored_conditions:
-    - weather
-    - temp_min
-    - temp_max
+# - platform: yweather
+  # forecast: 1
+  # name: yw_day1
+  # monitored_conditions:
+    # - weather
+    # - temp_min
+    # - temp_max
+# - platform: yweather
+  # forecast: 2
+  # name: yw_day2
+  # monitored_conditions:
+    # - weather
+    # - temp_min
+    # - temp_max
+# - platform: yweather
+  # forecast: 3
+  # name: yw_day3
+  # monitored_conditions:
+    # - weather
+    # - temp_min
+    # - temp_max
  
-- platform: nzbget
-  host: 192.168.86.41
-  hide_in_default_view: true
-  username: !secret nzbget_username
-  password: !secret nzbget_password
-  monitored_variables:
-    - article_cache
-    - average_download_rate
-    - download_paused
-    - download_size
-    - post_paused
-    - remaining_size
+#- platform: nzbget
+#  host: 192.168.86.41
+#  hide_in_default_view: true
+#  username: !secret nzbget_username
+#  password: !secret nzbget_password
+#  monitored_variables:
+#    - article_cache
+#    - average_download_rate
+#    - download_paused
+#    - download_size
+#    - post_paused
+#    - remaining_size
  
-- platform: deluge
-  host: 192.168.86.41
-  username: !secret deluge_username
-  password: !secret deluge_password
-  monitored_variables:
-    - current_status
-    - download_speed
-    - upload_speed
+#- platform: deluge
+#  host: 192.168.86.41
+#  username: !secret deluge_username
+#  password: !secret deluge_password
+#  monitored_variables:
+#    - current_status
+#    - download_speed
+#    - upload_speed
  
-- platform: transmission
-  host: 192.168.86.35 
-  monitored_variables:
-    - current_status 
-    - active_torrents
+#- platform: transmission
+#  host: 192.168.86.35 
+#  monitored_variables:
+#    - current_status 
+#    - active_torrents
      
 
-- platform: sonarr
-  api_key: !secret sonarr_api_key
-  host: galaxy
-  port: 8989
-  monitored_conditions: 
-    - upcoming
-    - diskspace
-    - queue
-  days: 2
-  unit: TB
+#- platform: sonarr
+#  api_key: !secret sonarr_api_key
+#  host: galaxy
+#  port: 8989
+#  monitored_conditions: 
+#    - upcoming
+#    - diskspace
+#    - queue
+#  days: 2
+#  unit: TB
 
-- platform: radarr
-  api_key: !secret radarr_api_key
-  
-- platform: fitbit
-  client_id: !secret fitbit_client_id
-  client_secret: !secret fitbit_client_secret
-  clock_format: 24H
-  hide_in_default_view: true
-  monitored_resources:
-    - "sleep/timeInBed"
-    - "activities/steps"
-    - "sleep/minutesAsleep"
-    - "devices/battery"
-    - "activities/heart"
+# - platform: radarr
+  # api_key: !secret radarr_api_key
+ 
+#- platform: fitbit
+#  client_id: !secret fitbit_client_id
+#  client_secret: !secret fitbit_client_secret
+#  clock_format: 24H
+#  hide_in_default_view: true
+#  monitored_resources:
+#    - "sleep/timeInBed"
+#    - "activities/steps"
+#    - "sleep/minutesAsleep"
+#    - "devices/battery"
+#    - "activities/heart"
     
 # - platform: season
   # type: astronomical
@@ -122,432 +108,166 @@
   host: 192.168.86.1
   name: Google WiFi
   
-- platform: hue
+ # TRAVEL TIME
+# - platform: waze_travel_time
+  # name: "Broadridge Commute"
+  # region: 'US'
+  # origin: '13 Warrington Round, Danbury, CT, 06810'
+  # destination: '10 Bank St, White Plains, NY'
 
-  #- platform: fail2ban
-  #jails:
-   # - hass-iptables
-  #file_path: /fail2ban/fail2ban.log scan_interval: 900    
-  
-# MQTT SENSORS
+# - platform: waze_travel_time
+  # name: "Datto Commute"
+  # region: 'US'
+  # origin: '13 Warrington Round, Danbury, CT, 06810'
+  # destination: '101 Meritt 7, Norwalk, CT'
       
-- platform: mqtt
-  state_topic: "smartthings/Garage Multi/temperature"
-  name: garage_temperature
-  friendly_name: Garage Temperature (Multi)
-  unit_of_measurement: °F
-  forceupdate: true
-  retain: true
-
-#- platform: mqtt
-#  state_topic: "smartthings/Garage Bosch/temperature"
-#  name: garage_temperature_bosch
-#  friendly_name: Garage Temperature (Bosch)
-#  unit_of_measurement: °F
-#  forceupdate: true
-#  retain: true
-  
-#- platform: mqtt
-#  state_topic: 'smartthings/Basement Climate/temperature'
-#  name: basement_temperature
-#  friendly_name: Basement Temperature
-#  unit_of_measurement: °F
-#  retain: true
-#  forceupdate: true
  
-#- platform: mqtt
-#  state_topic: 'smartthings/Basement Climate/humidity'
-#  name: basement_humidity
-#  friendly_name: Basement Temperature
-#  unit_of_measurement: '%'
-#  retain: true
-#  forceupdate: true
- 
-#- platform: mqtt
- # state_topic: "smartthings/Sofia Room Temperature/temperature"
- # name: sofias_room_temperature
- # friendly_name: Sofias Room Temperature
- # unit_of_measurement: °F
- # retain: true
- # forceupdate: true
-  
-#- platform: mqtt
-#  state_topic: "smartthings/Sofia Room Temperature/humidity"
-#  name: sofias_room_humidity
-#  friendly_name: Sofias Room Humidity
-#  unit_of_measurement: "%"
-#  retain: true
-#  forceupdate: true
-  
-#- platform: mqtt
-#  state_topic: "smartthings/Bedroom Climate/temperature"
-#  name: bedroom_temperature
-#  friendly_name: Bedroom Temperature
-#  unit_of_measurement: °F
-#  retain: true
-#  forceupdate: true
-  
-#- platform: mqtt
-#  state_topic: "smartthings/Bedroom Climate/humidity"
-#  name: bedroom_humidity
-#  friendly_name: Bedroom Humidity
-#  unit_of_measurement: "%"
-#  retain: true
-#  forceupdate: true
-  
-- platform: mqtt
-  state_topic: "smartthings/Outdoor Weather/temperature"
-  name: outdoor_temperature
-  friendly_name: Outdoor Temperature
-  unit_of_measurement: °F
-  retain: true
-  forceupdate: true
-  
-- platform: mqtt
-  state_topic: "smartthings/Outdoor Weather/humidity"
-  name: outdoor_humidity
-  friendly_name: Outdoor Humidity
-  unit_of_measurement: "%"
-  retain: true
-  forceupdate: true
-
-# PLANT GATEWAY MQTT SENSORS
-- platform: mqtt
-  name: plant_mqtt_basil_1_moisture
-  friendly_name: Basil Soil Moisture
-  state_topic: "plantgateway/raw/basil_1"
-  value_template: '{{ value_json.moisture }}'
-  unit_of_measurement: '%'
-  retain: true
-
-- platform: mqtt   
-  name: plant_mqtt_basil_1_battery
-  friendly_name: Basil Node Battery
-  state_topic: "plantgateway/raw/basil_1"
-  value_template: '{{ value_json.battery }}'
-  unit_of_measurement: '%'
-  forceupdate: true
-  retain: true
-
-- platform: mqtt
-  name: plant_mqtt_basil_1_temperature
-  friendly_name: Basil Ambient Temperature
-  state_topic: "plantgateway/raw/basil_1"
-  value_template: '{{ float(value_json.temperature) * 9 / 5 + 32 }}'
-  retain: true
-  unit_of_measurement: °F
-  
-- platform: mqtt
-  name: plant_mqtt_basil_1_conductivity
-  friendly_name: Basil Soil Conductivity
-  state_topic: "plantgateway/raw/basil_1"
-  value_template: '{{ value_json.conductivity }}'
-  unit_of_measurement: "uS/cm"
-  retain: true
-  
-- platform: mqtt
-  name: plant_mqtt_basil_1_brightness
-  friendly_name: Basil Ambient Light
-  state_topic: "plantgateway/raw/basil_1"
-  value_template: '{{ value_json.brightness }}'
-  unit_of_measurement: lx
-  retain: true
-  
-- platform: mqtt
-  name: plant_mqtt_plant_2_moisture
-  friendly_name: Plant 2 Soil Moisture
-  state_topic: "plantgateway/raw/plant_2"
-  value_template: '{{ value_json.moisture }}'
-  unit_of_measurement: '%'
-  retain: true
-
-- platform: mqtt   
-  name: plant_mqtt_plant_2_battery
-  friendly_name: Plant 2 Node Battery
-  state_topic: "plantgateway/raw/plant_2"
-  value_template: '{{ value_json.battery }}'
-  unit_of_measurement: '%'
-  forceupdate: true
-  retain: true
-
-- platform: mqtt
-  name: plant_mqtt_plant_2_temperature
-  friendly_name: Plant 2 Ambient Temperature
-  state_topic: "plantgateway/raw/plant_2"
-  value_template: '{{ float(value_json.temperature) * 9 / 5 + 32 }}'
-  retain: true
-  unit_of_measurement: °F
-  
-- platform: mqtt
-  name: plant_mqtt_plant_2_conductivity
-  friendly_name: Plant 2 Soil Conductivity
-  state_topic: "plantgateway/raw/plant_2"
-  value_template: '{{ value_json.conductivity }}'
-  unit_of_measurement: "uS/cm"
-  retain: true
-  
-- platform: mqtt
-  name: plant_mqtt_plant_2_brightness
-  friendly_name: Plant 2 Ambient Light
-  state_topic: "plantgateway/raw/plant_2"
-  value_template: '{{ value_json.brightness }}'
-  unit_of_measurement: lx
-  retain: true
-  
-- platform: mqtt
-  name: plant_mqtt_plant_3_moisture
-  friendly_name: Plant 3 Soil Moisture
-  state_topic: "plantgateway/raw/plant_3"
-  value_template: '{{ value_json.moisture }}'
-  unit_of_measurement: '%'
-  retain: true
-
-- platform: mqtt   
-  name: plant_mqtt_plant_3_battery
-  friendly_name: Plant 3 Node Battery
-  state_topic: "plantgateway/raw/plant_3"
-  value_template: '{{ value_json.battery }}'
-  unit_of_measurement: '%'
-  forceupdate: true
-  retain: true
-
-- platform: mqtt
-  name: plant_mqtt_plant_3_temperature
-  friendly_name: Plant 3 Ambient Temperature
-  state_topic: "plantgateway/raw/plant_3"
-  value_template: '{{ float(value_json.temperature) * 9 / 5 + 32 }}'
-  retain: true
-  unit_of_measurement: °F
-  
-- platform: mqtt
-  name: plant_mqtt_plant_3_conductivity
-  friendly_name: Plant 3 Soil Conductivity
-  state_topic: "plantgateway/raw/plant_3"
-  value_template: '{{ value_json.conductivity }}'
-  unit_of_measurement: "uS/cm"
-  retain: true
-  
-- platform: mqtt
-  name: plant_mqtt_plant_3_brightness
-  friendly_name: Plant 3 Ambient Light
-  state_topic: "plantgateway/raw/plant_3"
-  value_template: '{{ value_json.brightness }}'
-  unit_of_measurement: lx
-  retain: true
-
-- platform: mqtt
-  name: plant_mqtt_plant_4_moisture
-  friendly_name: Plant 4 Soil Moisture
-  state_topic: "plantgateway/raw/plant_4"
-  value_template: '{{ value_json.moisture }}'
-  unit_of_measurement: '%'
-  retain: true
-
-- platform: mqtt   
-  name: plant_mqtt_plant_4_battery
-  friendly_name: Plant 4 Node Battery
-  state_topic: "plantgateway/raw/plant_4"
-  value_template: '{{ value_json.battery }}'
-  unit_of_measurement: '%'
-  forceupdate: true
-  retain: true
-
-- platform: mqtt
-  name: plant_mqtt_plant_4_temperature
-  friendly_name: Plant 4 Ambient Temperature
-  state_topic: "plantgateway/raw/plant_4"
-  value_template: '{{ float(value_json.temperature) * 9 / 5 + 32 }}'
-  retain: true
-  unit_of_measurement: °F
-  
-- platform: mqtt
-  name: plant_mqtt_plant_4_conductivity
-  friendly_name: Plant 4 Soil Conductivity
-  state_topic: "plantgateway/raw/plant_4"
-  value_template: '{{ value_json.conductivity }}'
-  unit_of_measurement: "uS/cm"
-  retain: true
-  
-- platform: mqtt
-  name: plant_mqtt_plant_4_brightness
-  friendly_name: Plant 4 Ambient Light
-  state_topic: "plantgateway/raw/plant_4"
-  value_template: '{{ value_json.brightness }}'
-  unit_of_measurement: lx
-  retain: true
-
-- platform: mqtt
-  name: plant_mqtt_plant_5_moisture
-  friendly_name: Front Garden Soil Moisture
-  state_topic: "plantgateway/raw/plant_5"
-  value_template: '{{ value_json.moisture }}'
-  unit_of_measurement: '%'
-  retain: true
-
-- platform: mqtt   
-  name: plant_mqtt_plant_5_battery
-  friendly_name: Garden Node Battery
-  state_topic: "plantgateway/raw/plant_5"
-  value_template: '{{ value_json.battery }}'
-  unit_of_measurement: '%'
-  forceupdate: true
-  retain: true
-
-- platform: mqtt
-  name: plant_mqtt_plant_5_temperature
-  friendly_name: Garden Ambient Temperature
-  state_topic: "plantgateway/raw/plant_5"
-  value_template: '{{ float(value_json.temperature) * 9 / 5 + 32 }}'
-  retain: true
-  unit_of_measurement: °F
-  
-- platform: mqtt
-  name: plant_mqtt_plant_5_conductivity
-  friendly_name: Garden Soil Conductivity
-  state_topic: "plantgateway/raw/plan_5"
-  value_template: '{{ value_json.conductivity }}'
-  unit_of_measurement: "uS/cm"
-  retain: true
-  
-- platform: mqtt
-  name: plant_mqtt_plant_5_brightness
-  friendly_name: Garden Ambient Light
-  state_topic: "plantgateway/raw/plant_5"
-  value_template: '{{ value_json.brightness }}'
-  unit_of_measurement: lx
-  retain: true
+  ###################################
 # XIAOMI HUB SENSORS
       
-- platform: xiaomi_aqara
-  name: bedroom_illumination
-  friendly_name: Bedroom Illumination
-  unit_of_measurement: lx
+# - platform: xiaomi_aqara
+  # name: bedroom_illumination
+  # friendly_name: Bedroom Illumination
+  # unit_of_measurement: lx
  
-- platform: xiaomi_aqara
-  name: front_room_temperature
-  friendly_name: Front Room Temperature 
-  unit_of_measurement: °F
+# - platform: xiaomi_aqara
+  # name: front_room_temperature
+  # friendly_name: Front Room Temperature 
+  # unit_of_measurement: °F
   
-- platform: xiaomi_aqara
-  name: front_room_humidity
-  friendly_name: Front Room Humidity
-  unit_of_measurement: '%'
+# - platform: xiaomi_aqara
+  # name: front_room_humidity
+  # friendly_name: Front Room Humidity
+  # unit_of_measurement: '%'
   
-- platform: xiaomi_aqara
-  name: office_temperature
-  friendly_name: Office Temperature
-  unit_of_measurement: °F
+# - platform: xiaomi_aqara
+  # name: office_temperature
+  # friendly_name: Office Temperature
+  # unit_of_measurement: °F
   
-- platform: xiaomi_aqara
-  name: office_humidity
-  friendly_name: Office Humidity
-  unit_of_measurement: "%"
+# - platform: xiaomi_aqara
+  # name: office_humidity
+  # friendly_name: Office Humidity
+  # unit_of_measurement: "%"
 
-- platform: xiaomi_aqara
-  name: basement_temperature
-  friendly_name: Basement Temperature 
-  unit_of_measurement: °F
+# - platform: xiaomi_aqara
+  # name: basement_temperature
+  # friendly_name: Basement Temperature 
+  # unit_of_measurement: °F
   
-- platform: xiaomi_aqara
-  name: basement_humidity
-  friendly_name: Basement Humidity
-  unit_of_measurement: '%'
+# - platform: xiaomi_aqara
+  # name: basement_humidity
+  # friendly_name: Basement Humidity
+  # unit_of_measurement: '%'
   
-- platform: xiaomi_aqara
-  name: bedroom_temperature
-  friendly_name: Bedroom Temperature 
-  unit_of_measurement: °F
+# - platform: xiaomi_aqara
+  # name: bedroom_temperature
+  # friendly_name: Bedroom Temperature 
+  # unit_of_measurement: °F
   
-- platform: xiaomi_aqara
-  name: bedroom_humidity
-  friendly_name: Bedroom Humidity
-  unit_of_measurement: '%'
+# - platform: xiaomi_aqara
+  # name: bedroom_humidity
+  # friendly_name: Bedroom Humidity
+  # unit_of_measurement: '%'
 
-- platform: xiaomi_aqara
-  name: sofias_room_temperature
-  friendly_name: Sofia's Room Temperature 
-  unit_of_measurement: °F
+# - platform: xiaomi_aqara
+  # name: sofias_room_temperature
+  # friendly_name: Sofia's Room Temperature 
+  # unit_of_measurement: °F
   
-- platform: xiaomi_aqara
-  name: sofias_room_humidity
-  friendly_name: Sofia's Room Humidity
-  unit_of_measurement: '%'
+# - platform: xiaomi_aqara
+  # name: sofias_room_humidity
+  # friendly_name: Sofia's Room Humidity
+  # unit_of_measurement: '%'
   
  # TEMPLATE SENSORS
  
 - platform: template
   sensors:
     plex_aftv:
-      friendly_name: Plex (AFTV2)
+      friendly_name: Plex (FireTV2)
       value_template: >-
         {% if states.media_player.aftn.state == 'playing' %}
         {{ states.media_player.aftn.attributes.media_title }}
         {% else %}
          Nothing
         {% endif %}   
- 
-- platform: template
-  sensors:
-    upstairs_avg_temperature:
-      friendly_name: Upstairs Average Temperature
-      icon_template: mdi:thermometer
+    plex_aftt:
+      friendly_name: Plex (Stick)
       value_template: >-
-        {% if (is_state('sensor.office_temperature','unknown') or is_state('sensor.sofias_room_temperature','unknown') or is_state('bedroom_temperature.state','unknown')) %}
-           Unknown
-         {% else %}
-           {{ (( float(states.sensor.office_temperature.state) + float(states.sensor.bedroom_temperature.state) + float(states.sensor.sofias_room_temperature.state) + float(states.sensor.upstairs_thermostat_temperature.state)) / 4) | round(1) }}
-         {% endif %}
-      unit_of_measurement: °F
-      
-- platform: template
-  sensors:
-    upstairs_avg_humidity:
-      friendly_name: Upstairs Average Humidity
-      icon_template: mdi:thermometer
-      value_template: >-
-        {% if (is_state('sensor.office_humidity','unknown') or is_state('sensor.sofias_room_humidity','unknown') or is_state('bedroom_humidity.state','unknown')) %}
-           Unknown
-         {% else %}
-           {{ (( float(states.sensor.office_humidity.state) + float(states.sensor.bedroom_humidity.state) + float(states.sensor.sofias_room_humidity.state) + float(states.sensor.upstairs_thermostat_temperature.state)) / 4) | round(1) }}
-         {% endif %}
-      unit_of_measurement: "%"
-
-- platform: template
-  sensors:
-    downstairs_avg_temperature:
-      friendly_name: Downstairs Average Temperature
-      icon_template: mdi:thermometer
-      value_template: >-
-        {% if (is_state('sensor.front_room_temperature','unknown')) %}
-           Unknown
-         {% else %}
-           {{ (( float(states.sensor.front_room_temperature.state) + float(states.sensor.downstairs_thermostat_temperature.state)) / 2) | round(1) }}
-         {% endif %}
-      unit_of_measurement: °F
-    downstairs_avg_humidity:
-      friendly_name: Downstairs Average Humidity
-      icon_template: mdi:thermometer
-      value_template: >-
-        {% if (is_state('sensor.front_room_humidity','unknown')) %}
-           Unknown
-         {% else %}
-           {{ (( float(states.sensor.front_room_humidity.state) + float(states.sensor.downstairs_thermostat_humidity.state)) / 2) | round(1) }}
-         {% endif %}
-      unit_of_measurement: '%'
+        {% if states.media_player.aftt.state == 'playing' %}
+        {{ states.media_player.aftt.attributes.media_title }}
+        {% else %}
+         Nothing
+        {% endif %}   
+    last_motion_detection:
+      friendly_name: Last Motion Detection
+      value_template: '{{ states.variable.last_motion.state | string  }} @ {{ states.variable.last_motion_datetime.state | string}}'
+      #device_class: timestamp
+        
+# - platform: template
+  # sensors:
+    # upstairs_avg_temperature:
+      # friendly_name: Upstairs Average Temperature
+      # icon_template: mdi:thermometer
+      # value_template: >-
+        # {% if (is_state('sensor.office_temperature','unknown') or is_state('sensor.sofias_room_temperature','unknown') or is_state('sensor.bedroom_temperature','unknown')) %}
+           # Unknown
+         # {% else %}
+           # {{ (( float(states.sensor.office_temperature.state) + float(states.sensor.bedroom_temperature.state) + float(states.sensor.sofias_room_temperature.state) + float(states.sensor.upstairs_thermostat_temperature.state)) / 4) | round(1) }}
+         # {% endif %}
+      # unit_of_measurement: °F
+    # upstairs_avg_humidity:
+      # friendly_name: Upstairs Average Humidity
+      # icon_template: mdi:thermometer
+      # value_template: >-
+        # {% if (is_state('sensor.office_humidity','unknown') or is_state('sensor.sofias_room_humidity','unknown') or is_state('sensor.bedroom_humidity','unknown')) %}
+           # Unknown
+         # {% else %}
+           # {{ (( float(states.sensor.office_humidity.state) + float(states.sensor.bedroom_humidity.state) + float(states.sensor.sofias_room_humidity.state) + float(states.sensor.upstairs_thermostat_temperature.state)) / 4) | round(1) }}
+         # {% endif %}
+      # unit_of_measurement: "%"
+    # downstairs_avg_temperature:
+      # friendly_name: Downstairs Average Temperature
+      # icon_template: mdi:thermometer
+      # value_template: >-
+        # {% if (is_state('sensor.front_room_temperature','unknown')) %}
+           # Unknown
+         # {% else %}
+           # {{ (( float(states.sensor.front_room_temperature.state) + float(states.sensor.downstairs_thermostat_temperature.state)) / 2) | round(1) }}
+         # {% endif %}
+      # unit_of_measurement: °F
+    # downstairs_avg_humidity:
+      # friendly_name: Downstairs Average Humidity
+      # icon_template: mdi:thermometer
+      # entity_id:
+        # - sensor.front_room_humidity
+        # - sensor.downstairs_thermostat_humidity
+      # value_template: >-
+        # {% if (is_state('sensor.front_room_humidity','unknown')) %}
+           # Unknown
+         # {% else %}
+           # {{ (( float(states.sensor.front_room_humidity.state) + float(states.sensor.downstairs_thermostat_humidity.state)) / 2) | round(1) }}
+         # {% endif %}
+      # unit_of_measurement: '%'
       
 - platform: template
   sensors:
     mud_room_temperature:
+      entity_id:
+        - binary_sensor.mud_room_motion_sensor
       friendly_name: 'Mud Room Temperature'
-      value_template: '{{ ((float(states.sensor.mud_room_motion_sensor.attributes.temperature) * 9 / 5) + 32) | round(1) }}'
+      value_template: '{{ ((float(states.binary_sensor.mud_room_motion_sensor.attributes.temperature) * 9 / 5) + 32) | round(1) }}'
       unit_of_measurement: °F
 
 - platform: template
   sensors:
-    pixel2_battery:
-      friendly_name: "Pixel2 Battery"
+    pixel3_battery:
+      friendly_name: "Pixel3 Battery"
+      entity_id:
+        - device_tracker.ant_pixel3
       unit_of_measurement: "%"
-      value_template: '{{ states.device_tracker.ant_pixel2.attributes.battery  | round(0) }}'
+      value_template: '{% if states.device_tracker.ant_pixel3.attributes.battery is defined %}{{ states.device_tracker.ant_pixel3.attributes.battery  | round(0) }}{% else %}0{% endif %}'
       
 # - platform: mqtt
 #  state_topic: "owntracks/ant/pixel2"
@@ -556,95 +276,128 @@
 #  value_template: '{{ value_json.batt }}'
       
   # MOTION SENSOR RE-TEMPLATING
-- platform: template
-  sensors:
-    mud_room_motion_template:
-      friendly_name: 'Mud Room Motion'
-      value_template: >-
-        {% if is_state('sensor.mud_room_motion_sensor', 'on') %}Active{% else %}Clear{% endif %}
-      icon_template: >-
-        {% if is_state('sensor.mud_room_motion_sensor', 'on') %}
-          mdi:run-fast
-        {% else %}
-          mdi:human-handsup
-         {% endif %}
-    garage_motion_template:
-      friendly_name: 'Garage Motion'
-      value_template: >-
-        {% if is_state('binary_sensor.garage_lightify', 'on') %}Active{% else %}Clear{% endif %}
-      icon_template: >-
-        {% if is_state('binary_sensor.garage_lightify', 'on') %}
-          mdi:run-fast
-        {% else %}
-          mdi:human-handsup
-         {% endif %}
-    office_motion_template:
-      friendly_name: 'Office Motion'
-      value_template: >-
-        {% if is_state('input_boolean.dlink_office_motion', 'on') %} Active {% else %} Clear {% endif %}
-      icon_template: >-
-        {% if is_state('input_boolean.dlink_office_motion', 'on') %}
-          mdi:run-fast
-        {% else %}
-          mdi:human-handsup
-         {% endif %}
+# - platform: template
+  # sensors:
+    # mud_room_motion_template:
+      # friendly_name: 'Mud Room Motion'
+      # value_template: >-
+        # {% if is_state('sensor.mud_room_motion_sensor', 'on') %}Active{% else %}Clear{% endif %}
+      # icon_template: >-
+        # {% if is_state('sensor.mud_room_motion_sensor', 'on') %}
+          # mdi:run-fast
+        # {% else %}
+          # mdi:human-handsup
+         # {% endif %}
+    # garage_motion_template:
+      # friendly_name: 'Garage Motion'
+      # value_template: >-
+        # {% if is_state('binary_sensor.garage_lightify', 'on') %}Active{% else %}Clear{% endif %}
+      # icon_template: >-
+        # {% if is_state('binary_sensor.garage_lightify', 'on') %}
+          # mdi:run-fast
+        # {% else %}
+          # mdi:human-handsup
+         # {% endif %}
  
 # ILLUMINATION 
 - platform: template
   sensors:
     mud_room_light_level:
       friendly_name: 'Mud Room Light Level'
-      value_template: '{{ float(10**((states.sensor.mud_room_motion_sensor.attributes.light_level-1)/10000)) | round(2) }}'
-      unit_of_measurement: lx
- 
- # BODY METRICS
-- platform: template
-  sensors:
-    ant_weight_sensor:
-      friendly_name: 'Weight'
-      value_template: '{{ states.input_number.ant_weight.state }}'
-      unit_of_measurement: lbs
-    ant_bf_pct_sensor:
-      friendly_name: 'BF%'
-      value_template: '{{ states.input_number.ant_bf_pct.state }}'
+      value_template: '{{ float(10**((states.binary_sensor.mud_room_motion_sensor.attributes.light_level-1)/10000)) | round(2) }}'
+    withings_bodyfat:
+      friendly_name: "Body Fat %"
       unit_of_measurement: "%"
-    ant_lean_mass_sensor:
-      friendly_name: 'Lean Mass'
-      value_template: '{{ states.input_number.ant_lean_mass.state }}'
-      unit_of_measurement: lbs
-    ant_fat_mass_sensor:
-      friendly_name: 'Fat Mass'
-      value_template: '{{ states.input_number.ant_fat_mass.state }}'
-      unit_of_measurement: lbs
-    ant_measurement_taken:
-      friendly_name: 'Weighed @'
-      value_template: '{{ states.input_datetime.ant_weigh_datetime.state }}'
+      value_template: '{%- if ((states.sensor.withings_weight.state | float) == 0) -%}0{%- else -%}{{((states.sensor.withings_fat_mass.state | float / states.sensor.withings_weight.state | float) * 100) | round(2) }}{%- endif -%}'
+    withings_muscle:
+      friendly_name: "Muscle %"
+      unit_of_measurement: "%"
+      value_template: '{%- if ((states.sensor.withings_weight.state | float) == 0) -%}0{%- else -%}{{((states.sensor.withings_muscle_mass.state | float / states.sensor.withings_weight.state | float) * 100) | round(2) }}{%- endif -%}'
+    moses_dir_travel:
+      friendly_name: "Moses Walks"
+      value_template: '{{ state_attr("proximity.moses_prox_home","dir_of_travel") }}'
+   # name: plant_mqtt_basil_1_moisture
+  # friendly_name: Basil Soil Moisture
+  # state_topic: "plantgateway/raw/basil_1"
+  # value_template: '{{ value_json.moisture }}'
+  # unit_of_measurement: '%'
+  # retain: true
+ #  - event: ANT_WEIGHT
+#    event_data_template:
+#      fat: '{{ trigger.event.data.fat }}'
+#      lean: '{{ trigger.event.data.lean }}'
+#      bodyfat: '{{ trigger.event.data.bodyfat }}'
+#      weight: '{{ trigger.event.data.weight }}'
+#      timestamp: '{{ trigger.event.data.timestamp }}'
+ # BODY METRICS
+# - platform: mqtt
+  # name: "Ant Weight"
+  # state_topic: "anthony/biometrics/weight"
+  # value_template: '{{ value_json.weight }}'
+  # unit_of_measurement: lbs
+# - platform: mqtt
+  # name: "Ant Bodyfat"
+  # value_template: '{{ value_json.bodyfat  }}'
+  # state_topic: "anthony/biometrics/weight"
+  # unit_of_measurement: "%"
+# - platform: mqtt
+  # name: "Ant Lean Mass"
+  # value_template: '{{ value_json.lean }}'
+  # state_topic: "anthony/biometrics/weight"
+  # unit_of_measurement: lbs
+# - platform: mqtt
+  # name: "Ant Fat Mass"
+  # value_template: '{{ value_json.fat  }}'
+  # state_topic: "anthony/biometrics/weight"
+  # unit_of_measurement: lbs
+# - platform: mqtt
+  # name: "Body Metric Measured At"
+  # state_topic: "anthony/biometrics/weight"
+  # value_template: '{{ value_json.timestamp }}'
 
+- platform: hue_sensor
+  
+- platform: withings
+  client_id:  !secret withings_client
+  secret: !secret withings_secret
+  profile: "Anthony"
+  measurements:
+    - weight_lb
+    - fat_mass_lb
+    - muscle_mass_lb
+    - bone_mass_lb
+    - fat_free_mass_lb
+    - sleep_state
+    # - sleep_deep_duration_minutes
+    # - sleep_rem_duration_minutes
+    # - sleep_light_duration_minutes
+    # - sleep_wakeup_duration_minutes
+    
 - platform: filter
-  name: ant_weight_smooth
-  entity_id: sensor.ant_weight_sensor
-  friendly_name: Weight Trend
-  unit_of_measurement: lbs
-  history_period: 72:00:00
+  name: withings_weight_smooth
+  entity_id: sensor.withings_weight
   filters:
     - filter: outlier
-      window_size: 5
+      window_size: 4
       radius: 2
     - filter: lowpass
-      time_constant: 15
+      time_constant: 10
+    - filter: time_simple_moving_average
+      window_size: "01:00"
+      precision: 2
       
 - platform: filter
-  name: ant_bf_pct_smooth
-  entity_id: sensor.ant_bf_pct_sensor
-  friendly_name: BF% Trend
-  unit_of_measurement: lbs
-  history_period: 72:00:00
+  name: withings_bodyfat_smoot
+  entity_id: sensor.withings_bodyfat
   filters:
     - filter: outlier
-      window_size: 5
+      window_size: 4
       radius: 2
     - filter: lowpass
-      time_constant: 15
+      time_constant: 10
+    - filter: time_simple_moving_average
+      window_size: "01:00"
+      precision: 2
 
 #- platform: filter
 #  name: ant_lean_mass_sensor
@@ -662,15 +415,19 @@
   sensors:
     nextsunrise:
        friendly_name: 'Next Sunrise'
+       entity_id: sun.sun
        value_template: "{{ as_timestamp(states.sun.sun.attributes.next_rising) | timestamp_custom('%D %-I:%M %P') }}"
     nextsunset:
       friendly_name: 'Next Sunset'
+      entity_id: sun.sun
       value_template: "{{ as_timestamp(states.sun.sun.attributes.next_setting) | timestamp_custom('%D %-I:%M %P') }}"
     dayofyear:
       friendly_name: 'Day Number'
+      entity_id: sun.sun
       value_template: "{{ now().strftime('%j') }}"
     weekofyear:
       friendly_name: 'Week Number'
+      entity_id: sun.sun
       value_template: "{{ now().strftime('%U') }}"
 
 - platform: template
@@ -678,12 +435,14 @@
     sunset_time:
       friendly_name: Sunset
       icon_template: mdi:weather-sunset-down
+      entity_id: sun.sun
       value_template: '{{ as_timestamp(states.sun.sun.attributes.next_setting) | timestamp_custom("%H:%M") }}' 
 
 - platform: template
   sensors:
     sunrise_time:
       friendly_name: Sunrise
+      entity_id: sun.sun
       icon_template: mdi:weather-sunset-up
       value_template: '{{ as_timestamp(states.sun.sun.attributes.next_rising) |  timestamp_custom("%H:%M") }}' 
       
@@ -691,6 +450,7 @@
   sensors:
     moonphases:
       friendly_name: Moon Phase
+      entity_id: sensor.moon
       value_template: '{{ states.sensor.moon.state }}'
       entity_picture_template: >-
           {%- if is_state('sensor.moon', 'New moon') -%}
@@ -713,5 +473,309 @@
             unknown
           {%- endif -%} 
 
+# MQTT SENSORS
 
+ 
+# - platform: mqtt
+  # state_topic: "smartthings/Garage Multi/temperature"
+  # name: garage_temperature
+  # friendly_name: Garage Temperature (Multi)
+  # unit_of_measurement: °F
+  # forceupdate: true
+  # retain: true
+
+# - platform: mqtt
+  # state_topic: "smartthings/Garage Bosch/temperature"
+  # name: garage_temperature_bosch
+  # friendly_name: Garage Temperature (Bosch)
+  # unit_of_measurement: °F
+  # forceupdate: true
+  # retain: true
+  
+# - platform: mqtt
+  # state_topic: 'smartthings/Basement Climate/temperature'
+  # name: basement_temperature
+  # friendly_name: Basement Temperature
+  # unit_of_measurement: °F
+  # retain: true
+  # forceupdate: true
+  
+# - platform: mqtt
+  # state_topic: 'smartthings/Basement Climate/humidity'
+  # name: basement_humidity
+  # friendly_name: Basement Temperature
+  # unit_of_measurement: '%'
+  # retain: true
+  # forceupdate: true
+ 
+# - platform: mqtt
+  # state_topic: "smartthings/Sofia Room Temperature/temperature"
+  # name: sofias_room_temperature
+  # friendly_name: Sofias Room Temperature
+  # unit_of_measurement: °F
+  # retain: true
+  # forceupdate: true
+  
+# - platform: mqtt
+  # state_topic: "smartthings/Sofia Room Temperature/humidity"
+  # name: sofias_room_humidity
+  # friendly_name: Sofias Room Humidity
+  # unit_of_measurement: "%"
+  # retain: true
+  # forceupdate: true
+  
+# - platform: mqtt
+  # state_topic: "smartthings/Bedroom Climate/temperature"
+  # name: bedroom_temperature
+  # friendly_name: Bedroom Temperature
+  # unit_of_measurement: °F
+  # retain: true
+  # forceupdate: true
+   
+# - platform: mqtt
+  # state_topic: "smartthings/Bedroom Climate/humidity"
+  # name: bedroom_humidity
+  # friendly_name: Bedroom Humidity
+  # unit_of_measurement: "%"
+  # retain: true
+  # forceupdate: true
+
+# - platform: mqtt
+  # state_topic: "smartthings/Kitchen Refrigerator/temperature"
+  # name: kitchen_fridge_temperature
+  #friendly_name: Kitchen Fridge Temp
+  # unit_of_measurement: °F
+  #retain: true
+  #forceupdate: true 
+  
+# - platform: mqtt
+  # state_topic: "smartthings/Kitchen Refrigerator/humidity"
+  # name: kitchen_fridge_humidity
+  #friendly_name: Kitchen Fridge Humidity
+  # unit_of_measurement: '%'
+  #retain: true
+  #forceupdate: true 
+
+# - platform: mqtt
+  # state_topic: "smartthings/Outdoor Weather/temperature"
+  # name: outdoor_temperature
+  # friendly_name: Outdoor Temperature
+  # unit_of_measurement: °F
+  # retain: true
+  # forceupdate: true
+  
+# - platform: mqtt
+  # state_topic: "smartthings/Outdoor Weather/humidity"
+  # name: outdoor_humidity
+  # friendly_name: Outdoor Humidity
+  # unit_of_measurement: "%"
+  # retain: true
+  # forceupdate: true
+
+# PLANT GATEWAY MQTT SENSORS
+# - platform: mqtt
+  # name: plant_mqtt_basil_1_moisture
+  # friendly_name: Basil Soil Moisture
+  # state_topic: "plantgateway/raw/basil_1"
+  # value_template: '{{ value_json.moisture }}'
+  # unit_of_measurement: '%'
+  # retain: true
+
+# - platform: mqtt   
+  # name: plant_mqtt_basil_1_battery
+  # friendly_name: Basil Node Battery
+  # state_topic: "plantgateway/raw/basil_1"
+  # value_template: '{{ value_json.battery }}'
+  # unit_of_measurement: '%'
+  # forceupdate: true
+  # retain: true
+
+# - platform: mqtt
+  # name: plant_mqtt_basil_1_temperature
+  # friendly_name: Basil Ambient Temperature
+  # state_topic: "plantgateway/raw/basil_1"
+  # value_template: '{{ float(value_json.temperature) * 9 / 5 + 32 }}'
+  # retain: true
+  # unit_of_measurement: °F
+  
+# - platform: mqtt
+  # name: plant_mqtt_basil_1_conductivity
+  # friendly_name: Basil Soil Conductivity
+  # state_topic: "plantgateway/raw/basil_1"
+  # value_template: '{{ value_json.conductivity }}'
+  # unit_of_measurement: "uS/cm"
+  # retain: true
+  
+# - platform: mqtt
+  # name: plant_mqtt_basil_1_brightness
+  # friendly_name: Basil Ambient Light
+  # state_topic: "plantgateway/raw/basil_1"
+  # value_template: '{{ value_json.brightness }}'
+  # unit_of_measurement: lx
+  # retain: true
+  
+# - platform: mqtt
+  # name: plant_mqtt_plant_2_moisture
+  # friendly_name: Plant 2 Soil Moisture
+  # state_topic: "plantgateway/raw/plant_2"
+  # value_template: '{{ value_json.moisture }}'
+  # unit_of_measurement: '%'
+  # retain: true
+
+# - platform: mqtt   
+  # name: plant_mqtt_plant_2_battery
+  # friendly_name: Plant 2 Node Battery
+  # state_topic: "plantgateway/raw/plant_2"
+  # value_template: '{{ value_json.battery }}'
+  # unit_of_measurement: '%'
+  # forceupdate: true
+  # retain: true
+
+# - platform: mqtt
+  # name: plant_mqtt_plant_2_temperature
+  # friendly_name: Plant 2 Ambient Temperature
+  # state_topic: "plantgateway/raw/plant_2"
+  # value_template: '{{ float(value_json.temperature) * 9 / 5 + 32 }}'
+  # retain: true
+  # unit_of_measurement: °F
+  
+# - platform: mqtt
+  # name: plant_mqtt_plant_2_conductivity
+  # friendly_name: Plant 2 Soil Conductivity
+  # state_topic: "plantgateway/raw/plant_2"
+  # value_template: '{{ value_json.conductivity }}'
+  # unit_of_measurement: "uS/cm"
+  # retain: true
+  
+# - platform: mqtt
+  # name: plant_mqtt_plant_2_brightness
+  # friendly_name: Plant 2 Ambient Light
+  # state_topic: "plantgateway/raw/plant_2"
+  # value_template: '{{ value_json.brightness }}'
+  # unit_of_measurement: lx
+  # retain: true
+  
+# - platform: mqtt
+  # name: plant_mqtt_plant_3_moisture
+  # friendly_name: Plant 3 Soil Moisture
+  # state_topic: "plantgateway/raw/plant_3"
+  # value_template: '{{ value_json.moisture }}'
+  # unit_of_measurement: '%'
+  # retain: true
+
+# - platform: mqtt   
+  # name: plant_mqtt_plant_3_battery
+  # friendly_name: Plant 3 Node Battery
+  # state_topic: "plantgateway/raw/plant_3"
+  # value_template: '{{ value_json.battery }}'
+  # unit_of_measurement: '%'
+  # forceupdate: true
+  # retain: true
+
+# - platform: mqtt
+  # name: plant_mqtt_plant_3_temperature
+  # friendly_name: Plant 3 Ambient Temperature
+  # state_topic: "plantgateway/raw/plant_3"
+  # value_template: '{{ float(value_json.temperature) * 9 / 5 + 32 }}'
+  # retain: true
+  # unit_of_measurement: °F
+  
+# - platform: mqtt
+  # name: plant_mqtt_plant_3_conductivity
+  # friendly_name: Plant 3 Soil Conductivity
+  # state_topic: "plantgateway/raw/plant_3"
+  # value_template: '{{ value_json.conductivity }}'
+  # unit_of_measurement: "uS/cm"
+  # retain: true
+  
+# - platform: mqtt
+  # name: plant_mqtt_plant_3_brightness
+  # friendly_name: Plant 3 Ambient Light
+  # state_topic: "plantgateway/raw/plant_3"
+  # value_template: '{{ value_json.brightness }}'
+  # unit_of_measurement: lx
+  # retain: true
+
+# - platform: mqtt
+  # name: plant_mqtt_plant_4_moisture
+  # friendly_name: Plant 4 Soil Moisture
+  # state_topic: "plantgateway/raw/plant_4"
+  # value_template: '{{ value_json.moisture }}'
+  # unit_of_measurement: '%'
+  # retain: true
+
+# - platform: mqtt   
+  # name: plant_mqtt_plant_4_battery
+  # friendly_name: Plant 4 Node Battery
+  # state_topic: "plantgateway/raw/plant_4"
+  # value_template: '{{ value_json.battery }}'
+  # unit_of_measurement: '%'
+  # forceupdate: true
+  # retain: true
+
+# - platform: mqtt
+  # name: plant_mqtt_plant_4_temperature
+  # friendly_name: Plant 4 Ambient Temperature
+  # state_topic: "plantgateway/raw/plant_4"
+  # value_template: '{{ float(value_json.temperature) * 9 / 5 + 32 }}'
+  # retain: true
+  # unit_of_measurement: °F
+  
+# - platform: mqtt
+  # name: plant_mqtt_plant_4_conductivity
+  # friendly_name: Plant 4 Soil Conductivity
+  # state_topic: "plantgateway/raw/plant_4"
+  # value_template: '{{ value_json.conductivity }}'
+  # unit_of_measurement: "uS/cm"
+  # retain: true
+  
+# - platform: mqtt
+  # name: plant_mqtt_plant_4_brightness
+  # friendly_name: Plant 4 Ambient Light
+  # state_topic: "plantgateway/raw/plant_4"
+  # value_template: '{{ value_json.brightness }}'
+  # unit_of_measurement: lx
+  # retain: true
+
+# - platform: mqtt
+  # name: plant_mqtt_plant_5_moisture
+  # friendly_name: Front Garden Soil Moisture
+  # state_topic: "plantgateway/raw/plant_5"
+  # value_template: '{{ value_json.moisture }}'
+  # unit_of_measurement: '%'
+  # retain: true
+
+# - platform: mqtt   
+  # name: plant_mqtt_plant_5_battery
+  # friendly_name: Garden Node Battery
+  # state_topic: "plantgateway/raw/plant_5"
+  # value_template: '{{ value_json.battery }}'
+  # unit_of_measurement: '%'
+  # forceupdate: true
+  # retain: true
+
+# - platform: mqtt
+  # name: plant_mqtt_plant_5_temperature
+  # friendly_name: Garden Ambient Temperature
+  # state_topic: "plantgateway/raw/plant_5"
+  # value_template: '{{ float(value_json.temperature) * 9 / 5 + 32 }}'
+  # retain: true
+  # unit_of_measurement: °F
+  
+# - platform: mqtt
+  # name: plant_mqtt_plant_5_conductivity
+  # friendly_name: Garden Soil Conductivity
+  # state_topic: "plantgateway/raw/plan_5"
+  # value_template: '{{ value_json.conductivity }}'
+  # unit_of_measurement: "uS/cm"
+  # retain: true
+  
+# - platform: mqtt
+  # name: plant_mqtt_plant_5_brightness
+  # friendly_name: Garden Ambient Light
+  # state_topic: "plantgateway/raw/plant_5"
+  # value_template: '{{ value_json.brightness }}'
+  # unit_of_measurement: lx
+  # retain: true
+ 
 

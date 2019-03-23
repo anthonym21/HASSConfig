@@ -24,7 +24,6 @@
       - sensor.pws_weather_3n
       - sensor.pws_weather_4d
       - sensor.pws_weather_4n
-      - sensor.travel_time__phone_to_home
       - sensor.last_boot
       - sensor.date
       - weather.dark_sky

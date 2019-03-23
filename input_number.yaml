@@ -1,34 +1,62 @@
 
+  stair_hall_light:
+    name: Stair Lights
+    min: 1
+    max: 3
+    step: 1
+
   ant_weight:
     name: Weight
-    min: 160
-    max: 250
-    step: .01
-    mode: box
+    min: 100
+    max: 280
+    step: 0.01
+    unit_of_measurement: "lbs"
+    icon: mdi:weight-pound
 
   ant_bf_pct:
     name: "BF%"
-    min: 14
-    max: 30
-    step: .01
-    mode: box
+    min: 6
+    max: 35
+    step: 0.01
+    unit_of_measurement: "%"
+    icon: mdi:percent
 
   ant_fat_mass:
     name: "Fat Mass"
     min: 1
     max: 200
-    step: .01
-    mode: box
+    step: 0.01
+    unit_of_measurement: "lbs"
+    icon: mdi:weight
 
   ant_lean_mass:
     name: "Lean Mass"
-    min: 120
+    min: 1
     max: 200
-    step: .01
-    mode: box
+    step: 0.01
+    unit_of_measurement: "lbs"
+    icon: mdi:dumbbell
 
-  sunrise_duration:
-    name: "Sunrise Duration"
-    min: 24
+  fade_out_duration:
+    name: "Fade Out Duration"
+    min: 10
     max: 3600
-    step: 8 
+    unit_of_measurement: "seconds"
+    step: 1 
+    icon: mdi:power-sleep
+    
+  fade_in_duration:
+    name: "Fade In Duration"
+    min: 10
+    max: 3600
+    unit_of_measurement: "seconds"
+    step: 1 
+    icon: mdi:white-balance-sunny
+    
+  fade_out_office:
+    name: "Fade Out Office"
+    min: 10
+    max: 3600
+    unit_of_measurement: "seconds"
+    step: 1 
+    icon: mdi:power-sleep

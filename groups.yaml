@@ -32,12 +32,27 @@
       - group.weather_ahead
       - group.local_outdoor_temps
 
+  antview:
+    name: Anthony
+    view: true
+    control: hidden
+    entities:
+      - group.movingabout
+      - group.office_room
+      - group.bedroom_room
+      - climate.nest_upstairs
+      - climate.nest_downstairs
+      - group.local_outdoor_temps
+      - group.family
+      - camera.office_window_camera
+      - group.booleans
       
   upstairs_view:
     name: Upstairs
     view: yes
     control: hidden
     entities:
+      - binary_sensor.dryer_running
       - group.bedroom_room
       - group.office_room
       - group.sofias_room
@@ -66,51 +81,37 @@
     entities:
       - group.all_lights
       
-  coummute_view:
-    name: Commuting
-    view: yes
-    control: hidden
-    entities:
-      - group.commuting_times
+  # coummute_view:
+    # name: Commuting
+    # view: yes
+    # control: hidden
+    # entities:
+      # - group.commuting_times
       
-  plant_view:
-    name: Plants
-    view: true
-    control: hidden
-    entities:
-      - plant.basil_1
-      - plant.plant_2
-      - plant.plant_3
-      - plant.plant_4
-      - plant.plant_5
+  #plant_view:
+  #  name: Plants
+   # view: true
+   # control: hidden
+   # entities:
+    #  - plant.basil_1
+    #  - plant.plant_2
+    #  - plant.plant_3
+    #  - plant.plant_4
+    #  - plant.plant_5
   
   network_computers:
     name: Intranetwork
     view: true
     control: hidden
     entities:
+      - group.network_devices
+      - group.network_systems
       - group.google_wifi_group
       - group.nzbget
       - group.sonarr
       - group.radarr
       - group.deluge
   
-  antview:
-    name: Anthony
-    view: true
-    control: hidden
-    entities:
-      - group.family
-      - group.booleans
-      - group.office_room
-      - group.my_commute
-      - group.movingabout
-      - group.fitbit
-      - group.weather_today
-      - group.almanac
-      - group.ant_body_composition_over_time
-      - group.batteries
-
   quick_motion:
     name: Activity
     view: yes
@@ -138,16 +139,19 @@
     entities:
       - sensor.outdoor_temperature
       - sensor.outdoor_humidity
-      - sensor.dark_sky_daily_low_apparent_temperature
-      - sensor.dark_sky_daily_high_apparent_temperature
+      - sensor.dark_sky_overnight_low_temperature
+      - sensor.dark_sky_daytime_high_temperature
+      - sensor.dark_sky_apparent_temperature
+      - sensor.pws_feelslike_string
 
   family:
     name: Family
     icon: mdi:home
     control: hidden
     entities:
-      - device_tracker.ant_pixel2
+      - device_tracker.ant_pixel3
       - device_tracker.sam_iphone
+      - device_tracker.sam_apple_watch
       - device_tracker.dan_iphone
       - device_tracker.mom_iphone
       - device_tracker.dad_iphone
@@ -167,6 +171,12 @@
       - input_boolean.push_blink_alerts
       - input_boolean.push_html5_alerts
       - input_boolean.push_blink_alerts_downstairs
+      - input_boolean.ant_in_bed
+      - input_boolean.luminate
+      - input_boolean.office_motion_throttle
+      - input_boolean.office_occupancy
+      - input_boolean.tv_room_occupancy
+      - input_boolean.push_door_alerts
   
   upstairs_all_temps:
     name: Upstairs Temperatures
@@ -192,6 +202,8 @@
       - sensor.kitchen_temperature
       - sensor.kitchen_humidity
       - sensor.kitchen_air_pressure
+      - sensor.kitchen_fridge_temp
+      - sensor.kitchen_fridge_humidity
       - sensor.downstairs_avg_temperature
       - sensor.downstairs_avg_humidity
             
@@ -273,10 +285,11 @@
     name: Dining Room
     control: hidden
     entities:
+      - binary_sensor.dining_room_motion
       - sensor.dining_room_illumination
       - light.dining_room
       - light.front_chess_table
-      - binary_sensor.dining_room_motion
+
 
   front_room:
     name: Front Room
@@ -285,12 +298,14 @@
       - light.front_lightstrip
       - light.front_lamp
       - light.front_small_lamps
-      - media_player.fire_tv_stick
+      - media_player.aftt
   
   kitchen_room:
     name: Kitchen
     control: hidden
     entities:
+      - sensor.kitchen_fridge_temperature
+      - sensor.kitchen_fridge_humidity
       - light.kitchen_island
       - light.kitchenette_lamp
       - sensor.kitchen_temperature
@@ -306,13 +321,17 @@
      - light.tv_room_back_lamp
      - light.tv_room_front_lamp
      - sensor.plex_aftv
+     - sensor.plex_aftt
      - media_player.tv_room_google
-     - media_player.atfn
+     - media_player.aftn
      - media_player.lg_tv
      - media_player.kodi_libreeleclocal
+     - media_player.apple_tv
      - remote.harmony
      - scene.illuminated_downstairs
      - scene.deluminated_downstairs
+     - binary_sensor.tv_room_motion
+     - binary_sensor.tv_room_occupancy
      - climate.nest_downstairs
   
   sofias_room:
@@ -321,10 +340,15 @@
     control: hidden
     entities:
       - binary_sensor.sofias_room_door
+      - binary_sensor.sofias_room_motion
       - sensor.sofias_room_temperature
       - sensor.sofias_room_humidity
       - light.sofia_pillar
       - light.sofias_lamp
+      - light.sofias_room
+      - sensor.sofias_room_illumination
+      - script.fade_sofias_room_in
+      - script.fade_sofias_room_out
   
   bedroom_room:
     name: Master Bedroom
@@ -334,12 +358,16 @@
       - sensor.bedroom_temperature
       - sensor.bedroom_humidity
       - binary_sensor.bedroom_motion
-      - sensor.bedroom_illumination
+      - binary_sensor.bedroom_bathroom_door
       - light.bedroom_lamp
       - light.bedroom_pillar
       - switch.bedroom_fan
       - light.bedroom
       - script.fade_to_goodnight
+      - script.fade_to_bright
+      - input_number.fade_out_duration
+      - input_number.fade_in_duration
+      - sensor.bedroom_illumination
       - media_player.bedroom_speaker
   
   office_room:
@@ -348,13 +376,17 @@
     control: hidden
     entities:
       - media_player.office_speaker
-      - camera.office_window_camera
+      - fan.office
       - sensor.office_temperature
       - sensor.office_humidity
       - sensor.illumination_gateway
       - binary_sensor.office_motion
+      - binary_sensor.office_occupancy
       - sensor.office_illumination
       - light.office
+      - light.office_irises
+      - light.office_lamps
+      - light.office_blooms
       - light.office_bookcase_bloom
       - light.office_bookcase_iris
       - light.office_closet_corner
@@ -363,33 +395,37 @@
       - light.office_hue_go
       - light.office_monitor_bloom
       - light.office_pillar
-      - light.game_of_thrones_lamp
-      - light.gateway_llight
+      - light.office_game_of_thrones_lamp
+      - light.gateway_light
       - light.flex_rgbw
       - scene.dimmed_office
       - scene.neutral_dim_office
       - scene.bright_white_office
-      - input_number.sunrise_duration
-#      - switch.office_flux
+      - input_number.fade_out_office
+      - script.fade_out_office
       - switch.dome_siren
-#      - input_boolean.push_blink_alerts
-#  input_boolean.push_html5_alerts
+      - binary_sensor.office_motion_1
+      - binary_sensor.office_motion_2
 
   basement_room:
     name: Basement
     control: hidden
     entities:
-      - binary_sensor.garage_open
-      - binary_sensor.garage_moving
+      - binary_sensor.basement_motion
+      - binary_sensor.garage_door
+      - binary_sensor.garage_door_open
+      - binary_sensor.garage_door_tilt
+      - binary_sensor.garage_door_moving
       - binary_sensor.garage_motion
       - sensor.mud_room_motion_template
-      - binary_sensor.basement_door
+      - binary_sensor.mudroom_door
+      - binary_sensor.basement_freezer_door
       - sensor.mud_room_light_level
       - sensor.basement_temperature
       - sensor.garage_temperature_bosch
       - sensor.basement_humidity
       - light.mud_room
-      - light.garage_lights
+      - light.garage
   
   ant_body_composition_over_time:
     name: Body Metrics Weekly
@@ -428,6 +464,21 @@
       - sensor.sonarr_queue
       - sensor.sonarr_upcoming
   
+  network_systems:
+    name: Network Status
+    entities:
+      - device_tracker.ant_chromebook
+      - device_tracker.prodrive
+      - device_tracker.papirus
+      - device_tracker.wyze_garage
+      - device_tracker.creepercam
+      - device_tracker.plantgateway
+      - device_tracker.pi3b_local
+      - device_tracker.sam_work_laptop
+      - device_tracker.raspi01
+      - device_tracker.sofiacam
+      - device_tracker.thinkpad
+  
   fitbit:   
     name: Body Metrics
     control: hidden
@@ -441,7 +492,9 @@
       - sensor.resting_heart_rate
       - sensor.steps
       - sensor.ant_weight_sensor
+      - sensor.ant_weight_smooth
       - sensor.ant_bf_pct_sensor
+      - sensor.ant_bf_pct_smooth
       - sensor.ant_lean_mass_sensor
       - sensor.ant_fat_mass_sensor
       - sensor.ant_measurement_taken
@@ -455,28 +508,36 @@
       - binary_sensor.bedroom_motion
       - binary_sensor.hallway_spy
       - binary_sensor.office_motion
-      - binary_sensor.office_window_motion
+      - binary_sensor.office_occupancy
+      - binary_sensor.sofias_room_motion
+      - binary_sensor.front_door_camera_motion
       - binary_sensor.dining_room_motion
       - binary_sensor.tv_room_motion
+      - binary_sensor.tv_room_occupancy
       - sensor.mud_room_motion_template
+      - binary_sensor.basement_motion
       - binary_sensor.garage_motion
-      - binary_sensor.garage_door
+      - binary_sensor.garage_door_open
+      - binary_sensor.ecolink_garage_door_tilt_sensor_sensor
       - binary_sensor.garage_moving
+      - binary_sensor.bedroom_bathroom_door
       - binary_sensor.sofias_room_door
       - binary_sensor.front_door
       - binary_sensor.patio_door
-      - binary_sensor.basement_door
-     
+      - binary_sensor.mudroom_door
+
   all_doors:
     name: All Doors
     icon: mdi:door
     entities:
       - binary_sensor.garage_open
+      - binary_sensor.ecolink_garage_door_tilt_sensor_sensor
       - binary_sensor.garage_moving
-      - binary_sensor.basement_door
+      - binary_sensor.mudroom_door
       - binary_sensor.front_door
       - binary_sensor.sofias_room_door
       - binary_sensor.patio_door
+      - binary_sensor.bedroom_bathroom_door
     
 
      
@@ -512,6 +573,7 @@
   household_protect:
     name: Protect Status
     entities:
+      - sensor.upstairs_nest_protect_color_status
       - binary_sensor.upstairs_nest_protect_online
       - sensor.upstairs_nest_protect_co_status
       - sensor.upstairs_nest_protect_smoke_status
@@ -545,13 +607,18 @@
     entities:
       - sensor.dark_sky_summary
       - sensor.dark_sky_temperature
-      - sensor.pws_feelslike_f
-      - sensor.dark_sky_daily_low_apparent_temperature
-      - sensor.dark_sky_daily_high_apparent_temperature
+      - sensor.pws_feelslike_string
+      - sensor.dark_sky_apparent_temperature
+      - sensor.dark_sky_overnight_low_temperature
+      - sensor.dark_sky_daytime_high_temperature
       - sensor.dark_sky_humidity
-      - sensor.dark_sky_precip_type
+      - sensor.dark_sky_cloud_coverage
+      - sensor.pws_precip_today_string
+      - sensor.dark_sky_precip
       - sensor.dark_sky_precip_probability
       - sensor.dark_sky_uv_index
+      - sensor.dark_sky_hourly_summary
+      - sensor.dark_sky_minutely_summary
       - sensor.sunrise_time
       - sensor.sunset_time
       
@@ -562,14 +629,15 @@
       - sensor.pws_weather_1d
       - sensor.pws_weather_1n
       - sensor.pws_temp_f
-      - sensor.dark_sky_daily_low_apparent_temperature
-      - sensor.dark_sky_daily_high_apparent_temperature
+      - sensor.dark_sky_overnight_low_temperature
+      - sensor.dark_sky_daytime_high_temperature
       - sensor.pws_relative_humidity
       - sensor.pws_precip_1d
       - sensor.pws_precip_1d_in
       - sensor.pws_wind_mph
       - sensor.dark_sky_uv_index
       - sensor.pws_alerts
+      - sensor.daylight
   
   weather_ahead:  
     name: Looking Ahead Slightly
@@ -590,13 +658,14 @@
       - sensor.sunset_time
       - sensor.pws_weather_1d
       - sensor.pws_weather_1n
-      - sensor.pws_feelslike_f
+      - sensor.pws_feelslike_string
       - sensor.pws_temp_f
-      - sensor.dark_sky_daily_low_apparent_temperature
-      - sensor.dark_sky_daily_high_apparent_temperature
+      - sensor.dark_sky_overnight_low_temperature
+      - sensor.dark_sky_daytime_high_temperature
       - sensor.pws_relative_humidity
       - sensor.pws_precip_1d
       - sensor.dark_sky_precip
+      - sensor.pws_precip_today_string
       - sensor.pws_precip_1d_in
       - sensor.pws_wind_mph
       - sensor.dark_sky_uv_index
@@ -613,7 +682,10 @@
     name: Homeless
     entities:
       - sensor.office_motion_template
+      - binary_sensor.office_motion_1
+      - binary_sensor.office_motion_2
       - button.luminate
+      - binary_sensor.dryer_actvivity
       - binary_sensor.button_1
       - binary_sensor.button_in_bed
       - sensor.dome_alarm_type
@@ -622,3 +694,21 @@
       - sensor.home_to_datto_raw
       - sensor.datto_to_home_raw
       - sensor.garage_motion_template
+      - sensor.garage_motion_bosch
+      - binary_sensor.garage_bosch
+      - sensor.danbury_eta
+      - binary_sensor.danbury_away
+      - binary_sensor.downstairs_thermostat_is_locked
+      - binary_sensor.downstairs_thermostat_is_using_emergency_heat
+      - binary_sensor.upstairs_thermostat_is_locked
+      - binary_sensor.upstairs_thermostat_is_using_emergency_heat
+      - timer.office_occupancy
+      - timer.tv_room_occupancy
+      - binary_sensor.office_window_motion
+      - binary_sensor.kitchen_motion
+      - sensor.kitchen_illumination
+      - binary_sensor.tv_room_motion_1
+      - sensor.ecolink_garage_door_tilt_sensor_alarm_type
+      - sensor.ecolink_garage_door_tilt_sensor_burglar
+      - sensor.ecolink_garage_door_tilt_sensor_power_management
+      - sensor.ecolink_garage_door_tilt_sensor_sourcenodeid

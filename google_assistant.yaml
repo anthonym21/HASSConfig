@@ -1,0 +1,346 @@
+# GOOGLE Assistant
+#google_assistant:
+  project_id: !secret google_project_id
+  api_key: !secret google_api_key
+  expose_by_default: false
+  exposed_domains:
+    - fan 
+  #  - scene
+  #  - script
+  #  - switch
+  #  - light
+  #  - input boolean
+  entity_config:
+    input_boolean.push_blink_alerts:
+      name: Blink Alerts
+      expose: true
+      room: Attic
+    input_boolean.push_door_alerts:
+      name: Door Alerts
+      expose: true
+      room: Attic
+    input_boolean.push_simple_alerts:
+      name: Push Alerts
+      expose: true
+      room: Attic
+    input_boolean.luminate:
+      name: Downstairs Light Automations
+      expose: true
+      room: Attic
+    input_boolean.jailbreak:
+      name: Jailbreak
+      room: Bedroom    
+      expose: true      
+    light.bedroom_lamp:
+      name: Bedside Lamp
+      expose: true
+      room: Bedroom
+    light.bedroom_pillar:
+      name: Bedroom Pillar
+      expose: true
+      room: Bedroom
+    light.dining_room_1:
+      name: Dining Room 1
+      expose: true
+      room: Dining Room
+    light.dining_room_2:
+      name: Dining Room 2
+      expose: true
+      room: Dining Room
+    light.dining_room_3:
+      name: Dining Room 3
+      expose: true
+      room: Dining Room
+    light.dining_room_4:
+      name: Dining Room 4
+      expose: true
+      room: Dining Room
+    light.dining_room_5:
+      name: Dining Room 5
+      expose: true
+      room: Dining Room
+    light.flux_1:
+      name: Porch Light
+      expose: true
+      room: Balcony
+    light.garage_light_1:
+      name: Garage Light One
+      expose: true
+      room: Garage
+    light.garage_light_2:
+      name: Garage Light Two
+      expose: true
+      room: Garage
+    light.kitchen_island:
+      name: Kitchen Island
+      expose: true
+      room: Other Kitchen
+    light.front_room_small_lamps:
+      name: Front Room Small Lamps
+      expose: true
+      room: Front Room
+    light.front_lightstrip:
+      name: Front Light Strip
+      expose: true
+      room: Front Room
+    light.front_lamp:
+      name: Front Pillar
+      expose: true
+      room: Front Room
+    light.flex_rgbw:
+      name: Office Strip
+      expose: true
+      room: Office
+    light.office_irises:
+      name: Office Irises
+      expose: true
+      room: Office
+    light.office_blooms:
+      name: Office Blooms
+      expose: true
+      room: Office
+    light.office_lamps:
+      name: Office Lamps
+      expose: true
+      room: Office
+    light.office_hue_go:
+      name: Office Go
+      expose: true
+      room: Office
+    light.outside_light:
+      name: Outside Light
+      expose: true
+      room: Outside
+    light.office_gateways:
+      name: Office Gateways
+      expose: true
+      room: Office
+    light.kitchenette_lamp:
+      name: Kitchenette Lamp
+      expose: true
+      aliases: Kitchen Back Light
+      room: Other Kitchen
+    light.sofia_pillar:
+      name: Sofia's Pillar
+      expose: true
+      room: Sofia's Room
+    light.sofias_lamp:
+      name: Sofia's Lamp
+      expose: true
+      room: Sofia's Room
+    light.mud_room:
+      name: Mud Room Lamp
+      expose: true
+      room: Mud Room
+    light.tv_bias:
+      name: TV Bias
+      expose: true
+      room: TV Room
+    light.tv_room_lamps:
+      name: TV Room Lamps
+      expose: true
+      room: TV Room
+    light.kitchen_ceiling_4:
+      name: Kitchen Ceiling Light 4
+      expose: true
+      room: Kitchen
+    light.kitchen_ceiling_3:
+      name: Kitchen Ceiling Light 3
+      expose: true
+      room: Kitchen
+    light.kitchen_ceiling_2:
+      name: Kitchen Ceiling Light 2
+      expose: true
+      room: Kitchen
+    light.kitchen_ceiling_1:
+      name: Kitchen Ceiling Light 1
+      expose: true
+      room: Kitchen      
+    light.basement_white_1:
+      name: Basement White
+      expose: true
+      room: Basement    
+    light.basement_white_2:
+      name: Basement Color
+      expose: true
+      room: Basement    
+    scene.bright_white_office:
+      name: Blinding Office
+      expose: true
+      room: Office
+    scene.early_morning_office:
+      name: Early Morning Office
+      expose: true
+      room: Office
+    scene.neutral_dim_office:
+      name: Neutral Dim Office
+      expose: true
+      room: Office
+    scene.darker_office:
+      name: Late Night Office
+      expose: true
+      room: Office
+    scene.pastel_office:
+      name: Pastel Office
+      expose: true
+      room: Office
+    scene.cool_dark_office:
+      name: Cool Dark Office
+      expose: true
+      room: Office
+    scene.warm_dark_office:
+      name: Warm Dark Office
+      expose: true
+      room: Office
+    scene.deluminated_downstairs:
+      name: Deluminated Downstairs
+      expose: true
+      room: TV Room
+    scene.illuminated_downstairs:
+      name: Illuminated Downstairs
+      expose: true
+      room: TV Room
+    scene.dark_corridors:
+      name: Dark Corridors
+      expose: true
+      room: Hallway
+    scene.bright_corridors:
+      name: Bright Corridors
+      expose: true
+      room: Hallway
+    scene.twilight_corridors:
+      name: Twilight Corridors
+      expose: true
+      room: Hallway
+    scene.red_bedroom:
+      name: Dark Red Bedroom
+      expose: true
+      room: Bedroom
+    scene.relaxing_bedroom:
+      name: Relaxing Bedroom
+      expose: true
+      room: Bedroom
+    script.bedroom_night_routine:
+      name: Bedroom Bedtime
+      room: Bedroom
+      expose: true
+    script.fade_to_bright:
+      name: Bedroom Fade to Bright
+      room: Bedroom
+      expose: true
+    script.fade_to_goodnight:
+      name: Bedroom Fade to Goodnight
+      room: Bedroom
+      expose: true
+    script.fade_out_office:
+      name: Office Fade Out
+      room: Office
+      expose: true
+    switch.bedroom_fan:
+     name: Bedroom Fan
+     room: Bedroom
+     expose: true
+    script.watch_out_for_sofia:
+      name: Watch Out For Sofia
+      room: Bedroom
+      expose: true
+    script.bedroom_good_morrning:
+      name: Bedroom Good Morning
+      room: Bedroom
+      expose: true
+    script.heading_upstairs_routine:
+      name: Heading Upstairs Routine
+      room: TV Room
+      expose: true
+    script.lumos:
+      name: Lumos
+      room: Downstairs
+      expose: true
+    script.gym_wake_up:
+      name: Gym Wake Up
+      room: Bedroom
+      expose: true
+    script.nox:
+      name: Nox
+      room: Downstairs
+      expose: true
+    switch.peanut_leds:
+      name: Peanut Plug
+      expose: true
+      room: Attic
+    script.off_to_the_gym:
+      name: Off to the Gym
+      expose: true
+      room: Upstairs
+    script.back_from_the_gym:
+      name: Back From The Gym
+      expose: true
+      room: Upstairs
+    scene.typical_office:
+      name: Typical Office
+      expose: true
+      room: Office
+    script.fifteen_minute_fan_run:
+      name: House Fans for 15 Minutes
+      expose: true
+      room: Upstairs
+    script.four_hour_fan_run:
+      name: House Fans for 4 Hours
+      expose: true
+      room: Upstairs
+    switch.sofias_tv:
+      name: Sofias TV
+      expose: true
+      room: Front Room
+    switch.office_dumb_fan:
+      name: Stupid Fan
+      expose: true
+      room: Office
+    script.pulsing_lamp:
+      name: Soothing Pulse
+      expose: true
+      room: Bedroom
+    script.goodnight_downstairs:
+      name: Goodnight Downstairs
+      expose: true
+      room: Kitchen
+    light.hallway_bedroom:
+      name: Hallway Bedroom
+      expose: true
+      room: Hall
+    light.hallway_office:
+      name: Hallway Office
+      expose: true
+      room: Hall
+    light.stairs_top:
+      name: Top of the Stairs
+      expose: true
+      room: Stairs
+    light.bottom_of_the_stairs:
+      name: Bottom of the Stairs
+      expose: true
+      room: Stairs
+    script.quiet_bedroom:
+      name: Quiet Bedroom
+      expose: true
+      room: Bedroom
+    climate.google_bedroom_temperature:      
+      name: Bedroom Temperature
+      expose: true
+      room: Bedroom
+    climate.google_sofias_room_temperature:
+      name: Sofia's Room Temperature
+      expose: true
+      room: Sofia's Room 
+    
+   
+      
+      
+      
+      
+      
+       
+          
+     
+  
+    

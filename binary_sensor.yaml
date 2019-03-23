@@ -1,82 +1,116 @@
-- platform: mqtt
-  name: garage_moving
-  friendly_name: Garage Door Acceleration
-  state_topic: "smartthings/Garage Multi/acceleration"
-  device_class : garage_door
-  payload_on: "active"
-  payload_off: "inactive"
-  retain: true  
+# - platform: mqtt
+  # name: garage_moving
+  # friendly_name: Garage Door Acceleration
+  # state_topic: "smartthings/Garage Multi/acceleration"
+  # device_class: moving
+  # payload_on: "active"
+  # payload_off: "inactive"
+  # retain: true  
   
-- platform: mqtt
-  name: garage_lightify
-  state_topic: "smartthings/Lightify Garage/motion"
-  friendly_name: Garage Motion Lightify
-  device_class: motion
-  payload_on: "active"
-  payload_off: "inactive" 
-  retain: true  
+# - platform: mqtt
+  # name: garage_lightify
+  # state_topic: "smartthings/Lightify Garage/motion"
+  # friendly_name: Garage Motion Lightify
+  # device_class: motion
+  # payload_on: "active"
+  # payload_off: "inactive" 
+  # retain: true  
   
-- platform: mqtt
-  name: garage_bosch
-  state_topic: "smartthings/Garage Bosch/motion"
-  friendly_name: Garage Motion Bosch
-  device_class: motion
-  payload_on: "active"
-  payload_off: "inactive" 
-  retain: true
+# - platform: mqtt
+  # name: garage_bosch
+  # state_topic: "smartthings/Garage Bosch/motion"
+  # friendly_name: Garage Motion Bosch
+  # device_class: motion
+  # payload_on: "active"
+  # payload_off: "inactive" 
+  # retain: true
 
-- platform: mqtt
-  name: garage_open
-  state_topic: "smartthings/Garage Multi/contact"
-  friendly_name: Garage Door Open/Close
-  device_class: garage_door
-  payload_on: "open"
-  payload_off: "closed"
-  retain: true
+# - platform: mqtt
+  # name: garage_open
+  # state_topic: "smartthings/Garage Multi/contact"
+  # friendly_name: Garage Door Open/Close (ST)
+  # device_class: garage_door
+  # payload_on: "open"
+  # payload_off: "closed"
+  # retain: true
   
-- platform: mqtt
-  name: basement_door
-  state_topic: "smartthings/Basement Door/contact"
-  friendly_name: Basement Door
-  device_class: door
-  payload_on: "open"
-  payload_off: "closed"
-  retain: true
+# - platform: mqtt
+  # name: basement_door
+  # state_topic: "smartthings/Basement Door/contact"
+  # friendly_name: Basement Door
+  # device_class: door
+  # payload_on: "open"
+  # payload_off: "closed"
+  # retain: true
 
-- platform: mqtt
-  name: sofias_room_door
-  state_topic: "smartthings/Sofia Door/contact"
-  friendly_name: Sofia's Door
-  device_class: door
-  payload_on: "open"
-  payload_off: "closed"
-  retain: true
+# - platform: mqtt
+  # name: freezer_door
+  # state_topic: "smartthings/Freezer Door/contact"
+  # friendly_name: Freezer Door
+  # device_class: door
+  # payload_on: "open"
+  # payload_off: "closed"
+  # retain: true
+  
+# - platform: mqtt
+  # name: kitchen_refrigerator_door
+  # state_topic: "smartthings/Kitchen Refrigerator Door/contact"
+  # friendly_name: Kitchen Refrigerator Door
+  # device_class: door
+  # payload_on: "open"
+  # payload_off: "closed"
+  # retain: true
 
-- platform: mqtt
-  name: patio_door
-  state_topic: "smartthings/Patio Door/contact"
-  friendly_name: Patio Door
-  device_class: door
-  payload_on: "open"
-  payload_off: "closed"
-  retain: true
+# - platform: mqtt
+  # name: sofias_room_door
+  # state_topic: "smartthings/Sofia Door/contact"
+  # friendly_name: Sofia's Door
+  # device_class: door
+  # payload_on: "open"
+  # payload_off: "closed"
+  # retain: true
+
+# - platform: mqtt
+  # name: patio_door
+  # state_topic: "smartthings/Patio Door/contact"
+  # friendly_name: Patio Door
+  # device_class: door
+  # payload_on: "open"
+  # payload_off: "closed"
+  # retain: true
     
-- platform: mqtt
-  name: tv_room_motion
-  state_topic: "smartthings/TV Room Presence/motion"
-  friendly_name: TV Room Motion
-  device_class: motion
-  payload_on: "active"
-  payload_off: "inactive"
-  retain: true
+#- platform: mqtt
+#  name: tv_room_motion_1
+#  state_topic: "smartthings/TV Room Presence/motion"
+#  friendly_name: TV Room Motion
+#  device_class: motion
+#  payload_on: "active"
+#  payload_off: "inactive"
+#  retain: true
 
 - platform: mqtt
-  name: office_window_motion
-  state_topic: "camera/zeroview office/motion"
-  friendly_name: Office Camera Motion
+  name: front_door_camera_mqtt
+  #friendly_name: Front Door MQTT
+  state_topic: "camera/front_door/motion"
+  unique_id: front_door_camera_mqtt
   device_class: motion
-  retain: true
- 
+  payload_on: "on"
+  payload_off: "off"
+  off_delay:  120
+  
+  #retain: true
+
+# - platform: mqtt
+  # state_topic: "smartthings/Dryer Activity/acceleration"
+  # name: dryer_activity
+  # friendly_name: Dryer Activity
+  # device_class: moving
+  # payload_on: "active"
+  # payload_off: "inactive"
+  # retain: true  
+
+- platform: hue_sensor
+  
  # TEMPLATE
 
 - platform: template
@@ -84,49 +118,144 @@
     garage_motion:
       friendly_name: 'Garage Motion'
       value_template: "{{ is_state('binary_sensor.garage_lightify','on') or is_state('binary_sensor.garage_bosch','on') }}"
+      device_class: motion
+ 
+    garage_door:
+      friendly_name: 'Garage Door'
+      value_template: "{{ is_state('binary_sensor.garage_door_tilt','on') or is_state('binary_sensor.garage_door_open','on') }}"
+      device_class: garage_door
+      
+    anthony_is_home:
+      friendly_name: Anthony @ Home
+      value_template: "{{ is_state('device_tracker.ant_pixel3','home') }}"
+      device_class: occupancy
+      delay_off: 
+        minutes: 5
+    
+    anthony_at_gym:
+      friendly_name: Anthony @ Gym
+      value_template: "{{ is_state('device_tracker.2014_nissan_altima','Rivington Gym') }}"
+      device_class: occupancy
+      
+    anyone_is_home:
+      friendly_name: Anyone @ Home
+      value_template: "{{ is_state('device_tracker.ant_pixel3','home') or is_state('device_tracker.sam_iphone','home') }}"
+      device_class: occupancy
+      
+    # front_door_motion:
+      # friendly_name: Front Door Motion
+      # value_template: "{{ is_state('binary_sensor.front_door_camera_mqtt','on') }}"
+      # device_class: motion
+      # delay_off:
+        # minutes: 3
+      
+    tv_room_motion:
+      friendly_name: 'TV Room Motion'
+      value_template: "{{ is_state('binary_sensor.tv_room_motion_1','on') or is_state('binary_sensor.kitchen_motion','on') }}"
+      device_class: motion
+
+    office_motion:
+      friendly_name: 'Office Motion'
+      value_template: "{{ is_state('binary_sensor.office_motion_1','on') or is_state('binary_sensor.office_motion_2','on') }}"
+      device_class: motion
+     
+    # mud_room_motion:
+      # friendly_name: 'Mud Room Motion'
+      # value_template: "{{ is_state('binary_sensor.mud_room_motion_sensor', 'on') }}"
+      # device_class: motion
+     
+    office_occupancy:
+      friendly_name: 'Office Occupancy'
+      value_template: "{{ is_state('input_boolean.office_occupancy','on') }}"
       icon_template: >-
-        {% if is_state('binary_sensor.garage_lightify', 'on') %}
-          mdi:run-fast
+        {% if is_state('input_boolean.office_occupancy', 'on') %}
+          mdi:home-alert
         {% else %}
-          mdi:human-handsup
+          mdi:home-account
          {% endif %}
+    tv_room_occupancy:
+      friendly_name: 'TV Room Occupancy'
+      value_template: "{{ is_state('input_boolean.tv_room_occupancy','on') }}"
+      icon_template: >-
+        {% if is_state('input_boolean.tv_room_occupancy', 'on') %}
+          mdi:home-alert
+        {% else %}
+          mdi:home-account
+         {% endif %}
+
+    dryer_running:
+      friendly_name: 'Dryer Running'
+      value_template: "{{ states.sensor.dryer_power | float > 2 }}"
+      entity_id: sensor.dryer_power
+      device_class: power
+      delay_on:
+        minutes: 1
+      delay_off:           
+        seconds: 90
+      
+    sofias_door_moving:
+      friendly_name: "Sofia's Door Moving"
+      value_template: '{{ is_state("binary_sensor.sofias_door_moving_parent","on") }}'
+      device_class: motion
+      entity_id: binary_sensor.sofias_door_moving_parent
+      delay_on:
+        milliseconds: 250
+      icon_template: >-
+        {%- if state == "true" -%}mdi:alarm-check{%- else -%}mdi:alarm{%- endif -%}
+
       
 # XIAOMI HUB
   
-- platform: xiaomi_aqara
-  name: bedroom_motion
-  friendly_name: Bedroom Motion
-  device_class: motion
-  retain: true
+# - platform: xiaomi_aqara
+  # name: bedroom_motion
+  # device_class: motion
+  # retain: true
 
-- platform: xiaomi_aqara
-  name: luminate_button
-  friendly_name: Luminate Button
-  device_class: light
-  retain: false
+# - platform: xiaomi_aqara
+  # name: binary_sensor.sofias_room_motion
+  # device_class: motion
+  # retain: true
   
-- platform: xiaomi_aqara
-  name: button_in_bed
-  friendly_name: Toggle In-Bed
-  device_class: light
-  retain: false
+# - platform: xiaomi_aqara
+  # name: luminate_button
+  # friendly_name: Luminate Button
+  # device_class: light
+  # retain: false
+  
+# - platform: xiaomi_aqara
+  # name: stair_light_button
+  # friendly_name: Stair Light Button
+  # device_class: light
+  # retain: false
 
-- platform: xiaomi_aqara
-  name: office_motion
-  friendly_name: Office Motion
-  device_class: motion
-  retain: true
+# - platform: xiaomi_aqara
+  # name: office_motion_1
+  # friendly_name: Office Motion Sub 1
+  # device_class: motion
+  # retain: true
   
-- platform: xiaomi_aqara
-  name: hallway_spy
-  friendly_name: Hallway Motion
-  device_class: motion
-  retain: true
-  
-- platform: xiaomi_aqara
-  name: front_door
-  friendly_name: Front Door
-  device_class: door
-  payload_on: "open"
-  payload_off: "closed"
-  retain: true
+# - platform: xiaomi_aqara
+  # name: hallway_spy
+  # friendly_name: Hallway Motion
+  # device_class: motion
+  # retain: true
+ 
+# - platform: xiaomi_aqara
+  # name: bedroom_bathroom_door
+  # friendly_name: Bedroom Bath Door
+  # device_class: door
+  # retain: true
+ 
+# - platform: xiaomi_aqara
+  # name:  kitchen_motion
+  # friendly_name: Kitchen Motion
+  # device_class: motion
+  # retain: true
+
+# - platform: xiaomi_aqara
+  # name: front_door
+  # friendly_name: Front Door
+  # device_class: door
+  # payload_on: "open"
+  # payload_off: "closed"
+  # retain: true

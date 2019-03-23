@@ -14,8 +14,17 @@
 *.sql
 *.pem
 *.conf
+*.sql
+*.txt
+*.7z
 .cloud
+.automatic
+.git
+.storage
+.withings
 core.config_entries
+not.withings
+nppBackup
 deps
 custom_components
 dome

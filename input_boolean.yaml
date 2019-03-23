@@ -1,0 +1,66 @@
+  
+  daytime:
+    name: "Daytime"
+    icon: mdi:sun
+  ant_in_bed:
+    name: "Ant In Bed"
+    icon: mdi:sleep
+  luminate:
+    name: "Unluminate"
+    icon: mdi:light
+    initial: false
+  office_occupancy:
+    name: "Office Occupancy Switch"
+    icon: mdi:home-account
+    initial: false
+  tv_room_occupancy:
+    name: "TV Room Occupancy Switch"
+    icon: mdi:home-account
+    initial: false
+  push_blink_alerts:
+    name: "Push Blink Notes"
+    icon: mdi:alerts
+    initial: false
+  push_html5_alerts:
+    name: "Push HTML5 Notes"
+    icon: mdi:alerts
+    initial: false
+  push_simple_alerts:
+    name: "Push Simple Alerts"
+    icon: mdi:alerts
+    initial: true
+  dummy_for_generic_thermostat:
+    name: "Dummy"
+    icon: mdi:toggle-switch-off
+    initial: false
+  push_blink_alerts_downstairs:
+    name: "Push Downstairs Notes"
+    icon: mdi:alerts
+    initial: false
+  push_door_alerts:
+    name: "Push Door Alerts"
+    icon: mdi:alerts
+    initial: false
+  house_fans_for_15_minutes:
+    name: "House Fans for 15 Minutes"
+    icon: mdi:fan
+    initial: false
+  house_fans_for_4_hours:
+    name: "House Fans for 4 Hours"
+    icon: mdi:fan
+    initial: false
+  ant_at_gym:
+    name: "At the Gym"
+    icon: mdi:gym
+  illuminated_tv_room:
+    name: "illuminated tv room"
+    initial: false
+  sofia_override:
+    name: "sofia override"
+    initial: false
+  jailbreak:
+    name: Jailbreak
+    initial: true
+  additional_motion_warnings:
+    name: "Push Add'l Motion Notes"
+    initial: false

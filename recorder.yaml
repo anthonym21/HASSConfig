@@ -17,41 +17,85 @@
   exclude:
     entities:
       - sensor.dark_sky_apparent_temperature
-      - sensor.dark_sky_daily_high_apparent_temperature
-      - sensor.dark_sky_daily_low_apparent_temperature
-      - sensor.dark_sky_humidity
-      - sensor.dark_sky_icon
-      - sensor.dark_sky_precip
-      - sensor.dark_sky_precip_probability
-      - sensor.dark_sky_summary
-      - sensor.dark_sky_temperature
-      - sensor.dark_sky_uv_index
-      - sensor.dark_sky_cloud_cover
-      - sensor.dark_sky_minutely_summary
+      - sensor.dark_sky_cloud_coverage
+      - sensor.dark_sky_cloud_coverage_0
+      - sensor.dark_sky_cloud_coverage_1
+      - sensor.dark_sky_cloud_coverage_2
+      - sensor.dark_sky_daily_summary
+      - sensor.dark_sky_daytime_high_apparent_temperature_0
+      - sensor.dark_sky_daytime_high_apparent_temperature_1
+      - sensor.dark_sky_daytime_high_apparent_temperature_2
       - sensor.dark_sky_hourly_summary
-      - sensor.dark_sky_apparent_temperature
-      - sensor.dark_sky_temperature_high
-      - sensor.dark_sky_temperature_low
-      - sensor.pws_alerts
-      - sensor.pws_feelslike_f
-      - sensor.pws_heat_index_f
-      - sensor.pws_temp_f
-      - sensor.pws_weather
-      - sensor.pws_weather_1d
-      - sensor.pws_weather_1n
-      - sensor.pws_weather_2d
-      - sensor.pws_weather_2n
-      - sensor.pws_weather_3d
-      - sensor.pws_weather_3n
-      - sensor.pws_weather_4d
-      - sensor.pws_weather_4n
-      - sensor.travel_time__phone_to_home
-      - sensor.pws_precip_today_string
-      - sensor.pws_feelslike_string
+      - sensor.dark_sky_humidity
+      - sensor.dark_sky_humidity_0
+      - sensor.dark_sky_humidity_1
+      - sensor.dark_sky_humidity_2
+      - sensor.dark_sky_icon
+      - sensor.dark_sky_icon_0
+      - sensor.dark_sky_icon_1
+      - sensor.dark_sky_icon_2
+      - sensor.dark_sky_overnight_low_apparent_temperature_0
+      - sensor.dark_sky_overnight_low_apparent_temperature_1
+      - sensor.dark_sky_overnight_low_apparent_temperature_2
+      - sensor.dark_sky_precip
+      - sensor.dark_sky_precip_0
+      - sensor.dark_sky_precip_1
+      - sensor.dark_sky_precip_2
+      - sensor.dark_sky_precip_probability
+      - sensor.dark_sky_precip_probability_0
+      - sensor.dark_sky_precip_probability_1
+      - sensor.dark_sky_precip_probability_2
+      - sensor.dark_sky_summary
+      - sensor.dark_sky_summary_0
+      - sensor.dark_sky_summary_1
+      - sensor.dark_sky_summary_2
+      - sensor.dark_sky_temperature
+      - sensor.dark_sky_temperature_0
+      - sensor.dark_sky_temperature_1
+      - sensor.dark_sky_temperature_2
+      - sensor.dark_sky_uv_index
+      - sensor.dark_sky_uv_index_0
+      - sensor.dark_sky_uv_index_1
+      - sensor.dark_sky_uv_index_2
+      - sensor.travel_time_phone_to_home
       - sensor.google_wifi_last_restart
       - sensor.date
       - weather.dark_sky
       - sensor.ups
+      - automation.office_throttle
+      - automation.office_occupancy_on
+      - automation.office_occupancy_off
+      - automation.office_occupancy_extend
+      - input_boolean.office_occupancy
+      - automation.tv_room_occupancy_on
+      - automation.tv_room_occupancy_off
+      - automation.tv_room_occupancy_extend
+      - automation.log_phonecalls_to_logbook
+      - input_boolean.tv_room_occupancy
+      - light.thundergodd
+      - light.thundergeven
+      - device_tracker.thinkpad
+      - script.pulsing_lamp
+      - script.pulsing_lampo
+      - sensor.datto_commute
+      - sensor.broadridge_commute
+      - automation.last_motion_update
+      - automation.last_motion_datetime_update
+      - automation.last_office_motion_datetime_update
+      - binary_sensor.kitchen_refrigerator_door_acceleration
+      - sensor.ecolink_garage_door_tilt_sensor_power_management
+      - sensor.ecolink_garage_door_tilt_sensor_sourcenodeid
+      - sensor.ecolink_garage_door_tilt_sensor_alarm_level
+      - sensor.ecolink_garage_door_tilt_sensor_alarm_type
+      - sensor.ecolink_garage_door_tilt_sensor_access_control
+      - binary_sensor.garage_door_moving
+      - binary_sensor.garage_door_open
+      - binary_sensor.garage_door_tilt
+      - automation.turning_on_amx
+      - automation.simplepush_ifttt
+      - automation.simplepush_message
+      - automation.better_door_logging
+     # - automation.better_door_logging
  #   domains:
  #     - camera
  #     - history_graph

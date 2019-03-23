@@ -2,7 +2,7 @@
   include:
     domains:
       - binary_sensor
-      - automation
+     # - automation
       - sensor
       - variable
       - light
@@ -12,7 +12,11 @@
       - input_datetime
       - input_number
       - input_boolean
+    entities:
+      - automation.ifttt_nox
   exclude:
+    domains:
+      - automation
     entities:
       - sensor.dark_sky_apparent_temperature
       - sensor.dark_sky_daily_high_apparent_temperature
@@ -26,7 +30,10 @@
       - sensor.dark_sky_uv_index
       - sensor.pws_alerts
       - sensor.pws_feelslike_f
-      - sensor.pws_heat_index_f
+      - sensor.office_dust
+      - sensor.office_filter_life
+      - sensor.office_aqi
+      - sensor.pws_heat_index_f      
       - sensor.pws_temp_f
       - sensor.pws_weather
       - sensor.pws_weather_1d
@@ -40,24 +47,111 @@
       - sensor.yw_day1_condition
       - sensor.yw_day2_condition
       - sensor.yw_day3_condition
-      - sensor.travel_time__phone_to_home
       - sensor.last_boot
       - sensor.date
       - weather.dark_sky
       - sensor.ups
       - sensor.daylight
       - sensor.deluge_status
-      - automation.update_last_motion
-      - automation.update_last_motion_datetime
-      - variable.last_motion_datetime
-      - binary_sensor.bedroom_motion
-      - binary_sensor.dining_room_motion
-      - binary_sensor.garage_lightify
-      - binary_sensor.hallway_spy
-      - binary_sensor.tv_room_motion
-      - binary_sensor.office_motion
+      # - automation.update_last_motion
+      # - automation.update_last_motion_datetime
+      # - automation.update_last_office_motion_datetime
+      - binary_sensor.tv_room_motion_1
+      - binary_sensor.kitchen_motion
       - binary_sensor.office_window_motion
+      - binary_sensor.garage_motion_bosch
       - sensor.garage_motion_template
       - sensor.mud_room_motion_template
+      - automation.ant_in_bed
+      - automation.ant_out_bed
+      - input_boolean.ant_in_bed
+      - input_boolean.ant_out_bed
+      - binary_sensor.office_occupancy
+      - binary_sensor.garage_bosch
+      - light.garage_light_1
+      - light.garage_light_2
+      - light.dining_room_1
+      - light.dining_room_2
+      - light.dining_room_3
+      - light.dining_room_4
+      - light.dining_room_5
+      - light.kitchen_light_a
+      - light.kitchen_light_b
+      - light.kitchen_ceiling_1
+      - light.kitchen_ceiling_2
+      - light.kitchen_ceiling_3
+      - light.kitchen_ceiling_4      
+      - light.tv_bias_lighting_right
+      - light.tv_bias_lighting_left
+      - light.office_desk_iris
+      - light.office_bookcase_iris
+      - light.office_monitor_bloom
+      - light.office_corner_bloom
+      - light.office_bookcase_bloom
+      - light.office_closet_corner
+      - light.office_pillar
+      - light.office_game_of_thrones_lamp
+      - light.basement_white_1
+      - light.basement_white_2
+      - device_tracker.ant_chromebook
+      - device_tracker.prodrive
+      - device_tracker.papirus
+      - device_tracker.wyze_garage
+      - device_tracker.creepercam
+      - device_tracker.plantgateway
+      - device_tracker.pi3b_local
+      - device_tracker.sam_work_laptop
+      - device_tracker.raspi01
+      - device_tracker.sofiacam
+      # - automation.garage_motion_detected
+      # - automation.office_occupancy_extend
+      - binary_sensor.office_motion_1
+      - binary_sensor.office_motion_2
+      - binary_sensor.office_motion
+      - variable.last_office_motion_datetime
+      - device_tracker.ant_iphone
+      - variable.last_motion_datetime
+      - variable.last_motion
+      - sensor.last_motion_detection
+      - sensor.ecolink_garage_door_tilt_sensor_burglar
+      # - automation.better_door_logging
+      - binary_sensor.mudroom_door
+      - binary_sensor.basement_freezer_door
+      - binary_sensor.basement_door
+      - binary_sensor.bedroom_bathroom_door
+      - binary_sensor.bedroom_door
+      - binary_sensor.front_door
+      - binary_sensor.kitchen_refrigerator_door
+      - binary_sensor.patio_door
+      - binary_sensor.sofias_room_door
+      - binary_sensor.upstairs_bathroom_door
+      - binary_sensor.garage_door
+      - binary_sensor.tv_room_motion
+      - binary_sensor.dining_room_motion
+      - binary_sensor.dining_room_motion
+      - binary_sensor.mud_room_motion_sensor
+      - light.mud_room_2
+      - automation.ifttt_new_connection
+      - automation.log_motion
+      - binary_sensor.garage_motion
+      # - automation.ifttt_fire_ant_out_bed
+      # - automation.ifttt_fire_ant_in_bed
+      - binary_sensor.bedroom_motion
+      - binary_sensor.hallway_spy
+      - binary_sensor.sofias_room_motion
+      - binary_sensor.mud_room_door
+      - binary_sensor.mudroom_door
+      - binary_sensor.front_door_camera_mqtt
+      - light.tv_room_lamps
+      - light.stairs
+      - light.office
+      - binary_sensor.anyone_is_home
+      - binary_sensor.anthony_is_home
+      - light.outside
+      - script.fifteen_minute_fan_run
+      - script.four_hour_fan_run
+      - device_tracker.moses
+      # - automation.consume_simplepush_notify
+      
  #   domains:
   #    - zwave

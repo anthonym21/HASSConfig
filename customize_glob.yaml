@@ -1,43 +1,4 @@
-
-    "*.*":
-      custom_ui_state_card: state-card-custom-ui
     group.*:
-      google_assistant: false
-    switch.*:
-      google_assistant: false
-    switch.bedroom_fan:
-      google_assistant: true
-    sensor.garage_temperature:
-      show_last_changed: true
-    sensor.basement_temperature:
-      show_last_changed: true
-    sensor.office_temperature:
-      show_last_changed: true
-    sensor.sofias_room_temperature: 
-      show_last_changed: true
-    sensor.bedroom_temperature:
-      show_last_changed: true
-    mud_room_motion_template:
-      show_last_changed: true
-    binary_sensor.garage_lightify:
-      show_last_changed: true
-    binary_sensor.garage_moving:
-      show_last_changed: true
-    garage_motion_template:
-      show_last_changed: true
-    office_motion_template:
-      show_last_changed: true
-    binary_sensor.hallway_spy:
-      show_last_changed: true
-    binary_sensor.sofias_room_door:
-      show_last_changed: true
-    binary_sensor.front_door:
-      show_last_changed: true
-    binary_sensor.tv_room_motion:
-      show_last_changed: true
-    binary_sensor.basement_door:
-      show_last_changed: true
-    variable.last_motion:
-      show_last_motion: true
+      google_assistant: false    
     sensor.*humidity:
       icon: mdi:water-percent

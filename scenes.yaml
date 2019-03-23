@@ -1,4 +1,58 @@
 
+- name: Dark Corridors
+  entities:
+    light.stairs_bottom_1:
+      state: on
+      brightness: 1
+    light.stairs_bottom_2:
+      state: on
+      brightness: 1      
+    light.hallway_office:
+      state: on
+      brightness: 1    
+    light.stairs_top:
+      state: on
+      brightness: 1   
+    light.hallway_bedroom:
+      state: off
+     # brightness: 1   
+
+- name: Bright Corridors
+  entities:
+    light.stairs_bottom_1:
+      state: on
+      brightness: 85
+    light.stairs_bottom_2:
+      state: on
+      brightness: 85      
+    light.hallway_office:
+      state: on
+      brightness: 90  
+    light.stairs_top:
+      state: on
+      brightness: 65 
+    light.hallway_bedroom:
+      state: on
+      brightness: 90
+
+- name: Twilight Corridors
+  entities:
+    light.stairs_bottom_1:
+      state: on
+      brightness: 20
+    light.stairs_bottom_2:
+      state: on
+      brightness: 20  
+    light.hallway_office:
+      state: on
+      brightness: 20
+    light.stairs_top:
+      state: on
+      brightness: 15
+    light.hallway_bedroom:
+      state: on
+      brightness: 15
+      
 - name: Dark Late Downstairs
   entities:
     light.tv_bias:
@@ -7,7 +61,7 @@
       rgb_color: [255, 44, 2]
     light.front_small_lamp:
       state: on
-      brightness: 89
+      brightness: 128
     light.front_small_lamp_far:
       state: on
       brightness: 85
@@ -22,7 +76,7 @@
       brightness: 1
     light.front_chess_table:
       state: on
-      brightness: 25
+      brightness: 64
     light.dining_room_4:
       state: on
       brightness: 1
@@ -40,6 +94,10 @@
     light.tv_room_back_lamp:
       state: on
       brightness: 101
+    light.kitchen:
+      state: on
+      color_temp: 444
+      brightness: 128
     light.tv_room_front_lamp:
       state: on
       brightness: 101
@@ -55,11 +113,12 @@
       state: on
       brightness: 78
       rgb_color: [255, 222, 113]
-- name: Dimmed Office
+
+- name: Darker Office
   entities:
     light.office_pillar:
       state: on
-      brightness: 97
+      brightness: 61
       xy_color: [0.52, 0.413]
     light.office_closet_corner:
       state: on
@@ -67,50 +126,135 @@
       xy_color: [0.581, 0.393]
     light.office_bookcase_bloom:
       state: on
-      brightness: 253
+      brightness: 26
       xy_color: [0.53, 0.411]
     light.office_hue_go:
       state: on
-      brightness: 46
+      brightness: 26
       xy_color: [0.529, 0.406]
     light.office_filing_cabinet_iris:
       state: on
-      brightness: 13
+      brightness: 1
       xy_color: [0.539, 0.396]
     light.office_corner_bloom:
       state: on
-      brightness: 59
+      brightness: 26
       xy_color: [0.555, 0.422]
     light.office_monitor_bloom:
       state: on
-      brightness: 86
+      brightness: 26
       xy_color: [0.532, 0.442]
     light.office_bookcase_iris:
       state: on
       brightness: 1
       xy_color: [0.583, 0.399]
-    light.game_of_thrones_lamp:
+    light.office_game_of_thrones_lamp:
       state: on
-      brightness: 63
+      brightness: 51
       xy_color: [0.581, 0.387]
-    light.flux1:
+    light.flex_rgbw:
       state: on
-      brightness: 16
+      brightness: 88
       xy_color: [0.677, 0.319]
-    light.gateway_llight:
+    light.office_gateways:
       state: on
       brightness: 51
       xy_color: [0.677, 0.319]
-      
-- name: Neutral_Dim_Office
-  entities:
-    light.gateway_llight:
+    light.office_desk_iris:
       state: on
-      brightness: 242
-      hs_color: [0.0, 0.0]
+      brightness: 1
+      hs_color: [34.824, 100.0]
+
+- name: Red Bedroom
+  entities:
+    light.bedroom_pillar:
+      state: on
+      brightness: 1
+      color_name: DarkRed
+    light.bedroom_lamp:
+      state: on
+      brightness: 1
+      color_name: DarkRed
+ 
+- name: Cool Dark Office
+  entities:
+    light.office_irises:
+      state: on
+      brightness: 1
+      xy_color: [0.294, 0.285]
+    light.office_blooms:
+      state: on
+      brightness: 10
+      xy_color: [0.265, 0.24]
+    light.office_lamps:
+      state: on
+      brightness: 12
+      xy_color: [0.292, .296]
+    light.office_hue_go:
+      state: on
+      brightness: 26
+      xy_color: [0.266, 0.241]
     light.flex_rgbw:
       state: on
-      brightness: 255
+      brightness: 13
+      xy_color: [0.265, 0.241]      
+
+- name: Warm Dark Office
+  entities:
+    light.office_irises:
+      state: on
+      brightness: 1
+      xy_color: [0.294, 0.285]
+    light.office_blooms:
+      state: on
+      brightness: 10
+      xy_color: [0.265, 0.24]
+    light.office_lamps:
+      state: on
+      brightness: 12
+      xy_color: [0.292, .296]
+    light.office_hue_go:
+      state: on
+      brightness: 26
+      xy_color: [0.266, 0.241]
+    light.flex_rgbw:
+      state: on
+      brightness: 13
+      xy_color: [0.265, 0.241]        
+ 
+- name: Pastel Office
+  entities:
+    light.office_irises:
+      state: on
+      brightness: 1
+      xy_color: [0.305, 0.146]
+    light.office_blooms:
+      state: on
+      brightness: 48
+      xy_color: [0.182, 0.434]
+    light.office_lamps:
+      state: on
+      brightness: 32
+      xy_color: [0.529, .420]
+    light.office_hue_go:
+      state: on
+      brightness: 64
+      xy_color: [0.381, 0.159]
+    light.office_pillar:
+      state: on
+      brightness: 28
+      xy_color: [0.539, 0.392]      
+    
+- name: Neutral_Dim_Office
+  entities:
+    light.flex_rgbw:
+      state: on
+      brightness: 92
+      xy_color: [0.677, 0.319]
+    light.gateway_light:
+      state: on
+      brightness: 74
+      xy_color: [0.677, 0.319]
     light.office_filing_cabinet_iris:
       state: on
       brightness: 1
@@ -119,11 +263,15 @@
       state: on
       brightness: 86
       hs_color: [43.294, 100.0]
-    light.game_of_thrones_lamp:
+    light.office_game_of_thrones_lamp:
       state: on
       brightness: 63
       hs_color: [36.067, 69.804]
     light.office_bookcase_iris:
+      state: on
+      brightness: 1
+      hs_color: [34.824, 100.0]
+    light.office_desk_iris:
       state: on
       brightness: 1
       hs_color: [34.824, 100.0]
@@ -147,10 +295,163 @@
       state: on
       brightness: 46
       hs_color: [33.261, 72.157]
-      
+
+- name: Neutral_Office
+  entities:
+    light.office_bookcase_bloom:
+      state: on
+      brightness: 152
+      xy_color: [0.466, 0.423]
+    light.office_bookcase_iris:
+      state: on
+      brightness: 253
+      xy_color: [0.416, 0.386]
+    light.office_closet_corner:
+      state: on
+      brightness: 81
+      xy_color: [0.383, 0.383]
+    light.office_corner_bloom:
+      state: on
+      brightness: 145
+      xy_color: [0.479, 0.397]
+    light.office_desk_iris:
+      state: on
+      brightness: 253
+      xy_color: [0.408, 0.387]
+    light.office_filing_cabinet_iris:
+      state: on
+      brightness: 203
+      xy_color: [0.433, 0.389]
+    light.office_hue_go:
+      state: on
+      brightness: 102
+      xy_color: [0.46, 0.408]
+    light.office_monitor_bloom:
+      state: on
+      brightness: 254
+      xy_color: [0.39, 0.373]
+    light.office_pillar:
+      state: on
+      brightness: 254
+      xy_color: [0.447, 0.406]
+    light.flex_rgbw:
+      state: on
+      brightness: 210
+      xy_color: [0.537, 0.392]
+    light.gateway_light:
+      state: on
+      brightness: 114
+      xy_color: [0.509, 0.451]
+    light.office_game_of_thrones_lamp:
+      state: on
+      brightness: 253
+      xy_color: [0.464, 0.411]
+
+- name: typical_office
+  entities:
+    light.office_bookcase_bloom:
+      state: on
+      brightness: 254
+      xy_color: [0.467, 0.426]
+    light.office_bookcase_iris:
+      state: on
+      brightness: 253
+      xy_color: [0.416, 0.386]
+    light.office_closet_corner:
+      state: on
+      brightness: 81
+      xy_color: [0.383, 0.383]
+    light.office_corner_bloom:
+      state: on
+      brightness: 254
+      xy_color: [0.442, 0.378]
+    light.office_desk_iris:
+      state: on
+      brightness: 253
+      xy_color: [0.408, 0.387]
+    light.office_filing_cabinet_iris:
+      state: on
+      brightness: 203
+      xy_color: [0.433, 0.389]
+    light.office_hue_go:
+      state: on
+      brightness: 102
+      xy_color: [0.46, 0.408]
+    light.office_monitor_bloom:
+      state: on
+      brightness: 254
+      xy_color: [0.383, 0.383]
+    light.office_pillar:
+      state: on
+      brightness: 254
+      xy_color: [0.386, 0.483]
+    light.flex_rgbw:
+      state: on
+      brightness: 210
+      xy_color: [0.537, 0.392]
+    light.office_gateways:
+      state: on
+      brightness: 179
+      xy_color: [0.634, .351]
+    light.office_game_of_thrones_lamp:
+      state: on
+      brightness: 253
+      xy_color: [0.464, 0.411] 
+ 
+- name: early_morning_office
+  entities:
+    light.office_bookcase_bloom:
+      state: on
+      brightness: 76
+      xy_color: [0.466, 0.423]
+    light.office_bookcase_iris:
+      state: on
+      brightness: 126
+      xy_color: [0.416, 0.386]
+    light.office_closet_corner:
+      state: on
+      brightness: 40
+      xy_color: [0.383, 0.383]
+    light.office_corner_bloom:
+      state: on
+      brightness: 72
+      xy_color: [0.479, 0.397]
+    light.office_desk_iris:
+      state: on
+      brightness: 126
+      xy_color: [0.408, 0.387]
+    light.office_filing_cabinet_iris:
+      state: on
+      brightness: 102
+      xy_color: [0.433, 0.389]
+    light.office_hue_go:
+      state: on
+      brightness: 102
+      xy_color: [0.46, 0.408]
+    light.office_monitor_bloom:
+      state: on
+      brightness: 128
+      xy_color: [0.39, 0.373]
+    light.office_pillar:
+      state: on
+      brightness: 128
+      xy_color: [0.447, 0.406]
+    light.flex_rgbw:
+      state: on
+      brightness: 105
+      xy_color: [0.537, 0.392]
+    light.gateway_light:
+      state: on
+      brightness: 60
+      xy_color: [0.509, 0.451]
+    light.office_game_of_thrones_lamp:
+      state: on
+      brightness: 128
+      xy_color: [0.464, 0.411] 
+ 
 - name: Bright_White_Office
   entities:
-    light.gateway_llight:
+    light.gateway_light:
       state: on
       brightness: 242
       hs_color: [0.0, 0.0]
@@ -165,7 +466,7 @@
       state: on
       brightness: 254
       hs_color: [181.579, 14.902]
-    light.game_of_thrones_lamp:
+    light.office_game_of_thrones_lamp:
       state: on
       brightness: 253
       hs_color: [42.222, 10.588]
@@ -193,16 +494,20 @@
       state: on
       brightness: 251
       hs_color: [186.0, 3.922]
-
+    light.office_desk_iris:
+      state: on
+      brightness: 252
+      hs_color: [55.714, 10.98]
+      
 - name: Deluminated Downstairs
   entities:
     light.tv_bias:
       state: on
       brightness: 36
       xy_color: [0.646, 0.346]
-    light.kitchen:
+    light.other_kitchen:
       state: on
-      brightness: 31
+      brightness: 62
       xy_color: [0.539, 0.386]
     light.tv_room_front_lamp:
       state: on
@@ -216,6 +521,22 @@
       state: on
       color_temp: 500
       brightness: 1
+    light.front_lightstrip:
+      state: on
+      color_name: Gold
+      brightness: 32
+    light.front_room_small_lamps:
+      state: on
+      color_temp: 500
+      brightness: 24
+    light.front_lamp:
+      state: on
+      color_name: SandyBrown
+      brightness: 32
+    light.kitchen:
+      state: on
+      color_temp: 333
+      brightness: 128
 
 - name: Illuminated Downstairs
   entities:
@@ -223,7 +544,7 @@
       state: on
       brightness: 236
       xy_color: [0.606, 0.374]
-    light.kitchen:
+    light.other_kitchen:
       state: on
       brightness: 108
       xy_color: [0.539, 0.386]
@@ -239,3 +560,31 @@
       state: on
       color_temp: 333
       brightness: 75
+    light.front_lightstrip:
+      state: on
+      color_name: SeaGreen
+      brightness: 216
+    light.front_room_small_lamps:
+      state: on
+      color_temp: 333
+      brightness: 166
+    light.front_lamp:
+      state: on
+      color_name: LightGoldenRodYellow
+      brightness: 254
+    light.kitchen:
+      state: on
+      color_temp: 450
+      brightness: 100
+
+- name: Relaxing Bedroom
+  entities:
+    light.bedroom_lamp:
+      state: on
+      color_temp: 366
+      brightness: 40
+    light.bedroom_pillar:
+      state: on
+      color_temp: 366
+      brightness: 40   
+    

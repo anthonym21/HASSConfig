@@ -54,4 +54,5 @@ nppBackup
 panels
 .spotify-token-cache
 automations.yaml
+known_devices.yaml
 

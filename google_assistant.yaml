@@ -11,6 +11,10 @@
   #  - light
   #  - input boolean
   entity_config:
+    # camera.creepercam:
+      # name: Creeper Cam
+      # expose: true
+      # room:  Outside
     input_boolean.push_blink_alerts:
       name: Blink Alerts
       expose: true
@@ -19,10 +23,10 @@
       name: Door Alerts
       expose: true
       room: Attic
-    input_boolean.push_simple_alerts:
-      name: Push Alerts
-      expose: true
-      room: Attic
+    # input_boolean.push_simple_alerts:
+      # name: Push Alerts
+      # expose: true
+      # room: Attic
     input_boolean.luminate:
       name: Downstairs Light Automations
       expose: true
@@ -31,6 +35,14 @@
       name: Jailbreak
       room: Bedroom    
       expose: true      
+    input_boolean.pulse_control:
+      name: Pulse Control
+      room: Bedroom
+      expose: true
+    light.bedroom:
+      name: Bedroom Lights
+      expose: true
+      room: Bedroom      
     light.bedroom_lamp:
       name: Bedside Lamp
       expose: true
@@ -39,36 +51,16 @@
       name: Bedroom Pillar
       expose: true
       room: Bedroom
-    light.dining_room_1:
-      name: Dining Room 1
-      expose: true
-      room: Dining Room
-    light.dining_room_2:
-      name: Dining Room 2
-      expose: true
-      room: Dining Room
-    light.dining_room_3:
-      name: Dining Room 3
-      expose: true
-      room: Dining Room
-    light.dining_room_4:
-      name: Dining Room 4
-      expose: true
-      room: Dining Room
-    light.dining_room_5:
-      name: Dining Room 5
+    light.dining_room:
+      name: Dining Room Lights
       expose: true
       room: Dining Room
     light.flux_1:
       name: Porch Light
       expose: true
       room: Balcony
-    light.garage_light_1:
-      name: Garage Light One
-      expose: true
-      room: Garage
-    light.garage_light_2:
-      name: Garage Light Two
+    light.garage:
+      name: Garage Lights
       expose: true
       room: Garage
     light.kitchen_island:
@@ -86,7 +78,7 @@
     light.front_lamp:
       name: Front Pillar
       expose: true
-      room: Front Room
+      room: Front Room Lights
     light.flex_rgbw:
       name: Office Strip
       expose: true
@@ -111,6 +103,10 @@
       name: Outside Light
       expose: true
       room: Outside
+    light.office:
+      name: Office Lights
+      expose: true
+      room: Office
     light.office_gateways:
       name: Office Gateways
       expose: true
@@ -123,47 +119,35 @@
     light.sofia_pillar:
       name: Sofia's Pillar
       expose: true
-      room: Sofia's Room
+      room: Sofia's Room Lights
     light.sofias_lamp:
       name: Sofia's Lamp
       expose: true
       room: Sofia's Room
     light.mud_room:
-      name: Mud Room Lamp
+      name: Mud Room Lights
       expose: true
       room: Mud Room
     light.tv_bias:
       name: TV Bias
       expose: true
       room: TV Room
-    light.tv_room_lamps:
-      name: TV Room Lamps
+    light.tv_room:
+      name: TV Room Lights
       expose: true
       room: TV Room
-    light.kitchen_ceiling_4:
-      name: Kitchen Ceiling Light 4
-      expose: true
-      room: Kitchen
-    light.kitchen_ceiling_3:
-      name: Kitchen Ceiling Light 3
-      expose: true
-      room: Kitchen
-    light.kitchen_ceiling_2:
-      name: Kitchen Ceiling Light 2
-      expose: true
-      room: Kitchen
-    light.kitchen_ceiling_1:
-      name: Kitchen Ceiling Light 1
+    light.kitchen:
+      name: Kitchen Lights
       expose: true
       room: Kitchen      
-    light.basement_white_1:
-      name: Basement White
+    light.basement:
+      name: Basement Lights
       expose: true
       room: Basement    
-    light.basement_white_2:
-      name: Basement Color
+    light.play:
+      name: Play
       expose: true
-      room: Basement    
+      room: Bedroom
     scene.bright_white_office:
       name: Blinding Office
       expose: true
@@ -212,6 +196,10 @@
       name: Twilight Corridors
       expose: true
       room: Hallway
+    scene.bedtime_nightlight:
+      name: Bedtime Nightlight
+      expose: true
+      room: Bedroom
     scene.red_bedroom:
       name: Dark Red Bedroom
       expose: true
@@ -220,10 +208,20 @@
       name: Relaxing Bedroom
       expose: true
       room: Bedroom
+    scene.no_witnesses:
+      name: No Witnesses
+      expose: true
+      room: Bedroom
     script.bedroom_night_routine:
       name: Bedroom Bedtime
       room: Bedroom
       expose: true
+    script.bedtime_nightlight:
+      name: Bedroom Nightlight
+      expose: true
+    script.soothing_play:
+      name: Soothing Play
+      expose: true      
     script.fade_to_bright:
       name: Bedroom Fade to Bright
       room: Bedroom
@@ -249,7 +247,7 @@
       room: Bedroom
       expose: true
     script.heading_upstairs_routine:
-      name: Heading Upstairs Routine
+      name: Heading Upstairs
       room: TV Room
       expose: true
     script.lumos:
@@ -268,6 +266,10 @@
       name: Peanut Plug
       expose: true
       room: Attic
+    switch.closet_lights:
+      name: Closet Lights
+      expose: true
+      room: Office
     script.off_to_the_gym:
       name: Off to the Gym
       expose: true

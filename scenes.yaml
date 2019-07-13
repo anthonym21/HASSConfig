@@ -3,7 +3,7 @@
   entities:
     light.stairs_bottom_1:
       state: on
-      brightness: 1
+      brightness: 10
     light.stairs_bottom_2:
       state: on
       brightness: 1      
@@ -176,6 +176,15 @@
       brightness: 1
       color_name: DarkRed
  
+- name: Bedtime Nightlight
+  entities:
+    light.bedroom_pillar:
+      state: off
+    light.bedroom_lamp:
+      state: on
+      brightness: 1
+      color_name: DarkRed
+ 
 - name: Cool Dark Office
   entities:
     light.office_irises:
@@ -251,7 +260,7 @@
       state: on
       brightness: 92
       xy_color: [0.677, 0.319]
-    light.gateway_light:
+    light.office_gateways:
       state: on
       brightness: 74
       xy_color: [0.677, 0.319]
@@ -338,7 +347,7 @@
       state: on
       brightness: 210
       xy_color: [0.537, 0.392]
-    light.gateway_light:
+    light.office_gateways:
       state: on
       brightness: 114
       xy_color: [0.509, 0.451]
@@ -384,7 +393,7 @@
     light.office_pillar:
       state: on
       brightness: 254
-      xy_color: [0.386, 0.483]
+      xy_color: [0.353, 0.356]
     light.flex_rgbw:
       state: on
       brightness: 210
@@ -440,7 +449,7 @@
       state: on
       brightness: 105
       xy_color: [0.537, 0.392]
-    light.gateway_light:
+    light.office_gateways:
       state: on
       brightness: 60
       xy_color: [0.509, 0.451]
@@ -451,7 +460,7 @@
  
 - name: Bright_White_Office
   entities:
-    light.gateway_light:
+    light.office_gateways:
       state: on
       brightness: 242
       hs_color: [0.0, 0.0]
@@ -586,5 +595,28 @@
     light.bedroom_pillar:
       state: on
       color_temp: 366
-      brightness: 40   
+      brightness: 40
+  light.hue_play_1:
+      state: on
+      color_name: Peru
+      brightness: 1
+  light.hue_play_2:
+      state: on
+      color_name: Peru
+      brightness: 1
+      
+- name: No Witnesses
+  entities:
+    light.bedroom_lamp:
+      state: off
+    light.bedroom_pillar:
+      state: off
+  light.hue_play_1:
+      state: on
+      color_name: Peru
+      brightness: 1
+  light.hue_play_2:
+      state: on
+      color_name: Peru
+      brightness: 1  
     

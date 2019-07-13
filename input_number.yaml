@@ -5,38 +5,54 @@
     max: 3
     step: 1
 
-  ant_weight:
+  input_ant_weight:
     name: Weight
-    min: 100
-    max: 280
-    step: 0.01
+    min: 160
+    max: 260
+    step: 0.1
     unit_of_measurement: "lbs"
     icon: mdi:weight-pound
 
-  ant_bf_pct:
+  input_ant_bodyfat:
     name: "BF%"
     min: 6
     max: 35
-    step: 0.01
+    step: 0.1
     unit_of_measurement: "%"
     icon: mdi:percent
 
-  ant_fat_mass:
+  input_ant_fat_mass:
     name: "Fat Mass"
-    min: 1
-    max: 200
-    step: 0.01
+    min: 20
+    max: 80
+    step: 0.1
     unit_of_measurement: "lbs"
     icon: mdi:weight
 
-  ant_lean_mass:
+  input_ant_lean_mass:
     name: "Lean Mass"
-    min: 1
+    min: 125
     max: 200
-    step: 0.01
+    step: 0.1
     unit_of_measurement: "lbs"
     icon: mdi:dumbbell
 
+  pulse_max_brightness:
+    name: Pulse Max Brightness
+    min: 1
+    max: 100
+    unit_of_measurement: "percent"
+    step: 1
+    icon: "mdi:power-sleep"
+    
+  pulse_min_brightness:
+    name: Pulse Min Brightness
+    min: 1
+    max: 100
+    unit_of_measurement: "percent"
+    step: 1
+    icon: "mdi:power-sleep"
+    
   fade_out_duration:
     name: "Fade Out Duration"
     min: 10

@@ -4,6 +4,7 @@
   include:
     domains:
       - binary_sensor
+      - person
       - automation
       - sensor
       - variable
@@ -14,6 +15,7 @@
       - input_datetime
       - input_number
       - input_boolean
+      - sun
   exclude:
     entities:
       - sensor.dark_sky_apparent_temperature
@@ -83,14 +85,14 @@
       - automation.last_motion_datetime_update
       - automation.last_office_motion_datetime_update
       - binary_sensor.kitchen_refrigerator_door_acceleration
-      - sensor.ecolink_garage_door_tilt_sensor_power_management
-      - sensor.ecolink_garage_door_tilt_sensor_sourcenodeid
-      - sensor.ecolink_garage_door_tilt_sensor_alarm_level
-      - sensor.ecolink_garage_door_tilt_sensor_alarm_type
-      - sensor.ecolink_garage_door_tilt_sensor_access_control
-      - binary_sensor.garage_door_moving
-      - binary_sensor.garage_door_open
-      - binary_sensor.garage_door_tilt
+      - light.office_hue
+      - light.front_room_hue
+      - light.kitchen_hue
+      - light.garage_hue
+      - light.mud_room_hue
+      - light.basement_hue
+      - light.bedroom_hue
+      - light.hallway_hue
       - automation.turning_on_amx
       - automation.simplepush_ifttt
       - automation.simplepush_message

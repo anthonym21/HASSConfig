@@ -3,8 +3,6 @@ sensor.ant_home:
 binary_sensor.downstairs_thermostat_fan:
   device_class: power
   friendly_name: Downstairs Fan
-device_tracker.ant_iphone:
-  hidden: true
 binary_sensor.downstairs_thermostat_has_leaf:
   hidden: true
 light.entertainment_area_1:
@@ -34,15 +32,6 @@ binary_sensor.garage_door_open:
   show_last_changed: true
 sensor.garage_temperature:
   friendly_name: Garage Temperature
-sun.sun: {}
-sensor.bedroom_dimmer:
-  hidden: true
-sensor.dining_dimmer:
-  hidden: true
-sensor.google_pixel:
-  hidden: true
-sensor.office_dimmer:
-  hidden: true
 binary_sensor.downstairs_thermostat_downstairs_thermostat_online:
   friendly_name: Downstairs Nest Online
   icon: mdi:nest-thermostat
@@ -79,6 +68,8 @@ sensor.dark_sky_icon:
   hidden: true
 device_tracker.ant_pixel3:
   friendly_name: Ant
+  gravatar: anthony21@gmail.com
+  picture: /local/images/ant.jpg
 sensor.sofias_room_humidity:
   friendly_name: Sofia's Room Humidity
 sensor.sofias_room_temperature:
@@ -171,167 +162,6 @@ plant.basil_1:
     conductivity: uS/cm
     moisture: '%'
     temperature: °F
-light.office:
-  state_card_mode: break-slider
-  stretch_slider: true
-  extra_data_template: 'RGB: ${attributes.rgb_color} Br: ${(attributes.brightness
-    / 255 * 100 * 100 | round(0))}'
-  hide_control: false
-  show_last_changed: false
-  theme: happy
-  confirm_controls_show_lock: false
-  slider_theme:
-    min: 1
-    max: 255
-    pin: true
-    off_when_min: false
-    report_when_not_changed: false
-light.bedroom:
-  state_card_mode: break-slider
-  stretch_slider: true
-  extra_data_template: 'Temp: ${attributes.color_temp} Br: ${(attributes.brightness  /
-    255 * 100 * 100 | round(0))}'
-  hide_control: false
-  show_last_changed: false
-  theme: happy
-  slider_theme:
-    min: 1
-    max: 255
-    pin: true
-    off_when_min: false
-    report_when_not_changed: false
-light.office_blooms:
-  state_card_mode: break-slider
-  stretch_slider: true
-  extra_data_template: 'Temp: ${attributes.color_temp} Br: ${(attributes.brightness  /
-    255 * 100 * 100 | round(0))}'
-  hide_control: false
-  show_last_changed: false
-  theme: happy
-  slider_theme:
-    min: 1
-    max: 255
-    pin: true
-    off_when_min: false
-    report_when_not_changed: false
-light.office_irises:
-  state_card_mode: break-slider
-  stretch_slider: true
-  extra_data_template: 'Temp: ${attributes.color_temp} Br: ${(attributes.brightness  /
-    255 * 100 * 100 | round(0))}'
-  hide_control: false
-  show_last_changed: false
-  theme: happy
-  slider_theme:
-    min: 1
-    max: 255
-    pin: true
-    off_when_min: false
-    report_when_not_changed: false
-light.office_lamps:
-  state_card_mode: break-slider
-  stretch_slider: true
-  extra_data_template: 'Temp: ${attributes.color_temp} Br: ${(attributes.brightness  /
-    255 * 100 * 100 | round(0))}'
-  hide_control: false
-  show_last_changed: false
-  theme: happy
-  slider_theme:
-    min: 1
-    max: 255
-    pin: true
-    off_when_min: false
-    report_when_not_changed: false
-light.tv_bias:
-  state_card_mode: break-slider
-  stretch_slider: true
-  extra_data_template: 'RGB: ${attributes.rgb_color} Br: ${(attributes.brightness  /
-    255 * 100 * 100 | round(0))}'
-  hide_control: false
-  show_last_changed: false
-  theme: happy
-  slider_theme:
-    min: 1
-    max: 255
-    pin: true
-    off_when_min: false
-    report_when_not_changed: false
-light.front_lightstrip:
-  state_card_mode: break-slider
-  stretch_slider: true
-  extra_data_template: 'RGB: ${attributes.rgb_color} Br: ${(attributes.brightness  /
-    255 * 100 * 100 | round(0))}'
-  hide_control: false
-  show_last_changed: false
-  theme: happy
-  confirm_controls_show_lock: false
-  slider_theme:
-    min: 1
-    max: 255
-    pin: true
-    off_when_min: false
-    report_when_not_changed: false
-light.front_room_small_lamps:
-  state_card_mode: break-slider
-  stretch_slider: true
-  extra_data_template: 'Temp: ${attributes.color_temp} Br: ${(attributes.brightness  /
-    255 * 100 * 100 | round(0))}'
-  hide_control: false
-  show_last_changed: false
-  theme: happy
-  confirm_controls_show_lock: false
-  slider_theme:
-    min: 1
-    max: 255
-    pin: true
-    off_when_min: false
-    report_when_not_changed: false
-light.kitchen_island:
-  state_card_mode: break-slider
-  stretch_slider: true
-  extra_data_template: 'RGB: ${attributes.rgb_color} Br: ${(attributes.brightness  /
-    255 * 100 * 100 | round(0))}'
-  hide_control: false
-  show_last_changed: false
-  theme: happy
-  confirm_controls_show_lock: false
-  slider_theme:
-    min: 1
-    max: 255
-    pin: true
-    off_when_min: false
-    report_when_not_changed: false
-light.kitchenette_lamp:
-  state_card_mode: break-slider
-  stretch_slider: true
-  extra_data_template: 'RGB: ${attributes.rgb_color} Br: ${(attributes.brightness  /
-    255 * 100 * 100 | round(0))}'
-  hide_control: false
-  show_last_changed: false
-  theme: happy
-  confirm_controls_show_lock: false
-  slider_theme:
-    min: 1
-    max: 255
-    pin: true
-    off_when_min: false
-    report_when_not_changed: false
-light.sofias_room: {}
-light.dining_room:
-  state_card_mode: break-slider
-  stretch_slider: true
-  extra_data_template: 'Temp: ${attributes.color_temp} Br: ${(attributes.brightness  /
-    255 * 100 * 100 | round(0))}'
-  hide_control: false
-  show_last_changed: false
-  theme: happy
-  confirm_controls_show_lock: false
-  slider_theme:
-    min: 1
-    max: 255
-    pin: true
-    off_when_min: false
-    report_when_not_changed: false
 sensor.outdoor_temperature:
   friendly_name: Outdoor Temperature
 proximity.ant_prox_home:
@@ -474,6 +304,7 @@ binary_sensor.basement_door:
   device_class: door
 binary_sensor.bedroom_bathroom_door:
   device_class: door
+  friendly_name: Bedroom Bath Door
 device_tracker.b827eb1e746d:
   friendly_name: creepercam
 binary_sensor.kitchen_refrigerator_door:
@@ -520,8 +351,7 @@ sensor.my_iphone_battery_level:
 binary_sensor.front_door_motion:
   hidden: true
 zone.mom_and_dads:
-  latitude: 41.378957
-  longitude: -73.550362
+  longitude: -73.550481
   radius: 60
 binary_sensor.mud_room_motion_sensor:
   device_class: motion
@@ -542,3 +372,51 @@ sensor.office_aqi:
   unit_of_measurement: units
 sensor.office_dust:
   unit_of_measurement: units
+sensor.garage_multi_x_coordinate:
+  hidden: true
+sensor.garage_multi_y_coordinate:
+  hidden: true
+sensor.garage_multi_z_coordinate:
+  hidden: true
+sensor.kitchen_refrigerator_door_z_coordinate:
+  hidden: true
+sensor.kitchen_refrigerator_door_y_coordinate:
+  hidden: true
+sensor.kitchen_refrigerator_door_x_coordinate:
+  hidden: true
+sensor.moses_dir_travel:
+  device_class: pressure
+  friendly_name: Prevailing Winds (East Coast)
+  icon: mdi:weather-windy-variant
+light.flex_group:
+  hidden: true
+sensor.sofia_door_x_coordinate:
+  hidden: true
+sensor.sofia_door_y_coordinate:
+  hidden: true
+sensor.sofia_door_z_coordinate:
+  hidden: true
+light.basement_hue:
+  hidden: true
+light.bedroom_hue:
+  hidden: true
+light.dining_room_hue:
+  hidden: true
+light.front_room_hue:
+  hidden: true
+light.garage_hue:
+  hidden: true
+light.deconz_lights:
+  hidden: true
+binary_sensor.mud_room_sensor_motion:
+  hidden: true
+media_player.bathroom_speaker: {}
+media_player.bedroom_speaker: {}
+binary_sensor.blink_rowdycam_motion_detected:
+  hidden: true
+binary_sensor.bedroom_bathroom_door_offline:
+  device_class: door
+device_tracker.sam_iphone_mqtt:
+  hidden: true
+device_tracker.ant_pixel3_nmap:
+  picture: '"/local/images/ant.jpg"'

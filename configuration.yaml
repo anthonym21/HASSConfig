@@ -5,13 +5,25 @@ homeassistant:
   elevation: 182
   unit_system: imperial
   time_zone: America/New_York
+  auth_providers:
+    - type: homeassistant
+    # - type: trusted_networks
+      # trusted_networks:
+        # - 192.168.86.150
+        # - 192.168.86.35
+        # - 192.168.86.79
+         
   customize_glob: !include customize_glob.yaml
   customize:   !include customize.yaml
-    
-#customizer:
-#  custom_ui: local
+  whitelist_external_dirs:
+    - /config/whitelist
     
 zone: !include zones.yaml
+
+zha:
+  usb_path: /dev/zha
+  radio_type: deconz
+  database_path: /config/zigbee.db
 
 system_health:
 
@@ -45,13 +57,15 @@ map:
 
 http:
   base_url: https://rayn.duckdns.org
-  api_password: !secret api_password
+#    base_url: http://192.168.86.41:8123
+#  api_password: !secret api_password
   use_x_forwarded_for: true
   trusted_proxies:
     - 192.168.86.41
     - 192.168.86.1
     - 172.17.0.2
  
+
 # Checks for available updates
 # updater:
 
@@ -75,8 +89,6 @@ recorder: !include recorder.yaml
 lovelace:
 #  mode: yaml
 
-person:
-
 # tiny chinese gadgets  
 xiaomi_aqara:
   discovery_retry: 10
@@ -95,42 +107,46 @@ logger:
     homeassistant.components.http.ban: warning
     homeassistant.components.media_player.cast: warning
     homeassistant.components.http: debug
+
     homeassistant.core: info
     homeassistant.components.mqtt: debug
-    # homeassistant.setup: info
+    homeassistant.setup: info
     homeassistant.components.http.view: warning
     # homeassistant.components.sensor: warning
     # homeassistant.components.binary_sensor: warning
     homeassistant.components.discovery: warning
     homeassistant.components.ifttt: debug
     pyatv.daap: warning
-    homeassistant.components.device_tracker.nmap_tracker: warning
-    homeassistant.components.device_tracker.owntracks: warning
-    #homeassistant.components.device_tracker.gpslogger: debug
+    homeassistant.components.nmap_tracker: warning
+    homeassistant.components.automatic: debug
+    homeassistant.components.device_tracker.automatic: debug
+    homeassistant.components.owntracks: info
+    homeassistant.components.device_tracker: debug
+    homeassistant.components.person: debug
+    homeassistant.components.loader: debug
     homeassistant.components.automation: info
     homeassistant.components.media_player: info
     homeassistant.components.google_assistant: debug
     homeassistant.components.proximity: warning
-    requests.packages.urllib3.connectionpool: critical
+    #requests.packages.urllib3.connectionpool: critical
     homeassistant.helpers.script: warning 
     homeassistant.components.automation.last_motion_update: warning
     homeassistant.components.automation.last_motion_datetime_update: warning
     homeassistant.components.automation.tv_room_occupancy_extend: warning
     homeassistant.components.automation.office_occupancy_extend: warning
     homeassistant.components.dyson: warning
-    homeassistant.setup: warning
+    # homeassistant.setup: warning
     pychromecast: critical
     pychromecast.socket_client: critical
     WazeRouteCalculator.WazeRouteCalculator: critical
     aiohttp.websocket: debug
-    homeassistant.components.device_tracker.automatic: debug
-    homeassistant.components.websocket_api.http.connection: warning
+    homeassistant.components.websocket_api.http.connection: info
     aioautomatic.client: debug
     aioautomatic.session: debug
     #xiaomi_gateway: debug
     homeassistant.components.webhook: debug
     homeassistant.components.notify.simplepush: debug
-    homeassistant.components.light.hue: debug
+    # homeassistant.components.hue: debug
     # homeassistant.components.sensor.mqtt: debug
     # homeassistant.components.xiaomi_aqara: debug
     # homeassistant.components.binary_sensor.xiaomi_aqara: debug
@@ -140,12 +156,13 @@ logger:
     #homeassistant.components.websocket_api: debug
     #homeassistant.components.xiaomi_aqara: debug
     #homeassistant.components.sensor.waze_travel_time: debug
-    #pydeconz.utils: debug
-    #homeassistant.components.nest: debug
-    #homeassistant.components.binary_sensor.nest: debug
-    #nest: debug
-    #sseclient: debug
-    #homeassistant.components.hue: info
+    pydeconz: info
+    homeassistant.components.deconz: debug
+    # homeassistant.components.nest: debug
+    # homeassistant.components.binary_sensor.nest: debug
+    # nest: debug
+    # sseclient: debug
+    #homeassistant.components.hue: debug
 
 python_script:
     
@@ -216,9 +233,36 @@ variable:
     attributes: 
       icon: mdi:light
       name: "Bedroom Lamp Color"
+  amx_ignitions:
+    value: 'Unknown'
+    restore: true
+    attributes:
+      icon: mdi:car
+      name: 'AMEX History'
+  amx_anvil:
+    value: 'Unknown'
+    restore: true
+    attributes:
+      icon: mdi:car
+      name: 'Anvil History'      
+
+blink:
+  username: !secret blink_user 
+  password: !secret blink_pass
+  scan_interval: 300
+  binary_sensors:
+    monitored_conditions:
+      - motion_enabled
+      - motion_detected
+  sensors:
+    monitored_conditions:
+      - battery
+      - temperature
+      - wifi_strength
   
+      
 # iphone
-ios:
+# ios:
 
 ### INPUTS ####
  
@@ -278,75 +322,52 @@ timer:
     duration: '01:30:00'
   illuminated_tv_room_timer:
     duration: '00:05:00'
+  mudroom_light_dim:
+    duration: '00:01:30'
+  mudroom_light_off:
+    duration: '00:02:00'
     
 # LIGHTS / HUE / EMULATED BRIDGE
 light:
-# - platform: group
-  # name: Kitchen Island
-  # entities:
-    # - light.kitchen_light_a
-    # - light.kitchen_light_b
+
+- platform: group
+  name: Kitchen Island
+  entities:
+    - light.kitchen_light_a
+    - light.kitchen_light_b
     
-# - platform: group
-  # name: Other Kitchen
-  # entities:
-    # - light.kitchen_light_a
-    # - light.kitchen_light_b
-    # - light.kitchenette_lamp
+- platform: group
+  name: Other Kitchen
+  entities:
+    - light.kitchen_light_a
+    - light.kitchen_light_b
+    - light.kitchenette_lamp
  
-# - platform: group
-  # name: Front Room Small Lamps
-  # entities:
-    # - light.front_small_lamp
-    # - light.front_small_lamp_far
-
-# - platform: group
-  # name: TV Room Lamps
-  # entities:
-    # - light.tv_room_back_lamp
-    # - light.tv_room_front_lamp
-
-# - platform: group
-  # name: Bottom of the Stairs
-  # entities:
-    # - light.stairs_bottom_1
-    # - light.stairs_bottom_2
- 
-# - platform: group
-  # name: Garage
-  # entities:
-    # - light.garage_light_1
-    # - light.garage_light_2
+- platform: group
+  name: Garage
+  entities:
+    - light.garage_light_1
+    - light.garage_light_2
     
 - platform: group
   name: Office
   entities: 
-    # - light.office_bookcase_bloom
-    # - light.office_bookcase_iris
-    # - light.office_closet_corner
-    # - light.office_corner_bloom
-    # - light.office_filing_cabinet_iris
-    # - light.office_hue_go
-    # - light.office_monitor_bloom
-
-    # - light.office_game_of_thrones_lamp
-    # - light.office_desk_iris
-    - light.office_2
+    - light.office_hue
     - light.office_pillar
     - light.gateway_light
     - light.gateway_light_mi
-    - light.flex_rgbw
-
-# - platform: group
-  # name: TV Bias
-  # entities:
-    # - light.tv_bias_lighting_left
-    # - light.tv_bias_lighting_right
+    - light.flex_rgbw  
+    
+- platform: group
+  name: TV Bias
+  entities:
+    - light.tv_bias_lighting_left
+    - light.tv_bias_lighting_right
   
-# - platform: group
-  # name: Outside
-  # entities:
-    # - light.outside_light
+- platform: group
+  name: Outside
+  entities:
+    - light.outside_light
   
 # - platform: group
   # name: Office Blooms
@@ -377,78 +398,86 @@ light:
     - light.gateway_light
     - light.gateway_light_mi
     
-# - platform: group
-  # name: Sofias Room
-  # entities:
-    # - light.sofia_pillar
-    # - light.sofias_lamp
+- platform: group
+  name: Sofias Room
+  entities:
+    - light.sofia_pillar
+    - light.sofias_lamp
 
-# - platform: group
-  # name: Basement
-  # entities:
-    # - light.basement_white_1
-    # - light.basement_white_2
+- platform: group
+  name: Basement
+  entities:
+    - light.basement_white_1
+    - light.basement_white_2
+
+- platform: group 
+  name: Play
+  entities:
+    - light.hue_play_1
+    - light.hue_play_2
     
-# - platform: group
-  # name: Mud Room
-  # entities:
-    # - light.mud_room
+- platform: group 
+  name: Bedroom
+  entities:
+    - light.bedroom_lamp
+    - light.bedroom_pillar
+    - light.hue_play_1
+    - light.hue_play_2
+ 
+- platform: group
+  name: Dining Room
+  entities:
+    - light.dining_room_1
+    - light.dining_room_2
+    - light.dining_room_3
+    - light.dining_room_4
+    - light.dining_room_5
+    - light.front_chess_table
+    
+- platform: group
+  name: Front Room
+  entities:
+    - light.front_room_small_lamps
+    - light.front_lightstrip
+    - light.front_lamp
   
-# - platform: group 
-  # name: Bedroom
-  # entities:
-    # - light.bedroom_lamp
-    # - light.bedroom_pillar
- 
-# - platform: group
-  # name: Dining Room
-  # entities:
-    # - light.dining_room_1
-    # - light.dining_room_2
-    # - light.dining_room_3
-    # - light.dining_room_4
-    # - light.dining_room_5
-    # - light.front_chess_table
- 
-# - platform: group
-  # name: Front Room
-  # entities:
-    # - light.front_room_small_lamps
-    # - light.front_lightstrip
-    # - light.front_lamp
-  
-# - platform: group
-  # name: Hallway
-  # entities:
-    # - light.hallway_bedroom
-    # - light.hallway_office
+- platform: group
+  name: Hallway
+  entities:
+    - light.hallway_bedroom
+    - light.hallway_office
     
-# - platform: group
-  # name: Kitchen
-  # entities:
-   # - light.kitchen_island
-   # -  light.kitchenette_lamp
+- platform: group
+  name: Stairs
+  entities:
+    - light.stairs_top
+    - light.stairs_bottom_1
+    - light.stairs_bottom_2
+
+- platform: group
+  name: Top of the Stairs
+  entities:
+    - light.stairs_top
     
-# - platform: group
-  # name: Stairs
-  # entities:
-    # - light.stairs_top
-    # - light.stairs_bottom_1
-    # - light.stairs_bottom_2    
+- platform: group
+  name: Bottom of the Stairs
+  entities:
+    - light.stairs_bottom_1
+    - light.stairs_bottom_2
     
-# - platform: group
-  # name: TV Room
-  # entities:
-    # - light.tv_room_front_lamp
-    # - light.tv_room_back_lamp
- 
-# - platform: group
-  # name: Kitchen
-  # entities:
-    # - light.kitchen_ceiling_1
-    # - light.kitchen_ceiling_2
-    # - light.kitchen_ceiling_3
-    # - light.kitchen_ceiling_4    
+- platform: group
+  name: TV Room
+  entities:
+    - light.tv_room_front_lamp
+    - light.tv_room_back_lamp
+
+- platform: group
+  name: Kitchen
+  entities:
+    - light.kitchen_ceiling_1
+    - light.kitchen_ceiling_2
+    - light.kitchen_ceiling_3
+    - light.kitchen_ceiling_4
     
 - platform: flux_led
   devices:
@@ -478,9 +507,12 @@ light:
 
 hue:
   bridges:
-     - host: 192.168.86.37
-       allow_unreachable: true
-       allow_hue_groups: true
+    - host: 192.168.86.37
+      allow_unreachable: true
+      allow_hue_groups: true
+    - host: 192.168.86.43
+      allow_unreachable: true
+      allow_hue_groups: true
 
 # emulated_hue:
   # host_ip: 192.168.86.41
@@ -521,8 +553,15 @@ notify:
  
 - platform: html5
   name: html5_office
-  gcm_api_key: !secret gcm_api_key
-  gcm_sender_id: !secret gcm_sender_id
+  vapid_pub_key: !secret vapid_public_key_1
+  vapid_prv_key: !secret vapid_private_key_1
+  vapid_email: !secret vapid_email_1
+- platform: html5
+  name: html5_pixel
+  vapid_pub_key: !secret vapid_public_key_1
+  vapid_prv_key: !secret vapid_private_key_1
+  vapid_email: !secret vapid_email_1
+  
   
 #- platform: nfandroidtv
 #  name: firetv
@@ -535,27 +574,31 @@ notify:
 
 - platform: simplepush
   name: simplepush
-  device_key: kQWeKP
+  device_key: !secret simplepush_device_key
 - platform: simplepush
   name: simplepush_onelong
   event: onelong
-  device_key: kQWeKP
+  device_key: !secret simplepush_device_key
 - platform: simplepush
   name: simplepush_oneshort
   event: oneshort
-  device_key: kQWeKP
+  device_key: !secret simplepush_device_key
 - platform: simplepush
   name: simplepush_twoshort
   event: twoshort
-  device_key: kQWeKP
+  device_key: !secret simplepush_device_key
 - platform: simplepush
   name: simplepush_threeshort
   event: threeshort
-  device_key: kQWeKP
+  device_key: !secret simplepush_device_key
 - platform: simplepush
   name: simplepush_quiet
   event: quiet
-  device_key: kQWeKP
+  device_key: !secret simplepush_device_key
+- platform: simplepush
+  name: simplepush_disabled
+  event: disabled
+  device_key: !secret simplepush_device_key
   
 ### BINARY SENSORS ###
 binary_sensor:  !include binary_sensor.yaml
@@ -583,62 +626,45 @@ nest:
 
 ## HISTORY GRAPHS ##
          
-# history_graph:
-  # upstairs_climate_over_time:
-    # name: Upstairs Climate Over Time
-    # entities: 
-      # - sensor.outdoor_temperature
-      # - sensor.upstairs_avg_temperature
-      # - sensor.bedroom_temperature
-      # - sensor.office_temperature
-      # - sensor.sofias_room_temperature
-    # hours_to_show: 24
-    # refresh: 3600
-  # gr2:
-    # name: downstairs_vs_outdoor_temperatures_2d
-    # entities: 
-      # - sensor.pws_feelslike_f
-      # - sensor.outdoor_temperature
-      # - sensor.downstairs_thermostat_temperature
-      # - sensor.downstairs_thermostat_target
-    # hours_to_show: 48
-    # refresh: 3600
-  # gr5:
-    # name: ant_body_comp_history
-    # entities:
-      # - sensor.ant_weight_sensor
-      # - sensor.ant_fat_mass_sensor
-      # - sensor.ant_lean_mass_sensor
-    # hours_to_show: 367
-    # refresh: 600
-  # gr6:
-    # name: ant_body_fat_history
-    # entities:
-      # - sensor.ant_bf_pct_sensor
-      # - sensor.ant_bf_pct_smooth
-    # hours_to_show: 744
-    # refresh: 600
-  # smooth_metrics:
-    # name: Lean vs Weight
-    # entities:
-      # - sensor.ant_lean_mass_sensor
-      # - sensor.ant_weight_sensor
-    # hours_to_show: 744
-    # refresh: 600
-  # ant_sma_vs_smooth:
-    # name: Weight History
-    # entities:
-      # - sensor.ant_weight_sensor
-      # - sensor.ant_weight_smooth
-    # hours_to_show: 744
-    # refresh: 3600
-  # commuting:
-    # name: Current Commute Times
-    # entities:
-      # - sensor.home_to_broadridge_raw
-      # - sensor.broadridge_to_home_raw
-      # - sensor.home_to_datto_raw
-      # - sensor.datto_to_home_raw
+history_graph:
+  upstairs_climate_over_time:
+    name: Upstairs Climate Over Time
+    entities: 
+      - sensor.outdoor_temperature
+      - sensor.upstairs_avg_temperature
+      - sensor.bedroom_temperature
+      - sensor.office_temperature
+      - sensor.sofias_room_temperature
+    hours_to_show: 48
+    refresh: 3600
+  ant_body_comp_history:
+    name: ant_body_comp_history
+    entities:
+      - sensor.ant_fat_mass
+      - sensor.ant_lean_mass
+    hours_to_show: 2190     
+    refresh: 3600
+  ant_body_fat_history:
+    name: ant_body_fat_history
+    entities:
+      - sensor.ant_bodyfat
+    hours_to_show: 2190
+    refresh: 3600
+  ant_lean_fat_history:
+    name:  Lean vs Fat
+    entities:
+      - sensor.ant_lean_mass
+      - sensor.ant_fat_mass
+    hours_to_show: 2190
+    refresh: 3600
+  ant_weight_history:
+    name: Weight History
+    entities:
+      - sensor.ant_weight
+      - sensor.ant_lean_mass
+    hours_to_show: 2190
+    refresh: 3600
+
          
 weather:
 - platform: darksky
@@ -683,35 +709,47 @@ sensor: !include_dir_merge_list  sensor/
 
 # plant: !include plants.yaml
  
+zeroconf:
+ssdp:
+ 
+person:
+ 
 device_tracker:
+
 - platform: nmap_tracker
-  scan_options: " -F --host-timeout 2s "
   interval_seconds: 30
-  consider_home: 120
+  home_interval: 1
+  consider_home: 180
   new_device_defaults:
     track_new_devices: false
     hide_if_away: false
   hosts:
-     - 192.168.86.20-250
-#    - 192.168.86.75-81
-#    - 192.168.86.160
-#    - 192.168.86.200
-#    - 192.168.86.125
+    - 192.168.86.78
+    - 192.168.86.79
+    - 192.168.86.80
+    - 192.168.86.81
+    - 192.168.86.75
+    - 192.168.86.28
+    - 192.168.86.64
+    - 192.168.86.200
+    - 192.168.86.23
+    - 192.168.86.74
+    - 192.168.86.150
+    - 192.168.86.76
+    - 192.168.86.77
   exclude:
     - 192.168.86.41
-    - 192.168.86.79
     
 - platform: mqtt
   devices:
-    ant_pixel3:  '/location/ant_pixel3'
-    sam_iphone: '/location/sam_iphone'
+    ant_pixel3_mqtt:  '/location/ant_pixel3_mqtt'
+    sam_iphone_mqtt: '/location/sam_iphone_mqtt'
 
     # https://rayn.duckdns.org/api/webhook/automatic082214
 - platform: automatic
   client_id: !secret automatic_client_id
   secret: !secret automatic_secret
   current_location: true
-
     
 #- platform: gpslogger
 
@@ -721,19 +759,22 @@ device_tracker:
 #    sam_iphone: 192.168.86.80
 
 owntracks:
-  max_gps_accuracy: 312
-  waypoints: True
+  max_gps_accuracy: 255
+  waypoints: true
   waypoint_whitelist:
    - ant
-  mqtt_topic: "owntracks/#"
-  events_only: False   
+  #mqtt_topic: "owntracks/#"
+  events_only: false   
  
 
   
 # Text to speech
 tts:
-  platform: google
+  platform: google_translate
+  language: 'en'
   base_url: http://192.168.86.41:8123
+  service_name: google_say
+
 
 # GOOGLE Assistant
 google_assistant: !include google_assistant.yaml
@@ -859,18 +900,21 @@ tplink:
   discovery: false
   switch:
     - host: 192.168.86.38
+#    - host: 192.168.86.52
       
           
 camera: 
 
 - platform: mjpeg
-  name: office_window_camera
+  name: creepercam
+  still_image_url: !secret creepercam_still_image_url
   mjpeg_url: http://192.168.86.150:8081
   username: !secret office_cam_username
   password: !secret office_cam_password
 - platform: mjpeg
   name: garage_cam
   mjpeg_url:  !secret garage_cam_url
+
   
 automation: !include automations.yaml
 

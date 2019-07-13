@@ -12,8 +12,10 @@
       - input_datetime
       - input_number
       - input_boolean
+      - timer
     entities:
-      - automation.ifttt_nox
+      - automation.better_door_logging
+      - sun.sun
   exclude:
     domains:
       - automation
@@ -60,12 +62,15 @@
       - binary_sensor.kitchen_motion
       - binary_sensor.office_window_motion
       - binary_sensor.garage_motion_bosch
+      - binary_sensor.mud_room_motion
       - sensor.garage_motion_template
       - sensor.mud_room_motion_template
       - automation.ant_in_bed
       - automation.ant_out_bed
       - input_boolean.ant_in_bed
       - input_boolean.ant_out_bed
+      - input_datetime.ant_in_bed
+      - input_datetime.ant_out_bed
       - binary_sensor.office_occupancy
       - binary_sensor.garage_bosch
       - light.garage_light_1
@@ -150,7 +155,18 @@
       - light.outside
       - script.fifteen_minute_fan_run
       - script.four_hour_fan_run
+      - script.goodnight_downstairs
       - device_tracker.moses
+      - sensor.ecolink_garage_door_tilt_sensor_power_management
+      - sensor.ecolink_garage_door_tilt_sensor_sourcenodeid
+      - sensor.ecolink_garage_door_tilt_sensor_alarm_level
+      - sensor.ecolink_garage_door_tilt_sensor_alarm_type
+      - sensor.ecolink_garage_door_tilt_sensor_access_control
+      - binary_sensor.garage_door_moving
+      - binary_sensor.garage_door_open
+      - binary_sensor.garage_door_tilt
+      - binary_sensor.old_sofias_door_motion
+      - binary_sensor.sofias_door_motion
       # - automation.consume_simplepush_notify
       
  #   domains:

@@ -251,14 +251,14 @@
          # {% endif %}
       # unit_of_measurement: '%'
       
-- platform: template
-  sensors:
-    mud_room_temperature:
-      entity_id:
-        - binary_sensor.mud_room_motion_sensor
-      friendly_name: 'Mud Room Temperature'
-      value_template: '{{ ((float(states.binary_sensor.mud_room_motion_sensor.attributes.temperature) * 9 / 5) + 32) | round(1) }}'
-      unit_of_measurement: °F
+# - platform: template
+  # sensors:
+    # mud_room_temperature:
+      # entity_id:
+        # - binary_sensor.mud_room_motion_sensor
+      # friendly_name: 'Mud Room Temperature'
+      # value_template: '{{ ((float(states.binary_sensor.mud_room_motion_sensor.attributes.temperature) * 9 / 5) + 32) | round(1) }}'
+      # unit_of_measurement: °F
 
 - platform: template
   sensors:
@@ -302,20 +302,37 @@
 # ILLUMINATION 
 - platform: template
   sensors:
-    mud_room_light_level:
-      friendly_name: 'Mud Room Light Level'
-      value_template: '{{ float(10**((states.binary_sensor.mud_room_motion_sensor.attributes.light_level-1)/10000)) | round(2) }}'
-    withings_bodyfat:
-      friendly_name: "Body Fat %"
-      unit_of_measurement: "%"
-      value_template: '{%- if ((states.sensor.withings_weight.state | float) == 0) -%}0{%- else -%}{{((states.sensor.withings_fat_mass.state | float / states.sensor.withings_weight.state | float) * 100) | round(2) }}{%- endif -%}'
-    withings_muscle:
-      friendly_name: "Muscle %"
-      unit_of_measurement: "%"
-      value_template: '{%- if ((states.sensor.withings_weight.state | float) == 0) -%}0{%- else -%}{{((states.sensor.withings_muscle_mass.state | float / states.sensor.withings_weight.state | float) * 100) | round(2) }}{%- endif -%}'
+    # mud_room_light_level:
+      # friendly_name: 'Mud Room Light Level'
+      # value_template: '{{ float(10**((states.binary_sensor.mud_room_motion_sensor.attributes.light_level-1)/10000)) | round(2) }}'
+    # withings_bodyfat:
+      # friendly_name: "Body Fat %"
+      # unit_of_measurement: "%"
+      # value_template: "{%- if  states('sensor.withings_weight.state')|float <= 1 -%}0{%- else -%}{{ ((states('sensor.withings_fat_mass.state')|float) / (states('sensor.withings_weight.state')|float * 100))|round(2) }}{%- endif -%}"
+    # withings_muscle:
+      # friendly_name: "Muscle %"
+      # unit_of_measurement: "%"
+      # value_template: "{%- if  states('sensor.withings_weight.state')|float <= 1 -%}0{%- else -%}{{ ((states('sensor.withings_muscle_mass.state')|float) / (states('sensor.withings_weight.state')|float * 100))|round(2) }}{%- endif -%}"
     moses_dir_travel:
       friendly_name: "Moses Walks"
       value_template: '{{ state_attr("proximity.moses_prox_home","dir_of_travel") }}'
+      
+    ant_weight:
+      friendly_name: "Ant/Weight"
+      unit_of_measurement: "lbs"
+      value_template: '{{ (states.input_number.input_ant_weight.state | float ) }}'
+    ant_bodyfat:
+      friendly_name: "Ant/BF%"
+      unit_of_measurement: "%"
+      value_template: '{{ (states.input_number.input_ant_bodyfat.state | float ) }}'      
+    ant_lean_mass:
+      friendly_name: "Ant/Lean Mass"
+      unit_of_measurement: "lbs"
+      value_template: '{{ (states.input_number.input_ant_lean_mass.state | float ) }}'
+    ant_fat_mass:
+      friendly_name: "Ant/Fat Mass"
+      unit_of_measurement: "lbs"
+      value_template: '{{ (states.input_number.input_ant_fat_mass.state | float ) }}'
    # name: plant_mqtt_basil_1_moisture
   # friendly_name: Basil Soil Moisture
   # state_topic: "plantgateway/raw/basil_1"
@@ -355,27 +372,29 @@
   # state_topic: "anthony/biometrics/weight"
   # value_template: '{{ value_json.timestamp }}'
 
-- platform: hue_sensor
+# - platform: hue_sensor
   
-- platform: withings
-  client_id:  !secret withings_client
-  secret: !secret withings_secret
-  profile: "Anthony"
-  measurements:
-    - weight_lb
-    - fat_mass_lb
-    - muscle_mass_lb
-    - bone_mass_lb
-    - fat_free_mass_lb
-    - sleep_state
+# - platform: withings
+  # client_id:  !secret withings_client
+  # consumer_secret: !secret withings_secret
+  # profiles: 
+    # - "Anthony"
+  # measures:
+    # - weight_lb
+    # - fat_mass_lb
+    # - muscle_mass_lb
+    # - bone_mass_lb
+    # - fat_free_mass_lb
+    # - fat_ratio_pct
+    # - sleep_state
     # - sleep_deep_duration_minutes
     # - sleep_rem_duration_minutes
     # - sleep_light_duration_minutes
     # - sleep_wakeup_duration_minutes
     
 - platform: filter
-  name: withings_weight_smooth
-  entity_id: sensor.withings_weight
+  name: ant_weight_smooth
+  entity_id: sensor.ant_weight
   filters:
     - filter: outlier
       window_size: 4
@@ -387,8 +406,8 @@
       precision: 2
       
 - platform: filter
-  name: withings_bodyfat_smoot
-  entity_id: sensor.withings_bodyfat
+  name: ant_bodyfat_smooth
+  entity_id: sensor.ant_bodyfat
   filters:
     - filter: outlier
       window_size: 4
@@ -410,7 +429,12 @@
 #      radius: 3
 #    - filter: lowpass
 #      time_constant: 10
-      
+- platform: waze_travel_time
+  name: waze_tt_0
+  origin: device_tracker.moses
+  destination: sensor.moses_destination
+  region: 'US'
+  
 - platform: template
   sensors:
     nextsunrise:
@@ -429,7 +453,34 @@
       friendly_name: 'Week Number'
       entity_id: sun.sun
       value_template: "{{ now().strftime('%U') }}"
-
+    moses_destination:
+       friendly_name: Coordinates
+       value_template: >-
+          {%- if  is_state('device_tracker.moses', 'Home') -%}
+            41.1512607,-73.4277934
+          {%- else -%}
+            41.387668,-73.538861
+          {%- endif -%}
+                 
+- platform: template
+  sensors:
+    ant_zoning:
+      friendly_name: Ant-Pix3
+      entity_id: device_tracker.ant_pixel3
+      value_template: "{{ states('device_tracker.ant_pixel3') }} :: {{ state_attr('device_tracker.ant_pixel3','source_type') }}"
+    ant_zoning_mq:
+      friendly_name: Ant-MQTT
+      entity_id: device_tracker.ant_pixel3_mqtt
+      value_template: "{{ states('device_tracker.ant_pixel3_mqtt') }} :: {{ state_attr('device_tracker.ant_pixel3_mqtt','source_type') }}"
+    ant_zoning_nmap:
+      friendly_name: Ant-NMAP
+      entity_id: device_tracker.ant_pixel3_nmap
+      value_template: "{{ states('device_tracker.ant_pixel3_nmap') }} :: {{ state_attr('device_tracker.ant_pixel3_nmap','source_type') }}"      
+    ant_zoning_person:
+      friendly_name: Ant-ANT
+      entity_id: person.anthony
+      value_template: "{{ state_attr('person.anthony','source') }}"
+      
 - platform: template
   sensors:
     sunset_time:

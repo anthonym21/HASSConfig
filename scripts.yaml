@@ -74,10 +74,21 @@
         data_template:
           entity_id: input_text.last_nest_mode
           value: "{{ states.climate.nest_downstairs.attributes.operation_mode }}"
+      - service: script.turn_on
+        data_template:
+          entity_id: script.goodnight_downstairs
+      - delay:
+          seconds: 2
+      - service: scene.turn_on 
+        data_template:
+          entity_id: scene.dark_corridors
+      - delay:
+          seconds: 2          
       - service: climate.set_temperature
         data_template:
           entity_id: climate.nest_downstairs
           temperature: '{% if states.climate.nest_downstairs.attributes.operation_mode == "heat" %}60{% elif states.climate.nest_downstairs.attributes.operation_mode == "cool" %}80{% else %}68{% endif %}'
+
 
   goodnight_downstairs:
     alias: Goodnight Downstairs
@@ -88,6 +99,7 @@
         brightness: 96
         color_temp: 333
         transition: 80
+    - delay: '00:00:01'        
     - service: light.turn_on
       data_template:
         entity_id: light.tv_bias
@@ -96,8 +108,7 @@
         - 0.646
         - 0.346
         transition: 60
-    - delay:
-        milliseconds: 250         
+    - delay: '00:00:01'       
     - service: light.turn_on
       data_template:
         entity_id: light.other_kitchen
@@ -106,22 +117,14 @@
         - 0.509
         - 0.387
         transition: 70
-    - delay:
-        milliseconds: 250          
+    - delay: '00:00:01'       
     - service: light.turn_on
       data_template:
-        entity_id: light.tv_room_front_lamp
+        entity_id: light.tv_room
         color_temp: 500
         brightness: 38
         transition: 120
-    - service: light.turn_on
-      data_template:
-        entity_id: light.tv_room_back_lamp
-        color_temp: 500
-        brightness: 45
-        transition: 80
-    - delay:
-        milliseconds: 250  
+    - delay: '00:00:01'
     - service: light.turn_on
       data:
         entity_id: light.dining_room
@@ -129,21 +132,21 @@
         brightness: 1
         transition: 80
     - delay:
-        milliseconds: 250          
+        seconds: 2
     - service: light.turn_on
       data:
         entity_id: light.front_lamp
         color_temp: 425
         brightness: 164
         transition: 120
+    - delay: '00:00:01'
     - service: light.turn_on
       data:
         entity_id: light.front_small_lamps
         color_temp: 500
         brightness: 24
         transition: 60
-    - delay:
-        milliseconds: 500         
+    - delay: '00:00:01'    
     - service: light.turn_on
       data:
         entity_id: light.front_strip
@@ -160,9 +163,10 @@
         # transition: 60
     - service: logbook.log
       data_template:
-        name: light.dining_room
+        entity_id: light.dining_room
+        name: "Goodnight"
         domain: light
-        message: "Goodnight Downstairs!"
+        message: " Downstairs!"
     
           
   pulsing_lamp:
@@ -173,17 +177,17 @@
           entity_id: light.bedroom_lamp
           brightness_pct: 1
           color_name: DarkRed
-          transition: 2
-      - delay:
-          seconds: 2
-      - service: light.turn_on
-        data:
-          entity_id: light.bedroom_lamp
-          brightness_pct: 25
-          color_name: DarkRed
-          transition: 4        
+          transition: 1
       - delay:
           seconds: 4
+      - service: light.turn_on
+        data_template:
+          entity_id: light.bedroom_lamp
+          brightness_pct: 15
+          color_name:  "{{ ['crimson' ,'darkred', 'firebrick', 'red','maroon','sienna','brown','darkorange' ,'orangered', 'tomato', 'coral','peru','chocolate','sandybrown'] | random }}"
+          transition:  1       
+      - delay:
+          milliseconds: 750
       - condition: state
         entity_id: input_boolean.ant_in_bed
         state: 'on'
@@ -198,107 +202,213 @@
           entity_id: light.bedroom_lamp
           brightness_pct: 1
           color_name: DarkRed
-          transition: 2
-      - delay:
-          seconds: 2
-      - service: light.turn_on
-        data:
-          entity_id: light.bedroom_lamp
-          brightness_pct: 25
-          color_name: DarkRed
-          transition: 4        
+          transition: 1
       - delay:
           seconds: 4
+      - service: light.turn_on
+        data_template:
+          entity_id: light.bedroom_lamp
+          brightness_pct: 15
+          color_name:  "{{ ['crimson' ,'darkred', 'firebrick', 'red','maroon','sienna','brown','darkorange' ,'orangered', 'tomato', 'coral','peru','chocolate','sandybrown'] | random }}"
+          transition:  1       
+      - delay:
+          milliseconds: 750
       - service: script.turn_on
         entity_id: script.pulsing_lamp
-        
-  bedroom_good_morrning:
-    alias: Bedroom Wakeup
+
+  soothing_play:
+    alias: Soothing Play
     sequence:
       - service: light.turn_on
-        data:
-          entity_id: light.bedroom_pillar
-          brightness_pct: 1
-          color_name: DarkRed
+        data_template:
+          entity_id: light.hue_play_1
+          brightness_pct: '{{ (range(1,70) | random) }}'
+          color_name: "{{ ['crimson' ,'darkred', 'firebrick', 'red','maroon','sienna','brown'] | random }}"
+          transition: '{{ (range(10,13) | random) }}'
       - service: light.turn_on
-        data:
-          entity_id: light.bedroom_lamp
-          brightness_pct: 1
-          color_name: DarkRed
+        data_template:
+          entity_id: light.hue_play_2
+          brightness_pct: '{{ (range(1,70) | random) }}'
+          color_name: "{{ ['crimson' ,'darkred', 'firebrick', 'red','maroon','sienna','brown'] | random }}"
+          transition: '{{ (range(10,13) | random) }}'          
+      - delay:
+          seconds: 15
+      - service: light.turn_on
+        data_template:
+          entity_id: light.hue_play_1
+          brightness_pct: '{{ (range(1,70) | random) }}'
+          color_name: "{{ ['darkorange' ,'orangered', 'tomato', 'coral','peru','chocolate','sandybrown'] | random }}"
+          transition:  '{{ (range(10,13) | random) }}'
+      - service: light.turn_on
+        data_template:
+          entity_id: light.hue_play_2
+          brightness_pct: '{{ (range(1,70) | random) }}'
+          color_name: "{{ ['darkorange' ,'orangered', 'tomato', 'coral','peru','chocolate','sandybrown'] | random }}"
+          transition:  '{{ (range(10,13) | random) }}'
+      - delay:
+          seconds: 15
+      # - condition: state
+        # entity_id: input_boolean.pulse_control
+        # state: 'on'
+      - service: script.turn_on
+        entity_id: script.soothing_play_2
+
+  soothing_play_2:
+    alias: Soothing Play 2
+    sequence:
+      - service: light.turn_on
+        data_template:
+          entity_id: light.hue_play_1
+          brightness_pct: '{{ (range(1,70) | random) }}'
+          color_name: "{{ ['crimson' ,'darkred', 'firebrick', 'red','maroon','sienna','brown'] | random }}"
+          transition: '{{ (range(10,14) | random) }}'
+      - service: light.turn_on
+        data_template:
+          entity_id: light.hue_play_2
+          brightness_pct: '{{ (range(1,70) | random) }}'
+          color_name: "{{ ['crimson' ,'darkred', 'firebrick', 'red','maroon','sienna','brown'] | random }}"
+          transition: '{{ (range(10,14) | random) }}'          
+      - delay:
+          seconds: 15
+      - service: light.turn_on
+        data_template:
+          entity_id: light.hue_play_2
+          brightness_pct: '{{ (range(1,70) | random) }}'
+          color_name: "{{ ['rosybrown' ,'violet','fuschia','mediumorchid','palevioletred','deeppink','darkorchid','purple','indigo','darkmagenta'] | random }}"
+          transition: '{{ (range(10,15) | random) }}'   
+      - service: light.turn_on
+        data_template:
+          entity_id: light.hue_play_2
+          brightness_pct: '{{ (range(1,70) | random) }}'
+          color_name: "{{ ['rosybrown' ,'violet','fuschia','mediumorchid','palevioletred','deeppink','darkorchid','purple','indigo','darkmagenta'] | random }}"
+          transition: '{{ (range(10,15) | random) }}'             
+      - delay:
+          seconds: 15
+      - service: script.turn_on
+        entity_id: script.soothing_play
+
+        
+  bedroom_good_morning_office:
+    alias: Bedroom Wakeup Office
+    sequence:
       - service: scene.turn_on
         data:
           entity_id: scene.early_morning_office
-      - service: fan.dyson_set_night_mode
+      - service: dyson.set_night_mode
         data:
           entity_id: fan.office
-          night_mode: 'false'
+          night_mode: false
       - service: fan.set_speed
         data_template:
           entity_id: fan.office
-          speed: '5' 
-      - delay:
-          seconds: 1
+          speed: 5
+
+  bedroom_good_morning_hallway:
+    alias: Bedroom Wakeup Hallway
+    sequence:
+    - service: light.turn_on
+      data:
+        entity_id: light.hallway
+        brightness_pct: 75
+        transition: 30
+    - delay:
+       milliseconds: 1000 
+    - service: light.turn_on
+      data:
+        entity_id: light.stairs
+        brightness_pct: 75
+        transition: 30        
+          
+  bedroom_good_morning_lights:
+    alias: Bedroom Wakeup - Lights
+    sequence:
+    - service: light.turn_on
+      data:
+        entity_id: light.bedroom_pillar
+        color_name: DarkRed
+    - delay:
+        milliseconds: 100 
+    - service: light.turn_on
+      data:
+          entity_id: light.bedroom_lamp
+          color_name: DarkRed
+    - delay:
+        seconds: 1
+    - service: light.turn_on
+      data_template:
+        entity_id: light.bedroom_pillar
+        brightness_pct: '{% if (states.light.bedroom_pillar.attributes.brightness * 1.6 | int) > 99 %}100{% else %}{{ (states.light.bedroom_pillar.attributes.brightness * 1.6 | int) }}{% endif %}'
+        color_temp: 466
+        transition: 20
+    - delay:
+        milliseconds: 100          
+    - service: light.turn_on
+      data_template:
+        entity_id: light.bedroom_lamp
+        brightness_pct: '{% if (states.light.bedroom_lamp.attributes.brightness | int) + (states.light.bedroom_lamp.attributes.brightness * 0.15 | int) > 99 %}100{% else %}{{ (states.light.bedroom_lamp.attributes.brightness | int) + (states.light.bedroom_lamp.attributes.brightness * 0.15 | int) }}{% endif %}'
+        color_temp: 466
+        transition: 20
+    - delay:
+        seconds: 19
+    - service: light.turn_on
+      data:
+        entity_id: light.bedroom_lamp
+        brightness_pct: 100
+        color_temp: 369
+        transition: 45        
+    - service: light.turn_on
+      data_template:
+        entity_id: light.bedroom_pillar
+        brightness_pct: '{% if (states.light.bedroom_pillar.attributes.brightness | int) + (states.light.bedroom_pillar.attributes.brightness * 0.2 | int) > 99 %}100{% else %}{{ (states.light.bedroom_pillar.attributes.brightness | int) + (states.light.bedroom_pillar.attributes.brightness * 0.2 | int) }}{% endif %}'
+        color_temp: 369
+        transition: 15       
+    - delay:
+        seconds: 29
+    - service: light.turn_on
+      data_template:
+        entity_id: light.bedroom_pillar
+        brightness_pct: 100
+        color_temp: 466
+        transition: 20        
+
+  bedroom_good_morrning:
+    alias: Bedroom Wakeup    
+    sequence:
       - service: media_player.volume_set
         data_template:
           entity_id: media_player.bedroom_speaker
-          volume_level: 0.25
-      - service: light.turn_on
-        data:
-          entity_id: light.bedroom_pillar
-          brightness_pct: 60
-          color_temp: 466
-          transition: 20
-      - service: light.turn_on
-        data:
-          entity_id: light.bedroom_lamp
-          brightness_pct: 85
-          color_temp: 466
-          transition: 20
-      - delay:
-          seconds: 20
-      - service: light.turn_on
-        data:
-          entity_id: light.bedroom_pillar
-          brightness_pct: 80
-          color_temp: 369
-          transition: 60
-      - service: light.turn_on
-        data:
-          entity_id: light.bedroom_lamp
-          brightness_pct: 100
-          color_temp: 369
-          transition: 60
-      - service: light.turn_on
-        data:
-          entity_id: light.hallway_bedroom
-          brightness_pct: 15
-          transition: 30
-      - service: light.turn_on
-        data:
-          entity_id: light.hallway_office
-          brightness_pct: 25
-          transition: 30          
-      - service: light.turn_on
-        data:
-          entity_id: light.hallway
-          brightness_pct: 20
-          transition: 30
-      - service: light.turn_on
-        data:
-          entity_id: light.stairs
-          brightness_pct: 15
-          transition: 30         
+          volume_level: 0.40
       - service: climate.set_temperature
         data_template:
           entity_id: climate.nest_downstairs
-          temperature: '{% if states.climate.nest_downstairs.attributes.operation_mode == "heat" %}68{% elif states.climate.nest_downstairs.attributes.operation_mode == "cool" %}72{% else %}70{% endif %}'   
-          operation_mode: '{{ states.input_text.last_nest_mode.state }}' 
+          temperature: '{% if states.climate.nest_downstairs.attributes.operation_mode == "heat" %}68{% elif states.climate.nest_downstairs.attributes.operation_mode == "cool" %}74{% else %}70{% endif %}'   
+          operation_mode: '{{ states.input_text.last_nest_mode.state }}'           
       - service: input_boolean.turn_on
         data:
           entity_id: input_boolean.daytime
       - service: input_boolean.turn_off
         data:
-          entity_id: input_boolean.jailbreak      
+          entity_id: input_boolean.jailbreak               
+      - service: script.turn_on
+        data:
+          entity_id: script.bedroom_good_morning_lights  
+      - delay: 
+          seconds: 20 
+      - service: script.turn_on
+        data:
+          entity_id: script.bedroom_good_morning_hallway 
+      - delay:
+          seconds: 5      
+      - service: script.turn_on
+        data:
+          entity_id: script.bedroom_good_morning_office
+      - delay:
+          seconds: 5              
+      - service: script.turn_on
+        data:
+          entity_id: script.lumos
+      - delay:
+          seconds: 5   
           
   bedroom_night_routine:
     alias:  Bedroom Bedtime
@@ -316,30 +426,35 @@
       - service: light.turn_on
         data:
           entity_id: light.bedroom_lamp
-          brightness_pct: 50
+          brightness_pct: 80
+          color_name: DarkOrange
+      - service: light.turn_on
+        data:
+          entity_id: light.bedroom_lamp
+          brightness_pct: 100
+          color_name: peru
+      - service: light.turn_on
+        data:
+          entity_id: light.play
+          brightness_pct: 40
+          transition: 15
+          color_name: peru
+      - delay: 
+          seconds: 1
+      - service: light.turn_on
+        data:
+          entity_id: light.bedroom_lamp
+          brightness_pct: 1
           color_name: DarkRed
-          transition: 30
+          transition: 14
+      - service: light.turn_on
+        data:
+          entity_id: light.play
+          brightness_pct: 1
+          color_name: DarkOrange
       - service: switch.turn_on
         data:
           entity_id: switch.bedroom_fan      
-      # - service: light.turn_on
-        # data:
-          # entity_id: light.office_blooms
-          # transition: 30
-          # color_name: DarkOrange
-          # brightness_pct: 5
-      # - service: light.turn_on
-        # data:
-          # entity_id: light.office_irises
-          # brightness_pct: 5
-          # rgb_color: [255, 200, 146]
-          # transition: 30        
-      # - service: light.turn_on
-        # data:
-          # entity_id: light.office_lamps, light.flex_rgbw
-          # brightness: 49
-          # rgb_color: [217, 217, 250]
-          # transition: 30
       - delay: 
           seconds: 15
       - service: light.turn_on
@@ -348,24 +463,14 @@
           color_name: DarkOrange
           brightness_pct: 1
           transition: 15
-      - service: light.turn_off
-        data:
-          entity_id: light.hallway_bedroom
-          transition: 15   
       - service: light.turn_on
         data:
-          entity_id: light.hallway_office
-          brightness_pct: 1
-          transition: 15             
-      - service: light.turn_off
-        data:
-          entity_id: light.stairs_top
-          transition: 15
-      - service: light.turn_on
-        data:
-          entity_id: light.bottom_of_the_stairs
+          entity_id: light.play
           brightness_pct: 1
           transition: 15
+          color_name: DarkOrange
+      - delay: 
+          seconds: 1     
       - delay: 
           seconds: 15
       - service: light.turn_off
@@ -374,35 +479,47 @@
       - service: media_player.volume_set
         data_template:
           entity_id: media_player.bedroom_speaker
-          volume_level: 0.2
-      - service: climate.set_temperature
-        data_template:
-          entity_id: climate.nest_downstairs
-          temperature: '{% if states.climate.nest_downstairs.attributes.operation_mode == "heat" %}60{% elif states.climate.nest_downstairs.attributes.operation_mode == "cool" %}85{% else %}70{% endif %}'   
+          volume_level: 0.30
+      # - service: climate.set_temperature
+        # data_template:
+          # entity_id: climate.nest_downstairs
+          # temperature: '{% if states.climate.nest_downstairs.attributes.operation_mode == "heat" %}60{% elif states.climate.nest_downstairs.attributes.operation_mode == "cool" %}85{% else %}70{% endif %}'   
       - service: input_boolean.turn_on
         data:
           entity_id: input_boolean.jailbreak                
       - service: input_boolean.turn_off
         data:
           entity_id: input_boolean.daytime
+      - delay: 
+          seconds: 5
+      - service: scene.turn_on
+        data:
+          entity_id: scene.dark_corridors     
+      - delay: 
+          seconds: 5
+      - service: scene.turn_on
+        data:
+          entity_id: scene.Neutral_Dim_Office
+      - delay: 
+          seconds: 5
       - service: script.turn_on
         data:
-          entity_id: scene.pastel_office
+          entity_id: script.nox     
           
   fade_sofias_room_out:
     sequence:
     - service: light.turn_on
       data_template:
         entity_id: light.sofias_room
-        transition: 60
-        brightness_pct: 20
+        transition: 600
+        brightness_pct: 60
         
   fade_sofias_room_in:
     sequence:
     - service: light.turn_on
       data_template:
         entity_id: light.sofias_room
-        transition: 60
+        transition: 300
         brightness_pct: 100        
   
   fade_to_goodnight:
@@ -441,78 +558,66 @@
   
   lumos:
     sequence:
-      - service: light.turn_on
-        data:
-          brightness: 236
-          entity_id: light.tv_bias
-          xy_color:
-          - 0.606
-          - 0.374
-          transition: 2
-      - service: light.turn_on
-        data:
-          entity_id: light.other_kitchen
-          brightness: 158
-          xy_color:
-          - 0.539
-          - 0.386
-          transition: 4
-      - delay:
-          milliseconds: 250 
-      # - service: light.turn_on
-        # data:
-          # entity_id: light.kitchenette_lamp
-          # brightness: 158
-          # xy_color:
-          # - 0.539
-          # - 0.386
-          # transition: 4          
-      - service: light.turn_on
-        data:
-          entity_id: light.tv_room_front_lamp
-          color_temp: 333
-          brightness: 192
-          transition: 2
-      - service: light.turn_on
-        data:
-          entity_id: light.tv_room_back_lamp
-          color_temp: 333
-          brightness: 166
-          transition: 2
-      - delay:
-          milliseconds: 250           
-      - service: light.turn_on
-        data:
-          entity_id: light.dining_room
-          color_temp: 333
-          brightness: 200
-          transition: 3
-      - service: light.turn_on
-        data:
-          entity_id: light.front_room_small_lamps
-          color_temp: 333
-          brightness: 192
-          transition: 4
-      - delay:
-          milliseconds: 250            
-      - service: light.turn_on
-        data:
-          entity_id: light.front_lightstrip
-          color_name: Blue
-          brightness: 192
-          transition: 4
-      - service: light.turn_on
-        data:
-          entity_id: light.front_lamp
-          color_temp: 333
-          brightness: 192
-          transition: 4
-      - service: light.turn_on
-        data_template:
-          entity_id: light.kitchen
-          brightness: 192
-          color_temp: 425
-          transition: 8
+    - service: light.turn_on
+      data_template:
+        entity_id: light.kitchen
+        brightness: 212
+        color_temp: 256
+        transition: 8 
+    - delay: 00:00:01
+    - service: light.turn_on
+      data_template:
+        entity_id: light.tv_bias
+        brightness: 158
+        xy_color:
+        - 0.606
+        - 0.374
+        transition: 8
+    - delay: 00:00:01
+    - service: light.turn_on
+      data_template:
+        entity_id: light.other_kitchen
+        brightness: 158
+        xy_color:
+        - 0.539
+        - 0.386
+        transition: 8
+    - delay: 00:00:02
+    - service: light.turn_on
+      data_template:
+        entity_id: light.tv_room
+        color_temp: 256
+        brightness: 192
+        transition: 5
+    - delay: 
+        milliseconds: 500
+    - service: light.turn_on
+      data:
+        entity_id: light.dining_room
+        color_temp: 192
+        brightness: 248
+        transition: 2
+    - delay: 00:00:02
+    - service: light.turn_on
+      data:
+        entity_id: light.front_lamp
+        color_name: 'Peru'
+        brightness: 192
+        transition: 2
+    - service: light.turn_on
+      data:
+        entity_id: light.front_small_lamps
+        color_temp: 192
+        brightness: 212
+        transition: 4
+    - delay: 00:00:01
+    - service: light.turn_on
+      data:
+        entity_id: light.front_strip
+        color_name: 'Peru'
+        brightness: 192
+        transition: 4
+      
           
   fifteen_minute_fan_run:
     sequence:
@@ -558,64 +663,66 @@
  
   nox:
     sequence:
-      - service: light.turn_on
-        data:
-          entity_id: light.dining_room
-          color_temp: 500
-          brightness: 1
-          transition: 8
-      - service: light.turn_on
-        data_template:
-          entity_id: light.tv_bias
-          brightness: 36
-          xy_color:
-          - 0.646
-          - 0.346
-          transition: 8
-      - service: light.turn_on
-        data_template:
-          entity_id: light.kitchen
-          brightness: 128
-          color_temp: 399
-      - service: light.turn_on
-        data_template:
-          entity_id: light.other_kitchen
-          brightness: 32
-          xy_color:
-          - 0.509
-          - 0.387
-          transition: 8
-      - delay: 00:00:01
-      - service: light.turn_on
-        data_template:
-          entity_id: light.tv_room_front_lamp
-          color_temp: 500
-          brightness: 38
-          transition: 5
-      - service: light.turn_on
-        data_template:
-          entity_id: light.tv_room_back_lamp
-          color_temp: 500
-          brightness: 45
-          transition: 5          
-      - service: light.turn_on
-        data:
-          entity_id: light.front_room_small_lamps
-          color_temp: 500
-          brightness: 1
-          transition: 9
-      - service: light.turn_on
-        data:
-          entity_id: light.front_lightstrip
-          color_name: MidnightBlue
-          brightness: 1
-          transition: 5
-      - service: light.turn_on
-        data:
-          entity_id: light.front_lamp
-          color_temp: 500
-          brightness: 150
-          transition: 5
+    - service: light.turn_on
+      data_template:
+        entity_id: light.tv_bias
+        brightness: 36
+        xy_color:
+        - 0.646
+        - 0.346
+        transition: 8
+    - delay: 00:00:01
+    - service: light.turn_on
+      data_template:
+        entity_id: light.other_kitchen
+        brightness: 31
+        xy_color:
+        - 0.509
+        - 0.387
+        transition: 8
+    - delay: 00:00:03
+    - service: light.turn_on
+      data_template:
+        entity_id: light.tv_room
+        color_temp: 500
+        brightness: 38
+        transition: 5
+    - delay: 
+        milliseconds: 500        
+    - service: light.turn_on
+      data_template:
+        entity_id: light.kitchen
+        brightness: 22
+        color_temp: 500
+        transition: 5
+    - delay: 
+        milliseconds: 500        
+    - service: light.turn_on
+      data:
+        entity_id: light.dining_room
+        color_temp: 500
+        brightness: 1
+        transition: 2
+    - delay: 00:00:02
+    - service: light.turn_on
+      data:
+        entity_id: light.front_lamp
+        color_temp: 425
+        brightness: 164
+        transition: 2
+    - service: light.turn_on
+      data:
+        entity_id: light.front_small_lamps
+        color_temp: 500
+        brightness: 24
+        transition: 4
+    - delay: 00:00:01
+    - service: light.turn_on
+      data:
+        entity_id: light.front_strip
+        color_name: DarkRed
+        brightness: 48
+        transition: 4
       
   off_to_the_gym:
     sequence:
@@ -734,7 +841,7 @@
           color_name: MidnightBlue
       - service: light.turn_on
         data_template: 
-          entity_id: light.gateway_light
+          entity_id: light.office_gateways
           transition: 30
           brightness: 23
           color_name: Navy
@@ -871,7 +978,7 @@
           # rgb_color: [82, 2, 255] 
       # - service: light.turn_on
         # data_template: 
-          # entity_id: light.gateway_light
+          # entity_id: light.office_gateways
           # transition: '{{ ((states.input_number.sunrise_duration.state | int) / 3) | int }}'
           # brightness: 99
           # rgb_color: [82, 2, 255]

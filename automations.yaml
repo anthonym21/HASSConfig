@@ -1,4 +1,32 @@
 
+- id: meta_tracker_ant_home
+  alias: "Update Anthony-Meta-Tracker Home"
+  trigger:
+    - platform: state
+      entity_id: device_tracker.ant_pixel3, device_tracker.ant_pixel3_nmap, device_tracker.ant_pixel_mqtt
+    - platform: homeassistant
+      event: start
+  action:
+    service: python_script.meta_device_tracker
+    data_template:
+      entity_id: '{{trigger.entity_id}}'
+      meta_entity: Anthony
+      
+ 
+- id: meta_tracker_ant_away
+  alias: "Update Anthony-Meta-Tracker Away"
+  trigger:
+    -platform: state
+    entity_id: device_tracker.ant_pixel3, device_tracker.2014_nissan_altima
+    to: 'not_home'
+    for: 
+      minutes: 5
+  action:
+    service: python_script.meta_device_tracker
+    data_template:
+      entity_id: '{{trigger.entity_id}}'
+      meta_entity: Anthony
+      
 - id: illuminate_garage
   alias: "turn on garage light when downstairs door opens"
   trigger:
@@ -46,7 +74,7 @@
 - id: ensure_garage_off
   alias: Garage and Basement Clear for 10 Minutes
   trigger:
-  - entity_id: binary_sensor.garage_motion, binary_sensor.mud_room_motion_sensor
+  - entity_id: binary_sensor.garage_motion, binary_sensor.mud_room_motion
     for:
       minutes: 10
     platform: state
@@ -60,11 +88,12 @@
       entity_id: light.garage
     service: light.turn_off
     
+# DISABLED
 - id: dim_garage
   alias: "mudroom motion; turn on garage light"
   trigger:
     platform: event
-    event_type: event_mud_room_motion
+    event_type: disabled_event_mud_room_motion
   condition:
   - condition: state
     entity_id: light.garage
@@ -124,18 +153,89 @@
   alias: fire mudroom event
   trigger:
     platform: state
-    entity_id: binary_sensor.mud_room_motion_sensor
+    entity_id: binary_sensor.mud_room_motion, binary_sensor.mud_room_door, binary_sensor.basement_door
     from: 'off'
     to: 'on'
   action:
-  - event:  event_mud_room_motion
+  - event: 'event_mud_room_motion'
     event_data:
-      entity_id: 'binary_sensor.mud_room_motion_sensor'
+      entity_id: '{{ trigger.to_state.entity_id }}'
       domain: 'binary_sensor'
       new_state: 'on'
       old_state: 'off'
-      
 
+- id: mudroom-light-100
+  alias: Mudroom Light 100%
+  trigger:
+    platform: event
+    event_type: 'event_mud_room_motion'
+  action:
+  - service: light.turn_on
+    data:
+      entity_id: light.mud_room
+      brightness_pct: 100
+  - service: timer.start
+    data:
+      entity_id: timer.mudroom_light_dim
+      duration: 90
+  - service: timer.start
+    data:
+      entity_id: timer.mudroom_light_off
+      duration: 120
+ 
+- id: mudroom-light-30
+  alias: Mudroom Light 30%
+  trigger: 
+  - platform: event
+    event_type: timer.finished
+    event_data: 
+      entity_id: timer.mudroom_light_dim
+  action:
+  - service: light.turn_on
+    data:
+      entity_id: light.mud_room
+      brightness_pct: 30
+
+
+- id: mudroom-light-0
+  alias: Mudroom Light 0%
+  trigger: 
+  - platform: event
+    event_type: timer.finished
+    event_data: 
+      entity_id: timer.mudroom_light_off
+  action:
+  - service: light.turn_off
+    data:
+      entity_id: light.mud_room
+  - delay:
+      seconds: 5
+  - condition: state
+    entity_id: light.mud_room
+    state: 'on'
+  - service: light.turn_off
+    data:
+      entity_id: light.mud_room
+ 
+- id: mudroom-light-backup
+  alias: Mudroom Still off @ 3 Minutes
+  trigger:
+  - platform: state
+    entity_id: sensor.mud_room_motion
+    from: 'on'
+    to: 'off'
+    for:
+      minutes: 3
+  condition:
+  - condition: state
+    entity_id: light.mud_room
+    state: 'on'
+  action:
+  - service: light.turn_off
+    data:
+      entity_id: light.mud_room
+      
+  
 - id: blink_alert_office_garage_door
   alias: "blink.red: garage"
   trigger:
@@ -153,22 +253,40 @@
       store_name: office_store
       entity_id: light.office_filing_cabinet_iris
       operation: save
+  - service: python_script.light_store
+    data:
+      store_name: office_store_2
+      entity_id: light.office_corner_bloom
+      operation: save
   - service: light.turn_on
     data:
       brightness: 255
-      entity_id: light.office_filing_cabinet_iris
-      rgb_color:
-      - 255
-      - 0
-      - 0
-      flash: long
+      entity_id: light.office_filing_cabinet_iris, light.office_corner_bloom
+      color_name: Red
+  - service: light.turn_off
+    data:
+      entity_id: light.office_filing_cabinet_iris, light.office_corner_bloom
+      transition: 1
   - delay:
-      seconds: 5
+      seconds: 1
+  - service: light.turn_on
+    data:
+      brightness: 255
+      entity_id: light.office_filing_cabinet_iris, light.office_corner_bloom
+      color_name: Red
+      transition: 1
+  - delay:
+      seconds: 3
   - service: python_script.light_store
     data:
       store_name: office_store
       entity_id: light.office_filing_cabinet_iris
       operation: restore
+  - service: python_script.light_store
+    data:
+      store_name: office_store_2
+      entity_id: light.office_corner_bloom
+      operation: restore      
       
 - id: blink_alert_office_front_door
   alias: "blink.green: front door"
@@ -184,25 +302,43 @@
   action:
   - service: python_script.light_store
     data:
-      store_name: office_store
+      store_name: office_store_3
       entity_id: light.office_filing_cabinet_iris
       operation: save
-  - service: light.turn_on
-    data:
-      entity_id: light.office_filing_cabinet_iris
-      brightness: 255
-      rgb_color:
-      - 0
-      - 255
-      - 0
-      flash: long
-  - delay:
-      seconds: 5
   - service: python_script.light_store
     data:
-      store_name: office_store
+      store_name: office_store_4
+      entity_id: light.office_corner_bloom
+      operation: save      
+  - service: light.turn_on
+    data:
+      brightness: 255
+      entity_id: light.office_filing_cabinet_iris, light.office_corner_bloom
+      color_name: Green
+  - service: light.turn_off
+    data:
+      entity_id: light.office_filing_cabinet_iris, light.office_corner_bloom
+      transition: 1
+  - delay:
+      seconds: 1
+  - service: light.turn_on
+    data:
+      brightness: 255
+      entity_id: light.office_filing_cabinet_iris, light.office_corner_bloom
+      color_name: Green
+      transition: 1
+  - delay:
+      seconds: 3   
+  - service: python_script.light_store
+    data:
+      store_name: office_store_3
       entity_id: light.office_filing_cabinet_iris
       operation: restore
+  - service: python_script.light_store
+    data:
+      store_name: office_store_4
+      entity_id: light.office_corner_bloom
+      operation: restore      
       
 - id: blink_alert_hallway_others
   alias: Blinks From Hallway
@@ -258,13 +394,29 @@
 - id: turn_on_jailbreak
   alias: "jailbreak: on"
   trigger:
-    platform: time
-    at: '20:30:00'
+    entity_id: binary_sensor.sofia_door
+    platform: state
+    from: 'on'
+    to: 'off'
+  condition:
+    condition: time
+    after: '20:30:00'
+    before: '23:59:59'
   action:
   - service: input_boolean.turn_on
     data:
       entity_id: input_boolean.jailbreak
       
+- id: turn_off_jailbreak
+  alias: "jailbreak: off"
+  trigger:
+    platform: time
+    at: '09:00:00'
+  action:
+  - service: input_boolean.turn_off
+    data:
+      entity_id: input_boolean.jailbreak 
+ 
 - id: ready_for_bed
   alias: Set up for Bed
   trigger:
@@ -283,12 +435,11 @@
   - service: switch.turn_on
     data:
       entity_id: switch.bedroom_fan
-  - service: light.turn_on
-    data:
-      entity_id: light.bedroom_lamp
-      color_name: DarkRed
-      transition: 30
-      brightness_pct: 1
+  # - service: light.turn_on
+    # data:
+      # entity_id: light.bedroom_lamp
+      # color_name: DarkRed
+      # transition: 30
  
 - id: ant_in_bed
   alias: "consume: ant_in_bed"
@@ -411,39 +562,45 @@
       transition: 8
   - service: light.turn_on
     data_template:
-      entity_id: light.kitchen_island
+      entity_id: light.other_kitchen
       brightness: 31
       xy_color:
       - 0.509
       - 0.387
       transition: 8
+  - delay: 00:00:03
   - service: light.turn_on
     data_template:
-      entity_id: light.kitchenette_lamp
-      brightness: 31
-      xy_color:
-      - 0.509
-      - 0.387
-      transition: 8     
-  - delay: 00:00:01
-  - service: light.turn_on
-    data_template:
-      entity_id: light.tv_room_front_lamp
+      entity_id: light.tv_room
       color_temp: 500
       brightness: 38
       transition: 5
-  - service: light.turn_on
-    data_template:
-      entity_id: light.tv_room_back_lamp
-      color_temp: 500
-      brightness: 45
-      transition: 5
+  # - service: light.turn_on
+    # data_template:
+      # entity_id: light.tv_room_back_lamp
+      # color_temp: 500
+      # brightness: 45
+      # transition: 5
   - service: light.turn_on
     data_template:
       entity_id: light.kitchen
       brightness: 22
       color_temp: 500
       transition: 5
+  # - service: light.turn_on
+    # data_template:
+      # entity_id: light.front_room_small_lamps
+      # brightness: 48
+      # color_temp: 500
+      # transition: 3
+  # - delay: 00:00:02
+  # - service: light.turn_on
+    # data_template:
+      # entity_id: light.front_room_lampF
+      # brightness: 128
+      # color_temp: 500
+      # transition: 3
+      
   - service: logbook.log
     data_template:
       entity_id: light.tv_room
@@ -474,6 +631,7 @@
       color_temp: 500
       brightness: 1
       transition: 2
+  - delay: 00:00:01
   - service: light.turn_on
     data:
       entity_id: light.front_lamp
@@ -486,6 +644,7 @@
       color_temp: 500
       brightness: 24
       transition: 4
+  - delay: 00:00:01
   - service: light.turn_on
     data:
       entity_id: light.front_strip
@@ -527,33 +686,19 @@
       transition: 2
   - service: light.turn_on
     data:
-      entity_id: light.kitchen_island
+      entity_id: light.other_kitchen
       brightness: 108
       xy_color:
       - 0.539
       - 0.386
       transition: 1
-  - service: light.turn_on
-    data:
-      entity_id: light.kitchenette_lamp
-      brightness: 108
-      xy_color:
-      - 0.539
-      - 0.386
-      transition: 1      
   - delay: 00:00:01
   - service: light.turn_on
     data:
-      entity_id: light.tv_room_front_lamp
+      entity_id: light.tv_room
       color_temp: 333
       brightness: 142
       transition: 2
-  - service: light.turn_on
-    data:
-      entity_id: light.tv_room_back_lamp
-      color_temp: 333
-      brightness: 166
-      transition: 3
   - service: light.turn_on
     data_template:
       entity_id: light.kitchen
@@ -659,7 +804,7 @@
     entity_id: binary_sensor.tv_room_motion, binary_sensor.hallway_spy, binary_sensor.sofias_room_door,
       binary_sensor.mud_room_door, binary_sensor.front_door, binary_sensor.garage_motion,
       binary_sensor.bedroom_motion, binary_sensor.dining_room_motion, binary_sensor.patio_door,
-      binary_sensor.sofias_room_motion, binary_sensor.mud_room_motion_sensor, binary_sensor.basement_door
+      binary_sensor.sofias_room_motion, binary_sensor.mud_room_motion, binary_sensor.basement_door
     from: 'off'
     to: 'on'
   condition:
@@ -680,7 +825,7 @@
     entity_id: binary_sensor.tv_room_motion, binary_sensor.hallway_spy, binary_sensor.sofias_room_door,
       binary_sensor.mud_room_door, binary_sensor.front_door, binary_sensor.garage_motion,
       binary_sensor.bedroom_motion, binary_sensor.dining_room_motion, binary_sensor.patio_door,
-      binary_sensor.sofias_room_motion, binary_sensor.mud_room_motion_sensor, binary_sensor.basement_door
+      binary_sensor.sofias_room_motion, binary_sensor.mud_room_motion, binary_sensor.basement_door
     from: 'off'
     to: 'on'
   action:
@@ -708,8 +853,8 @@
     data_template: 
       message: '{{ trigger.event.data.timestamp }}'
       name: '{{ trigger.event.data.friendly_name }}'
-      entity_id: '{{ trigger.event.data.entity_id }}'
-      domain: '{{ trigger.event.data.domain }}'
+      entity_id: input_boolean.dummy_for_generic_thermostat
+      domain: input_boolean
       
 - id: last_motion_notify_simplepush
   alias: Notify on Last Motion
@@ -748,7 +893,7 @@
     data_template:
       name: '{{ trigger.event.data.new_state.name }}'
       domain: binary_sensor
-      entity_id: 'binary_sensor.{{ trigger.event.data.new_state.object_id }}'
+      # entity_id: 'binary_sensor.{{ trigger.event.data.new_state.object_id }}'
       message: '{%- if trigger.event.data.new_state.state == "on" -%}opens{%- else -%}closes{%- endif -%}'
       
 - id: last_office_motion_datetime_update
@@ -884,8 +1029,8 @@
       # message: Motion Detected in Front Zone
       # data:
         # tag: someone_is_out_front
-        # url: https://rayn.duckdns.org/api/camera_proxy/camera.office_window_camera?api_password=boardwalk
-        # image: https://rayn.duckdns.org/api/camera_proxy/camera.office_window_camera?api_password=boardwalk
+        # url: https://rayn.duckdns.org/api/camera_proxy/camera.office_window_camera?api_password=!secret camera_password
+        # image: https://rayn.duckdns.org/api/camera_proxy/camera.office_window_camera?api_password=!secret camera_password
   # - service: automation.turn_off
     # entity_id: automation.someone_is_out_front
   # - delay: 00:01:00
@@ -937,13 +1082,13 @@
     to: 'on'
   condition:
   - condition: template
-    value_template: '{{ not is_state(''device_tracker.ant_pixel3'', ''home'') }}'
+    value_template: '{{ not is_state(''person.anthony'', ''home'') }}'
   action:
   - service: logbook.log
     data_template:
       name: Intruder Alert
       message: '{{ trigger.to_state.attributes.friendly_name  }} Opened @  {{ now().strftime("%H:%M:%S") }}'
-      entity_id: '{{ trigger.entity_id }}'
+      # entity_id: '{{ trigger.entity_id }}'
       domain: binary_sensor
 # - service: notify.html5_office
 #   data_template:
@@ -1089,52 +1234,152 @@
       volume_level: 0.1
 
 
-- id: sofia_door_motion
-  alias: Sofias Awake (Door)
-  trigger:
-  - platform: state
-    entity_id: binary_sensor.sofias_door_motion
-    from: 'off'
-    to: 'on'
-  condition:
-    condition: and
-    conditions:
-      - condition: state
-        entity_id: input_boolean.jailbreak
-        state: 'on'
-      - condition: state
-        entity_id: binary_sensor.sofias_room_motion
-        state: 'on'
-      - condition: state
-        entity_id: binary_sensor.sofias_room_door
-        state: 'on'
-      - condition: or
-        conditions:
-        - condition: time
-          after: '20:30:00'
-          before: '08:30:00'
-        - condition: state
-          entity_id: input_boolean.sofia_override
-          state: 'on'
-  action:
-  - service: media_player.volume_set
-    data_template:
-      entity_id: media_player.bedroom_speaker
-      volume_level: 0.5
-  - service: tts.google_say
-    entity_id: media_player.bedroom_speaker
-    data:
-      message: 'jail break'
-  - delay: '00:01:00'
-  - service: media_player.volume_set
-    data_template:
-      entity_id: media_player.bedroom_speaker
-      volume_level: 0.1
+# - id: sofia_door_motion
+  # alias: Sofias Awake (Door)
+  # trigger:
+  # - platform: state
+    # entity_id: binary_sensor.sofias_door_motion
+    # from: 'off'
+    # to: 'on'
+  # condition:
+    # condition: and
+    # conditions:
+      # - condition: state
+        # entity_id: input_boolean.jailbreak
+        # state: 'on'
+      # - condition: state
+        # entity_id: binary_sensor.sofias_room_motion
+        # state: 'on'
+      # - condition: state
+        # entity_id: binary_sensor.sofias_room_door
+        # state: 'on'
+      # - condition: or
+        # conditions:
+        # - condition: time
+          # after: '20:30:00'
+          # before: '08:30:00'
+        # - condition: state
+          # entity_id: input_boolean.sofia_override
+          # state: 'on'
+  # action:
+  # - service: media_player.volume_set
+    # data_template:
+      # entity_id: media_player.bedroom_speaker
+      # volume_level: 0.5
+  # - service: tts.google_say
+    # entity_id: media_player.bedroom_speaker
+    # data:
+      # message: 'jail break'
+  # - delay: '00:01:00'
+  # - service: media_player.volume_set
+    # data_template:
+      # entity_id: media_player.bedroom_speaker
+      # volume_level: 0.1
   # - event: 'event_simplepush_notify'
     # event_data_template:
       # title: 'Jailbreak'
       # message: 'Jailbreak'
-      # tag: 'Jailbreak'
+      # tag: 'Jailbreak
+
+# {
+  # "id": "f61ba3d5-a68e-43eb-a731-0db871b4d3a3",
+  # "user": {
+    # "id": "U_ffd955ba63db5c25",
+    # "v2_id": "U_ffd955ba63db5c25"
+  # },
+  # "type": "trip:finished",
+  # "created_at": 1383448450201,
+  # "time_zone": "America/Los_Angeles",
+  # "location": {
+    # "lat": 37.757076,
+    # "lon": -122.448120,
+    # "accuracy_m": 10
+  # },
+  # "vehicle": {
+    # "id": "C_8e7b567626c26695",
+    # "year": "2001",
+    # "make": "Acura",
+    # "model": "MDX",
+    # "color": "#d15fed",
+    # "display_name": "My Speed Demon"
+  # },
+  # "device" : {
+    # "id": "021ac91c826b12eca99e685c"
+  # },
+  # "trip": {
+    # "id": "T_8e7b567626c26695",
+    # "start_location": {
+      # "name": "Ashbury St, SF, CA",
+      # "display_name": "Home",
+      # "lat": 37.7692903,
+      # "lon": -122.4465469,
+      # "accuracy_m": 5,
+      # "ts": 1383448450201,
+      # "city": "San Francisco",
+      # "country": "US",
+      # "state": "CA",
+      # "street_name": "Ashbury",
+      # "street_number": "464"
+    # },
+    # "start_time": 1383448450201,
+    # "start_time_zone": "America/Los_Angeles",
+    # "end_location": {
+      # "name": "5th St, SF, CA",
+      # "display_name": "Work",
+      # "lat": 37.78270046281092,
+      # "lon": -122.4064556183999,
+      # "accuracy_m": 100,
+      # "ts": 1383449950201,
+      # "city": "San Francisco",
+      # "country": "US",
+      # "state": "CA",
+      # "street_name": "5th",
+      # "street_number": "201"
+    # },
+    # "end_time": 1383449950201,
+    # "end_time_zone": "America/Los_Angeles",
+    # "path": "uioeFxycjVxDMvAGBjATlJXrLaIZHvCFhCHpCaI^i@@",
+    # "distance_m": 6573.416666666661,
+    # "hard_accels": 0,
+    # "hard_brakes": 1,
+    # "duration_over_80_s": 0,
+    # "duration_over_75_s": 2,
+    # "duration_over_70_s": 3,
+    # "fuel_cost_usd": 1.0428111627932486,
+    # "fuel_volume_gal": 0.2465857561582522,
+    # "average_mpg": 16.56434586845349,
+    # "idling_time_s": 78.47,
+    # "score_events": 33.67,
+    # "score_speeding": 40.19,
+    # "city_fraction": 0.45,
+    # "highway_fraction": 0.55,
+    # "night_driving_fraction": 0
+  # }
+# }
+
+# {
+  # "id": "f61ba3d5-a68e-43eb-a731-0db871b4d3a3",
+  # "user": {
+    # "id": "U_ffd955ba63db5c25",
+    # "url": "https://api.automatic.com/user/U_ffd955ba63db5c25/"
+  # },
+  # "type": "ignition:on",
+  # "created_at": "2015-04-12T17:45:18.123Z",
+  # "time_zone": "America/Los_Angeles",
+  # "location": {
+    # "lat": 37.757076,
+    # "lon": -122.448120,
+    # "accuracy_m": 10,
+    # "created_at": "2015-04-12T17:45:01.123Z"
+  # },
+  # "vehicle": {
+    # "id": "C_507d6f1bd6d9b855",
+    # "url": "https://api.automatic.com/vehicle/C_507d6f1bd6d9b855/"
+  # },
+  # "device" : {
+    # "id": "021ac91c826b12eca99e685c"
+  # }
+# }
  
 - id: amx_the_anvil
   alias: amx the anvil
@@ -1182,21 +1427,24 @@
   action:
   - service: logbook.log
     data_template: 
-      name: 'AMX Starting Up'
-      message: '{{ trigger.event.data.location.lat }}/{{ trigger.event.data.location.lon }}'
+      name: 'AMX >>'
+      message: '{{ trigger.event.data.location.lat }}{{ trigger.event.data.location.lon }}'
       entity_id: device_tracker.sam_iphone
+  - event: on_amx_turn_on
+    event_data_template:
+      type: 'on'
+      link: "https://www.google.com/maps?q={{ trigger.event.data.location.lat }},{{ trigger.event.data.location.lon }}"     
   - event: event_simplepush_notify
     event_data_template:
-      title: "AMX has Connected"
+      title: "AMX >>"
       message: "https://www.google.com/maps?q={{ trigger.event.data.location.lat }},{{ trigger.event.data.location.lon }}"
       tag: "TURNING_ON"
       service: "notify.simplepush_oneshort"
   - service: device_tracker.see
     data_template:
-      gps: ['{{ trigger.event.data.location.lat }}','{{ trigger.event.data.location.lon }}']
+      gps: ["{{ trigger.event.data.location.lat }}","{{ trigger.event.data.location.lon }}"]
       dev_id: "sam_iphone"
       gps_accuracy: 16
-      mac: C_688b13e2f85710b4
       
 - id: amx_turning_off
   alias: Turning off AMX
@@ -1210,21 +1458,24 @@
   action:
   - service: logbook.log
     data_template: 
-      name: 'AMX Shutting Down'
+      name: 'AMX XX'
       entity_id: 'device_tracker.sam_iphone'
-      message: '{{ trigger.event.data.location.lat }}/{{ trigger.event.data.location.lon }}'
+      message: '{{ trigger.event.data.location.lat }}{{ trigger.event.data.location.lon }}'
+  - event: on_amx_turn_off
+    event_data_template:
+      type: 'off'
+      link: "https://www.google.com/maps?q={{ trigger.event.data.location.lat }},{{ trigger.event.data.location.lon }}"
   - event: event_simplepush_notify
     event_data_template:
-      title: "AMX has Disconnected"
+      title: "AMX-XX"
       message: "https://www.google.com/maps?q={{ trigger.event.data.location.lat }},{{ trigger.event.data.location.lon }}"
       tag: "TURNING_OFF"
       service: "notify.simplepush_oneshort"
   - service: device_tracker.see
     data_template:
-      gps: ['{{ trigger.event.data.location.lat }}','{{ trigger.event.data.location.lon }}']
+      gps: ["{{ trigger.event.data.location.lat }}","{{ trigger.event.data.location.lon }}"]
       dev_id: "sam_iphone"
       gps_accuracy: 16
-      mac: C_688b13e2f85710b4
       
 - id: amx_trip_done
   alias: Trip Completed
@@ -1236,38 +1487,72 @@
   action:
   - service: logbook.log
     data_template:
-      name: 'amx complete loop'
+      name: 'Bootstrap'
       message:  '{{ trigger.event.data.vehicle.id }}'
+  - event: on_amx_trip_complete
+    event_data_template:
+      vehicle_id:  '{{ trigger.event.data.vehicle.id }}'
+      start_time: "{{(as_timestamp(trigger.event.data.trip.started_at) | timestamp_custom('%H:%M %m/%d/%Y',True) | string )}}"
+      end_time: "{{(as_timestamp(trigger.event.data.trip.ended_at) | timestamp_custom('%H:%M %m/%d/%Y',True) | string )}}"
+      start_address: '{{trigger.event.data.trip.start_address.name}}'
+      end_address: '{{trigger.event.data.trip.end_address.name}}'
+      start_lat: '{{trigger.event.data.trip.start_location.lat}}'
+      start_lon: '{{trigger.event.data.trip.start_location.lon}}'
+      end_lat: '{{trigger.event.data.trip.end_location.lat}}'
+      end_lon: '{{trigger.event.data.trip.end_location.lon}}'
   - service: ifttt.trigger
     data_template:
       event: 'trip_finished'
+      value3: '{{as_timestamp(trigger.event.data.trip.started_at) | timestamp_custom("%m/%d/%y %H:%M")}}'
       value2: '{% if trigger.event.data.vehicle.id == "C_488e7c3f47b5f832" %}device_tracker.ant_pixel3{% else %}device_tracker.sam_iphone{% endif %}'
       value1: >-
+          {% if trigger.event.data.trip.start_address.display_name == '15 Shawe Street, Danbury, CT 06810' %}{% set start_address =  '13 Warrington Round, Danbury, CT 06810' %}{% else %}{% set start_address = trigger.event.data.trip.end_address.display_name %}{% endif %}
+          {% if trigger.event.data.trip.end_address.display_name == '15 Shawe Street, Danbury, CT 06810' %}{% set end_address =  '13 Warrington Round, Danbury, CT 06810' %}{% else %}{% set end_address = trigger.event.data.trip.end_address.display_name %}{% endif %}
           {{trigger.event.data.vehicle.id}}|||
           {{(as_timestamp(trigger.event.data.trip.started_at) | timestamp_custom('%m/%d/%Y',True) | string )}}|||
           {{(as_timestamp(trigger.event.data.trip.started_at) | timestamp_custom('%H:%M',True) | string)}}|||
-          {{trigger.event.data.trip.start_address.name}}|||
-          {{trigger.event.data.trip.start_address.display_name}}|||
+          =(indirect("C"&row()))+(indirect("D"&row()))|||
+          {{start_address}}|||
           {{(as_timestamp(trigger.event.data.trip.ended_at) | timestamp_custom('%m/%d/%Y',True) | string )}}|||
           {{(as_timestamp(trigger.event.data.trip.ended_at) | timestamp_custom('%H:%M',True) | string )}}|||
-          {{trigger.event.data.trip.end_address.name}}|||
-          {{trigger.event.data.trip.end_address.display_name}}|||
+          =(indirect("g"&row()))+(indirect("h"&row()))|||
+          {{end_address}}|||
           {{((trigger.event.data.trip.ended_at - trigger.event.data.trip.started_at) / 60 | float)}}|||
           {{(trigger.event.data.trip.distance_m  / 1609.344 | float)}}|||
           {{(trigger.event.data.trip.average_kmpl * 2.35 | float)}}|||
           {{(trigger.event.data.trip.fuel_volume_l / 3.785 | float)}}|||
-          {{trigger.event.data.trip.fuel_cost_usd}}|||
+          ${{trigger.event.data.trip.fuel_cost_usd}}|||
           {{trigger.event.data.trip.duration_over_70_s}}|||
           {{trigger.event.data.trip.duration_over_75_s}}|||
           {{trigger.event.data.trip.duration_over_80_s}}|||
+          {{trigger.event.data.trip.start_location.lat}},{{trigger.event.data.trip.start_location.lon}}|||
           {{trigger.event.data.trip.start_location.lat}}|||
           {{trigger.event.data.trip.start_location.lon}}|||
           https://www.google.com/maps?q={{trigger.event.data.trip.start_location.lat}},{{trigger.event.data.trip.start_location.lon}}|||
+          {{trigger.event.data.trip.end_location.lat}},{{trigger.event.data.trip.end_location.lon}}|||
           {{trigger.event.data.trip.end_location.lat}}|||
           {{trigger.event.data.trip.end_location.lon}}|||
           https://www.google.com/maps?q={{trigger.event.data.trip.end_location.lat}},{{trigger.event.data.trip.end_location.lon}}|||
-          https://maps.googleapis.com/maps/api/staticmap?path=enc:{{trigger.event.data.trip.path}}&sensor=false&size=600x300&maptype=roadmap&key=AIzaSyDc3FtvAZVXNqLvXGhPkCVOKM3mDTr4fkw |||
+          https://maps.googleapis.com/maps/api/staticmap?path=enc:{{trigger.event.data.trip.path}}&sensor=false&size=600x300&maptype=roadmap&key=!secret google_maps_api_key |||
      
+# - id: amx_lcxus
+  # alias: amx-lcxus
+  # trigger:
+  # - platform: event
+    # event_type: automatic_update
+    # event_data:
+      # type: "location:updated"
+      # vehicle:
+        # id: "C_688b13e2f85710b4"
+  # condition:
+     # condition: template
+     # value_template: '{{ trigger.event.data.location.accuracy_m <= 100  and trigger.event.data.location.accuracy_m >= 0 }}'
+  # action:
+  # - service: device_tracker.see
+    # data_template:
+      # gps: ["{{ trigger.event.data.location.lat }}","{{ trigger.event.data.location.lon }}"]
+      # dev_id: "sam_iphone"
+      # gps_accuracy: 16
       
 # - id: amx_location_update
   # alias: AMX Locus Updating
@@ -1313,10 +1598,12 @@
     entity_id: 'binary_sensor.dryer_running'
     from: 'on'
     to: 'off'
+    for:
+      minutes: 2
   condition:
   - condition: time
-    before: '21:00:00'
     after: '07:00:00'
+    before: '21:00:00'
   action:
   - service: tts.google_say
     entity_id: media_player.office_google, media_player.tv_room_google, media_player.kitchen_hub
@@ -1457,8 +1744,20 @@
     event_type: ifttt_webhook_received
     event_data:
       action: ant_weight
+  condition:
+  - condition: template
+    value_template: '{{ (trigger.event.data.bodyfat | float) >= 10.0 }}'
+  - condition: template
+    value_template: '{{ (trigger.event.data.weight | float) >= 140.0 }}'
   action:
-  - service: notify.simplepush
+  - event: ANT_WEIGHT
+    event_data_template:
+      fat: '{{ trigger.event.data.fat }}'
+      lean: '{{ trigger.event.data.lean }}'
+      bodyfat: '{{ trigger.event.data.bodyfat }}'
+      weight: '{{ trigger.event.data.weight }}'
+      timestamp: '{{  as_timestamp(strptime(trigger.event.data.timestamp, "%B %d, %Y at %I:%M%p")) }}'
+  - service: notify.simplepush_quiet
     data_template:
       title: 'Weight Logged as {{ trigger.event.data.weight }} lbs at {{ trigger.event.data.bodyfat }} % BF'
       message: 'Lean Mass {{ trigger.event.data.lean }} lbs vs Fat Mass {{ trigger.event.data.fat }} lbs'
@@ -1466,8 +1765,8 @@
       data:
         tag: ant_weighed_in
   - service: mqtt.publish
-    data:
-      topic: "anthony/biometrics/weight"
+    data_template:
+      topic: "homeassistant/anthony_biometrics"
       payload_template: >- 
         { 
           "weight": {{ trigger.event.data.weight | string }}, 
@@ -1481,9 +1780,37 @@
     data_template:
       name: 'Body Metrics: '
       message: '{{ trigger.event.data.weight | float }} lbs ({{ trigger.event.data.lean | float }} lbs lean) ; {{ trigger.event.data.bodyfat | float }} % BF'
-      entity_id: input_number.ant_weight
+      entity_id: input_number.input_ant_weight
       domain: input_number
 
+- id: onANT_WEIGHT_update_inputNumbers    
+  alias: Update Biometric Input Numbers
+  trigger:
+    platform: event
+    event_type: ANT_WEIGHT
+  condition:
+  - condition: template
+    value_template: '{{ (trigger.event.data.bodyfat | float) >= 10.0 }}'
+  - condition: template
+    value_template: '{{ (trigger.event.data.weight | float) >= 140.0 }}'
+  action:
+  - service: input_number.set_value
+    entity_id: input_number.input_ant_weight
+    data_template:
+      value: '{{ (trigger.event.data.weight | float) }}'
+  - service: input_number.set_value
+    entity_id: input_number.input_ant_bodyfat
+    data_template:
+      value: '{{ (trigger.event.data.bodyfat | float) }}'
+  - service: input_number.set_value
+    entity_id: input_number.input_ant_lean_mass
+    data_template:
+      value: '{{ (trigger.event.data.lean | float) }}'
+  - service: input_number.set_value
+    entity_id: input_number.input_ant_fat_mass
+    data_template:
+      value: '{{ (trigger.event.data.fat | float) }}'
+    
  #  - event: ANT_WEIGHT
 #    event_data_template:
 #      fat: '{{ trigger.event.data.fat }}'
@@ -1589,9 +1916,9 @@
         tag: network_join
   - service: mqtt.publish
     data_template:
-      topic: '/location/{{ trigger.event.data.deviceTrackerId }}'
-      payload: home
-      retain: 'True'
+      topic: '/location/{{ trigger.event.data.deviceTrackerId }}_mqtt'
+      payload: 'home'
+      retain: true
 
 - id: office_alert
   alias: "office precense"
@@ -1602,7 +1929,7 @@
     to: 'on'
   condition:
   - condition: template
-    value_template: '{{ not is_state(''device_tracker.ant_pixel3'', ''home'') }}'
+    value_template: '{{ not is_state(''person.anthony'', ''home'') }}'
   action:
   - service: notify.simplepush
     data_template:
@@ -1623,7 +1950,7 @@
   - service: logbook.log
     data_template:
       name: Offline
-      message: '{{ trigger.event.data.loggedName }} Disconnected'
+      message: '{{ trigger.event.data.loggedName }} XX'
       entity_id: 'device_tracker.{{ trigger.event.data.deviceTrackerId }}'
       domain: device_tracker
   - service: notify.simplepush_oneshort
@@ -1633,7 +1960,18 @@
     data:
       data:
         tag: network_depart
-
+        
+- id: toggle closet lights 
+  alias: Toggle Closet Lights
+  trigger:
+    platform: event
+    event_type: xiaomi_aqara.click
+    event_data:
+      click_type: single
+      entity_id: binary_sensor.closet_lights
+  action:
+  - service: switch.toggle
+    entity_id: switch.closet_lights
  
 - id: ifttt_new_disconnection_mqtt
   alias: "ifttt: wifi disconnection -> mqtt"
@@ -1642,15 +1980,12 @@
     event_type: ifttt_webhook_received
     event_data:
       action: network_disconnect
-  condition:
-    condition: template
-    value_template: '{{ is_state("device_tracker.{{ trigger.event.data.deviceTrackerId }}", "home") }}'
   action:
   - service: mqtt.publish
     data_template:
-      topic: '/location/{{ trigger.event.data.deviceTrackerId }}'
-      payload: not_home
-      retain: 'True'
+      topic: '/location/{{ trigger.event.data.deviceTrackerId }}_mqtt'
+      payload: 'not_home'
+      retain: true
 
 - id: ant_enter_gym
   alias: "enter zone rivington gym"
@@ -1660,27 +1995,17 @@
     # zone: zone.rivington_gym
     # entity_id: device_tracker.2014_nissan_altima
   - platform: state
-    entity_id: device_tracker.2014_nissan_altima
-    from: 'Danbury'
+    entity_id: person.anthony
     to: 'Rivington Gym'
     for:
-      minutes: 3
-  - platform: state
-    entity_id: device_tracker.2014_nissan_altima
-    from: 'not_home'
-    to: 'Rivington Gym'
-    for:
-      minutes: 3  
-  - platform: state
-    entity_id: device_tracker.2014_nissan_altima
-    from: 'Home'
-    to: 'Rivington Gym'
-    for:
-      minutes: 3      
+      minutes: 2
   condition:
-    condition: time
+  - condition: time
     after: '04:00'
-    before: '07:30'
+    before: '08:00'
+  - condition: state
+    entity_id: input_boolean.ant_at_gym
+    state: 'off'
   action:
   # - service: device_tracker.see
     # data_template:
@@ -1692,7 +2017,7 @@
     data_template:
       name: Anthony
       message: is at the gym
-      entity_id: device_tracker.ant_pixel3
+      entity_id: person.anthony
   - service: input_boolean.turn_on
     entity_id: input_boolean.ant_at_gym
   - service: script.turn_on
@@ -1702,23 +2027,10 @@
   alias: "ant at home from the gym"
   trigger:
   - platform: state
-    entity_id: device_tracker.2014_nissan_altima
-    from: 'Danbury'
+    entity_id: person.anthony
     to: 'Home'
     for:
-      minutes: 3
-  - platform: state
-    entity_id: device_tracker.2014_nissan_altima
-    from: 'not_home'
-    to: 'Home'
-    for:
-      minutes: 3  
-  - platform: state
-    entity_id: device_tracker.2014_nissan_altima
-    from: 'Rivington Gym'
-    to: 'Home'
-    for:
-      minutes: 3   
+      minutes: 2      
   condition:
   - condition: time
     after: '04:00'
@@ -1731,7 +2043,7 @@
     data_template:
       name: Anthony
       message: is back from the gym
-      entity_id: device_tracker.ant_pixel3
+      entity_id: person.anthony
   - service: input_boolean.turn_off
     entity_id: input_boolean.ant_at_gym
   - service: script.turn_on
@@ -1767,6 +2079,83 @@
     data:
       entity_id: input_boolean.house_fans_for_4_hours
 
+- id: soothing play pulse
+  alias: soothing play pulse
+  trigger:
+  - platform: state
+    entity_id: input_boolean.pulse_control
+    from: 'off'
+    to: 'on'
+  - platform: event
+    event_type: playpulse
+    event_data:
+      action: playpulse
+  condition:
+  - condition: state
+    entity_id: input_boolean.pulse_control
+    state: 'on'
+  action:
+  - service: light.turn_on
+    data_template:
+      entity_id: light.hue_play_1
+      brightness_pct: '{{ (range((states("input_number.pulse_min_brightness") | int),(states("input_number.pulse_max_brightness") | int)) | random) }}'
+      color_name: "{{ ['crimson' ,'darkred', 'firebrick', 'red','maroon','sienna','brown'] | random }}"
+      transition: '{{ (range(10,13) | random) }}'
+  - service: light.turn_on
+    data_template:
+      entity_id: light.hue_play_2
+      brightness_pct: '{{ (range((states("input_number.pulse_min_brightness") | int),(states("input_number.pulse_max_brightness") | int)) | random) }}'
+      color_name: "{{ ['crimson' ,'darkred', 'firebrick', 'red','maroon','sienna','brown'] | random }}"
+      transition: '{{ (range(10,13) | random) }}'          
+  - delay:
+      seconds: 15
+  - service: light.turn_on
+    data_template:
+      entity_id: light.hue_play_1
+      brightness_pct: '{{ (range((states("input_number.pulse_min_brightness") | int),(states("input_number.pulse_max_brightness") | int)) | random) }}'
+      color_name: "{{ ['darkorange' ,'orangered', 'tomato', 'coral','peru','chocolate','sandybrown'] | random }}"
+      transition:  '{{ (range(10,13) | random) }}'
+  - service: light.turn_on
+    data_template:
+      entity_id: light.hue_play_2
+      brightness_pct: '{{ (range((states("input_number.pulse_min_brightness") | int),(states("input_number.pulse_max_brightness") | int)) | random) }}'
+      color_name: "{{ ['darkorange' ,'orangered', 'tomato', 'coral','peru','chocolate','sandybrown'] | random }}"
+      transition:  '{{ (range(10,13) | random) }}'
+  - delay:
+      seconds: 15
+  - service: light.turn_on
+    data_template:
+      entity_id: light.hue_play_1
+      brightness_pct: '{{ (range((states("input_number.pulse_min_brightness") | int),(states("input_number.pulse_max_brightness") | int)) | random) }}'
+      color_name: "{{ ['crimson' ,'darkred', 'firebrick', 'red','maroon','sienna','brown'] | random }}"
+      transition: '{{ (range(10,14) | random) }}'
+  - service: light.turn_on
+    data_template:
+      entity_id: light.hue_play_2
+      brightness_pct: '{{ (range((states("input_number.pulse_min_brightness") | int),(states("input_number.pulse_max_brightness") | int)) | random) }}'
+      color_name: "{{ ['crimson' ,'darkred', 'firebrick', 'red','maroon','sienna','brown'] | random }}"
+      transition: '{{ (range(10,14) | random) }}'          
+  - delay:
+      seconds: 15
+  - service: light.turn_on
+    data_template:
+      entity_id: light.hue_play_1
+      brightness_pct: '{{ (range((states("input_number.pulse_min_brightness") | int),(states("input_number.pulse_max_brightness") | int)) | random) }}'
+      color_name: "{{ ['rosybrown' ,'violet','mediumorchid','palevioletred','deeppink','darkorchid','purple','indigo','darkmagenta'] | random }}"
+      transition: '{{ (range(10,15) | random) }}'   
+  - service: light.turn_on
+    data_template:
+      entity_id: light.hue_play_2
+      brightness_pct: '{{ (range((states("input_number.pulse_min_brightness") | int),(states("input_number.pulse_max_brightness") | int)) | random) }}'
+      color_name: "{{ ['rosybrown' ,'violet','mediumorchid','palevioletred','deeppink','darkorchid','purple','indigo','darkmagenta'] | random }}"
+      transition: '{{ (range(10,15) | random) }}'             
+  - delay:
+      seconds: 15   
+  - event: event_daytime_toggle
+    event_data_template: 
+      action: 'playpulse'
+
+      
 - id: simplepush_ifttt
   alias: Consume IFTTT Push Event
   trigger:
@@ -1816,8 +2205,8 @@
     before: '07:45'
   - condition: template
     value_template: '{{ is_state_attr("climate.nest_upstairs","operation_mode","heat") }}'
-  - condition: template
-    value_template: '{{ is_state_attr("climate.nest_upstairs","fan_mode","auto") }}'
+  # - condition: template
+    # value_template: '{{ is_state_attr("climate.nest_upstairs","fan_mode","auto") }}'
   action:
   # store
   - service: variable.set_variable
@@ -1829,8 +2218,8 @@
   - service: climate.set_temperature
     data:  
       entity_id: climate.nest_upstairs
-      temperature: 63
-      operation_mode: heat
+      temperature: 63.0
+      operation_mode: cool
    # run the fans 
   - service: climate.set_fan_mode
     data:
@@ -1844,17 +2233,17 @@
   - service: light.turn_on
     data:
       entity_id: light.bedroom_lamp
-      color_name: DarkOrange
+      color_name: DarkRed
       brightness: 1
    # logging is always good
   - service: logbook.log
     data_template: 
       name: 'Cooling Off'
-      message: 'Current Bedroom Temperature: {{ states.sensor.bedroom_temperature.state }}° F. Attempting 30 minute cool off cycle.'
+      message: 'Current Bedroom Temperature: {{ states.sensor.bedroom_temperature.state }}° F. Attempting 15 minute cool off cycle.'
       entity_id: climate.nest_upstairs       
     # wait a bit
   - delay:
-      minutes: 30
+      minutes: 15
   - service: logbook.log
     data_template: 
       name: 'Cooling Off'
@@ -1863,7 +2252,7 @@
   - service: climate.set_temperature
     data_template:  
       entity_id: climate.nest_upstairs
-      temperature: '{% if states.variable.last_upstairs_nest_temperature.state  is defined %}{{ states.variable.last_upstairs_nest_temperature.state | int }}{% else %}68{% endif %}'
+      temperature: '{% if states.variable.last_upstairs_nest_temperature.state  is defined %}{{ states.variable.last_upstairs_nest_temperature.state | float }}{% else %}68.0{% endif %}'
       operation_mode: heat      
   - service: light.turn_on
     data:
@@ -1878,7 +2267,84 @@
     data:
       entity_id: climate.nest_downstairs
       fan_mode: 'auto'     
-          
+
+- id: bedroom_too_cold
+  alias: "Bedroom Nearly 67 deg"
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.bedroom_temperature
+    below: 68.0
+    for:
+      minutes: 5
+  condition:
+  - condition: time
+    after: '20:00'
+    before: '07:45'
+  - condition: template
+    value_template: '{{ is_state_attr("climate.nest_upstairs","operation_mode","cool") }}'
+  # - condition: template
+    # value_template: '{{ is_state_attr("climate.nest_upstairs","fan_mode","auto") }}'
+  action:
+  # store
+  - service: variable.set_variable
+    data:
+      variable: last_upstairs_nest_temperature
+    data_template:
+      value: '{{ states.climate.nest_upstairs.attributes.temperature }}'
+  # turn the heat up
+  - service: climate.set_temperature
+    data:  
+      entity_id: climate.nest_upstairs
+      temperature: 70.0
+      operation_mode: heat
+   # run the fans 
+  - service: climate.set_fan_mode
+    data:
+      entity_id: climate.nest_upstairs
+      fan_mode: 'on'
+  - service: climate.set_fan_mode
+    data:
+      entity_id: climate.nest_downstairs
+      fan_mode: 'on'     
+   # indicator light goes orange
+  - service: light.turn_on
+    data:
+      entity_id: light.bedroom_lamp
+      color_name: Indigo
+      brightness: 1
+   # logging is always good
+  - service: logbook.log
+    data_template: 
+      name: 'Heating Up'
+      message: 'Current Bedroom Temperature: {{ states.sensor.bedroom_temperature.state }}° F. Attempting 15 minute warm up cycle.'
+      entity_id: climate.nest_upstairs       
+    # wait a bit
+  - delay:
+      minutes: 15
+  - service: logbook.log
+    data_template: 
+      name: 'Warming Up'
+      message: 'Current Bedroom Temperature: {{ states.sensor.bedroom_temperature.state }}° F. Ending Warm Up Cycle.'
+      entity_id: climate.nest_upstairs       
+  - service: climate.set_temperature
+    data_template:  
+      entity_id: climate.nest_upstairs
+      temperature: '{% if states.variable.last_upstairs_nest_temperature.state  is defined %}{{ states.variable.last_upstairs_nest_temperature.state | float }}{% else %}68.0{% endif %}'
+      operation_mode: cool      
+  - service: light.turn_on
+    data:
+      entity_id: light.bedroom_lamp
+      color_name: DarkRed
+      brightness: 1 
+  - service: climate.set_fan_mode
+    data:
+      entity_id: climate.nest_upstairs
+      fan_mode: 'auto'       
+  - service: climate.set_fan_mode
+    data:
+      entity_id: climate.nest_downstairs
+      fan_mode: 'auto'     
+      
 - id: daytime_changed
   alias: "daytime: changed"
   trigger:
@@ -1946,7 +2412,7 @@
     entity_id: binary_sensor.sofias_room_door
     state: 'on'
   - condition: template
-    value_template: '{% if is_state_attr("climate.nest_downstairs","temperature", 60) or  is_state_attr("climate.nest_downstairs","temperature", 85) %}true{% else %}false{% endif %}'
+    value_template: '{{ is_state_attr("climate.nest_downstairs","temperature", 60) or  is_state_attr("climate.nest_downstairs","temperature", 78) }}'
   action:
   - service: climate.set_temperature  
     data_template:
@@ -1980,23 +2446,32 @@
     data:
       name: "It's a  "
       message: "Jailbreak!"
-      
   - service: python_script.light_store
     data:
-      store_name: bedroom_store
+      store_name: jailbreak_store
       entity_id:  light.bedroom_lamp
       operation: save
     # flash purple
+  - service: light.turn_off
+    data:
+      entity_id: light.bedroom_lamp
+  - delay:
+      milliseconds: 375      
   - service: light.turn_on
     data:
       entity_id: light.bedroom_lamp
-      color_name: DarkRed
-      brightness: 64    
+      color_name: Peru
+      brightness: 254    
   - delay:
-      seconds: 1
+      milliseconds: 375
+  - service: light.turn_off
+    data:
+      entity_id: light.bedroom_lamp
+  - delay:
+      milliseconds: 375      
   - service: python_script.light_store
     data:
-      store_name: bedroom_store
+      store_name: jailbreak_store
       entity_id:  light.bedroom_lamp
       operation: restore
            
@@ -2018,6 +2493,7 @@
     data:
       entity_id: light.office_corner_bloom
       brightness_pct: 100
+      color_name: Pink
   - delay:
       seconds: 2
   - service: python_script.light_store
@@ -2026,10 +2502,121 @@
       entity_id:  light.office_corner_bloom
       operation: restore
 
+- id: bath_is_begun
+  alias: bath is begun
+  trigger:
+    platform: state
+    entity_id: binary_sensor.bedroom_bathroom_door
+    from: 'on'
+    to: 'off'
+  action:
+  - service: python_script.light_store
+    data:
+      store_name: bedroom_bath_store_2
+      entity_id: light.office_monitor_bloom
+      operation: save  
+  - service: light.turn_on
+    data:
+      entity_id: light.office_monitor_bloom
+      color_name: Peru
+      brightness_pct: 100
+  - delay:
+      seconds: 2
+  - service: python_script.light_store
+    data:
+      store_name: bedroom_bath_store_2
+      entity_id:  light.office_monitor_bloom
+      operation: restore
+
+- id: harken_the_bedroom
+  alias: harken the bedroom_bath_store
+  trigger:
+    platform: state
+    entity_id: binary_sensor.bedroom_motion
+    from: 'off'
+    to: 'on'
+  condition:
+    condition: state
+    entity_id: input_boolean.push_bed_bumps   
+    state: 'on'
+  action:
+  - service: python_script.light_store
+    data:
+      store_name: bedbumps1
+      entity_id: light.flex_rgbw
+      operation: save
+  - service: light.turn_off
+    data:
+      entity_id: light.flex_rgbw
+  - delay:
+      milliseconds: 350      
+  - service: light.turn_on
+    data:
+      entity_id: light.flex_rgbw
+      color_name: Blue
+      brightness_pct: 80
+  - delay:
+      milliseconds: 700
+  - service: light.turn_off
+    data:
+      entity_id: light.flex_rgbw
+  - delay:
+      milliseconds: 350 
+  - service: light.turn_on
+    data:
+      entity_id: light.flex_rgbw
+      color_name: Green
+      brightness_pct: 80
+  - delay:
+      milliseconds: 700
+  - service: light.turn_off
+    data:
+      entity_id: light.flex_rgbw      
+  - delay:
+      milliseconds: 350     
+  - service: python_script.light_store
+    data:
+      store_name: bedbumps1
+      entity_id: light.flex_rgbw
+      operation: restore     
+      
+     
+ 
  ## Sun events ##
  
-
- 
+- id: moses come home
+  alias: moses come home
+  trigger:
+  - platform: state
+    entity_id: sensor.moses_dir_travel
+    from: 'stationary'
+    to: 'towards'
+  - platform: state
+    entity_id: sensor.moses_dir_travel
+    from: 'stationary'
+    to: 'away_from'
+  # condition:
+  # - condition: state
+    # entity_id: input_boolean.push_blink_alerts
+    # state: 'on'
+  action:
+  - service: python_script.light_store
+    data:
+      store_name: office_store_moses_1
+      entity_id:  light.office_corner_bloom
+      operation: save  
+  - service: light.turn_on
+    data:
+      entity_id: light.office_corner_bloom
+      brightness_pct: 100
+      color_name: 'Indigo'
+  - delay:
+      seconds: 2
+  - service: python_script.light_store
+    data:
+      store_name: office_store_moses_1
+      entity_id:  light.office_corner_bloom
+      operation: restore 
  ## HUE AUTOMATIONS ##
  
 - id: outside_light_sunset
@@ -2039,9 +2626,15 @@
     event: sunset
     offset: "-00:45:00"
   action:
-    service: light.turn_on
+  - service: logbook.log
     data:
-      entity_id: light.outside
+      entity_id: sun.sun
+      name: Sunset-T45
+      domain: sun
+      message: "Beginning 45 Minute Transition On" 
+  - service: light.turn_on
+    data:
+      entity_id: light.outside_light
       brightness_pct: 100
       transition: 2700
       
@@ -2052,35 +2645,54 @@
     event: sunrise
     offset: "-00:45:00"
   action:
-    service: light.turn_off
+  - service: logbook.log
     data:
-      entity_id: light.outside
-      transition: 2700     
+      entity_id: sun.sun
+      name: Sunrise -T45
+      domain: sun
+      message: "Beginning 45 Minute Transition Off"  
+  - service: light.turn_off
+    data:
+      entity_id: light.outside_light
+      transition: 2700
 
-- id: log_sunrise
-  alias: Sunrise
+- id: radarr download
+  alias: radarr download
   trigger:
-    platform: sun
-    event: sunrise
+    platform: webhook
+    webhook_id: radarr
   action:
-    service: logbook.log
+  - service: logbook.log
     data:
       entity_id: sun.sun
-      name: Sunrise
+      name: Radarr
       domain: sun
-      message: "!!"
-- id: log_sunset
-  alias: Sunset
-  trigger:
-    platform: sun
-    event: sunset
-  action:
-    service: logbook.log
-    data:
-      entity_id: sun.sun
-      name: Sunset
-      domain: sun
-      message: "!!"      
+      message: "Successful Download"
+      
+# - id: log_sunrise
+  # alias: Sunrise
+  # trigger:
+    # platform: sun
+    # event: sunrise
+  # action:
+    # service: logbook.log
+    # data:
+      # entity_id: sun.sun
+      # name: Sunrise
+      # domain: sun
+      # message: "!!"
+# - id: log_sunset
+  # alias: Sunset
+  # trigger:
+    # platform: sun
+    # event: sunset
+  # action:
+    # service: logbook.log
+    # data:
+      # entity_id: sun.sun
+      # name: Sunset
+      # domain: sun
+      # message: "!!"      
       
       
       

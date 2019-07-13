@@ -483,7 +483,7 @@ views:
           - sensor.office_temperature
           - light.office_filing_cabinet_iris
           - binary_sensor.office_motion
-          - light.gateway_light
+          - light.office_gateways
           - light.office_closet_corner
           - script.fade_out_office
           - binary_sensor.office_occupancy

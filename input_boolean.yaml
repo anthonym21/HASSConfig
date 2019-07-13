@@ -29,6 +29,10 @@
     name: "Push Simple Alerts"
     icon: mdi:alerts
     initial: true
+  push_bed_bumps:
+    name: "Push Bed Bumps"
+    icon: mdi:alerts
+    initial: false
   dummy_for_generic_thermostat:
     name: "Dummy"
     icon: mdi:toggle-switch-off
@@ -60,7 +64,9 @@
     initial: false
   jailbreak:
     name: Jailbreak
-    initial: true
   additional_motion_warnings:
     name: "Push Add'l Motion Notes"
     initial: false
+  pulse_control:
+    name: "pulse control"
+    initial: true

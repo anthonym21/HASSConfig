@@ -396,7 +396,7 @@
       - light.office_monitor_bloom
       - light.office_pillar
       - light.office_game_of_thrones_lamp
-      - light.gateway_light
+      - light.office_gateways
       - light.flex_rgbw
       - scene.dimmed_office
       - scene.neutral_dim_office

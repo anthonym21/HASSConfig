@@ -22,11 +22,13 @@
 .git
 .storage
 .withings
+.fuse*
+*.backup
+update.sh
 core.config_entries
 not.withings
 nppBackup
 deps
-custom_components
 dome
 openzwave
 __pycache__
@@ -48,5 +50,7 @@ production_auth.json
 sensor_2.yaml
 zone.yaml
 zones.yaml
+nppBackup
+panels
 .spotify-token-cache
 

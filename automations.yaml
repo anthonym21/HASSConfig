@@ -16,7 +16,7 @@
 - id: meta_tracker_ant_away
   alias: "Update Anthony-Meta-Tracker Away"
   trigger:
-    -platform: state
+  - platform: state
     entity_id: device_tracker.ant_pixel3, device_tracker.2014_nissan_altima
     to: 'not_home'
     for: 
@@ -1411,7 +1411,7 @@
   - service: device_tracker.see
     data_template:
       gps: ['{{ trigger.event.data.lat }}','{{trigger.event.data.lon}}']
-      dev_id: "sam_iphone"
+      dev_id: device_tracker.sam_iphone
       gps_accuracy: 16
       mac: C_688b13e2f85710b4
 
@@ -1443,7 +1443,7 @@
   - service: device_tracker.see
     data_template:
       gps: ["{{ trigger.event.data.location.lat }}","{{ trigger.event.data.location.lon }}"]
-      dev_id: "sam_iphone"
+      dev_id: device_tracker.sam_iphone
       gps_accuracy: 16
       
 - id: amx_turning_off
@@ -1459,7 +1459,7 @@
   - service: logbook.log
     data_template: 
       name: 'AMX XX'
-      entity_id: 'device_tracker.sam_iphone'
+      entity_id: device_tracker.sam_iphone
       message: '{{ trigger.event.data.location.lat }}{{ trigger.event.data.location.lon }}'
   - event: on_amx_turn_off
     event_data_template:
@@ -1474,7 +1474,7 @@
   - service: device_tracker.see
     data_template:
       gps: ["{{ trigger.event.data.location.lat }}","{{ trigger.event.data.location.lon }}"]
-      dev_id: "sam_iphone"
+      dev_id: device_tracker.sam_iphone
       gps_accuracy: 16
       
 - id: amx_trip_done
@@ -1504,10 +1504,10 @@
     data_template:
       event: 'trip_finished'
       value3: '{{as_timestamp(trigger.event.data.trip.started_at) | timestamp_custom("%m/%d/%y %H:%M")}}'
-      value2: '{% if trigger.event.data.vehicle.id == "C_488e7c3f47b5f832" %}device_tracker.ant_pixel3{% else %}device_tracker.sam_iphone{% endif %}'
+      value2: '{% if trigger.event.data.vehicle.id == C_488e7c3f47b5f832 %}device_tracker.ant_pixel3{% else %}device_tracker.sam_iphone{% endif %}'
       value1: >-
-          {% if trigger.event.data.trip.start_address.display_name == '15 Shawe Street, Danbury, CT 06810' %}{% set start_address =  '13 Warrington Round, Danbury, CT 06810' %}{% else %}{% set start_address = trigger.event.data.trip.end_address.display_name %}{% endif %}
-          {% if trigger.event.data.trip.end_address.display_name == '15 Shawe Street, Danbury, CT 06810' %}{% set end_address =  '13 Warrington Round, Danbury, CT 06810' %}{% else %}{% set end_address = trigger.event.data.trip.end_address.display_name %}{% endif %}
+          {% if trigger.event.data.trip.start_address.display_name == '15 Shawe Street, Danbury, CT 06810' %}{% set start_address =  '!secret addr_round' %}{% else %}{% set start_address = trigger.event.data.trip.end_address.display_name %}{% endif %}
+          {% if trigger.event.data.trip.end_address.display_name == '15 Shawe Street, Danbury, CT 06810' %}{% set end_address =  '!secret addr_round' %}{% else %}{% set end_address = trigger.event.data.trip.end_address.display_name %}{% endif %}
           {{trigger.event.data.vehicle.id}}|||
           {{(as_timestamp(trigger.event.data.trip.started_at) | timestamp_custom('%m/%d/%Y',True) | string )}}|||
           {{(as_timestamp(trigger.event.data.trip.started_at) | timestamp_custom('%H:%M',True) | string)}}|||
@@ -1551,45 +1551,8 @@
   # - service: device_tracker.see
     # data_template:
       # gps: ["{{ trigger.event.data.location.lat }}","{{ trigger.event.data.location.lon }}"]
-      # dev_id: "sam_iphone"
+      # dev_id: device_tracker.sam_iphone
       # gps_accuracy: 16
-      
-# - id: amx_location_update
-  # alias: AMX Locus Updating
-  # trigger:
-  # - platform: event
-    # event_type: automatic_update
-    # event_data:
-      # type: "location:updated"
-  # action:
-  # - service: logbook.log
-    # data_template:
-      # name: 'AMX Update'
-      # message: '{{ trigger.event.data.vehicle.id }} :: {{ trigger.event.data.location.created_at }} :: {{ trigger.event.data.location.lat }},{{ trigger.event.data.location.lon }} ({{ trigger.event.data.location.accuracy_m }})'
-      # entity_id: automation.amx_location_update
- #{{ now().strftime("%H:%M:%S") }}'
- 
-# - id: amx_moses_crosses
-  # alias: amx moses crosses
-  # trigger:  
-  # - platform: event
-    # event_type: ifttt_webhook_received
-    # event_data:
-      # action: amx_moses_crosses
-  # action:
-  # - service: logbook.log
-    # data_template: 
-      # name: "IFTTT amx_moses_crosses"
-      # message: "turned on"
-      # entity_id: device_tracker.ant_pixel3
-  # - service: notify.simplepush
-    # data_template:
-      # title: 'New Installation Complete at'  
-      # message: 'Test value'
-    # data:
-      # data:
-        # tag: "amx"
-
       
 - id: dryer_stop
   alias: Dryer Complete
@@ -1637,19 +1600,6 @@
       event: 'garage'
       value1: 'Closed'
       value2: '{{ now().strftime("%m/%d/%Y %H:%M:%S") }}'
-    
-# - id: ant_leaving_stopandshop
-  # alias: IFTTT Ant Leave Stop and SHop
-  # trigger:
-    # platform: event
-    # event_type: ifttt_webhook_received
-    # event_data:
-      # action: leave_stop_and_shop
-  # action:
-  # - service: tts.google_say
-    # entity_id: media_player.office_speaker, media_player.tv_room_google
-    # data:
-      # message: 'Anthony has left Stop and Shop'
 
 - id: ifttt_fire_event
   alias: IFTTT Fire Event

@@ -53,4 +53,5 @@ zones.yaml
 nppBackup
 panels
 .spotify-token-cache
+automations.yaml
 
